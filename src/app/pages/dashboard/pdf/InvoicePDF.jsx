@@ -1,5 +1,6 @@
 import {jsPDF} from 'jspdf'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import angkaTerbilang from '@develoka/angka-terbilang-js'
 
 const InvoicePDF = (data) => {
   const doc = new jsPDF('p', 'mm', 'a4')
@@ -29,7 +30,7 @@ const InvoicePDF = (data) => {
   doc.setTextColor(255, 255, 255)
   doc.text(data.total_harga.toLocaleString(), 165, 152)
   doc.setTextColor(0, 0, 0)
-  doc.text(data.total_harga.toLocaleString(), 133, 165)
+  doc.text(angkaTerbilang(data.total_harga), 133, 165)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-BoldItalic.ttf'), 'Lora', 'bold-italic')
   doc.setFont('Lora', 'bold-italic')
   doc.text(data.toko.toLocaleString(), 152, 211)

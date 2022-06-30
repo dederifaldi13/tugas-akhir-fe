@@ -5,9 +5,9 @@ import {FC, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {
-  // CreateAndSendPDFWithLoop,
+  CreateAndSendPDFWithLoop,
   GetPost,
-  SendEmailAndWhatsApp,
+  // SendEmailAndWhatsApp,
 } from '../../../../app/pages/dashboard/redux/actions/PostActions'
 import {RootState} from '../../../../setup'
 import {KTSVG, toAbsoluteUrl, defaultLogs} from '../../../helpers'
@@ -34,8 +34,8 @@ const HeaderNotificationsMenu: FC = () => {
         </h3>
         <button
           className='btn btn-light-primary btn-sm me-1 d-none'
-          onClick={() => dispatch(SendEmailAndWhatsApp())}
-          // onClick={() => dispatch(CreateAndSendPDFWithLoop())}
+          // onClick={() => dispatch(SendEmailAndWhatsApp())}
+          onClick={() => dispatch(CreateAndSendPDFWithLoop())}
           disabled={isSending}
         >
           {!isSending && <span className='indicator-label'>Kirim Email dan WhatsApp</span>}
