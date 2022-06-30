@@ -2,7 +2,7 @@
   "name": "demo2",
   "version": "8.0.31",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://nagatech-vps.netlify.app/",
   "dependencies": {
     "@formatjs/intl-pluralrules": "^4.0.28",
     "@formatjs/intl-relativetimeformat": "^9.1.7",
