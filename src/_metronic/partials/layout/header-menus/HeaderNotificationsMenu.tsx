@@ -1,10 +1,25 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import clsx from 'clsx'
-import {FC} from 'react'
+import moment from 'moment'
+import {FC, useEffect} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {KTSVG, toAbsoluteUrl, defaultAlerts, defaultLogs} from '../../../helpers'
+import {
+  // CreateAndSendPDFWithLoop,
+  GetPost,
+  SendEmailAndWhatsApp,
+} from '../../../../app/pages/dashboard/redux/actions/PostActions'
+import {RootState} from '../../../../setup'
+import {KTSVG, toAbsoluteUrl, defaultLogs} from '../../../helpers'
 
 const HeaderNotificationsMenu: FC = () => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(GetPost())
+  }, [dispatch])
+  const dataCustomer: any = useSelector<RootState>(({dashboard}) => dashboard.post)
+  const isSending: any = useSelector<RootState>(({loader}) => loader.loading)
+  const tglNow = moment()
   return (
     <div
       className='menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px'
@@ -15,8 +30,22 @@ const HeaderNotificationsMenu: FC = () => {
         style={{backgroundImage: `url('${toAbsoluteUrl('/media/misc/pattern-1.jpg')}')`}}
       >
         <h3 className='text-white fw-bold px-9 mt-10 mb-6'>
-          Notifications <span className='fs-8 opacity-75 ps-3'>24 reports</span>
+          Notifications <span className='fs-8 opacity-75 ps-3'>{dataCustomer.length} reports</span>
         </h3>
+        <button
+          className='btn btn-light-primary btn-sm me-1 d-none'
+          onClick={() => dispatch(SendEmailAndWhatsApp())}
+          // onClick={() => dispatch(CreateAndSendPDFWithLoop())}
+          disabled={isSending}
+        >
+          {!isSending && <span className='indicator-label'>Kirim Email dan WhatsApp</span>}
+          {isSending && (
+            <span className='indicator-progress' style={{display: 'block'}}>
+              Please wait...
+              <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+            </span>
+          )}
+        </button>
 
         <ul className='nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-bold px-9'>
           <li className='nav-item'>
@@ -54,28 +83,59 @@ const HeaderNotificationsMenu: FC = () => {
       <div className='tab-content'>
         <div className='tab-pane fade show active' id='kt_topbar_notifications_1' role='tabpanel'>
           <div className='scroll-y mh-325px my-5 px-8'>
-            {defaultAlerts.map((alert, index) => (
-              <div key={`alert${index}`} className='d-flex flex-stack py-4'>
+            {dataCustomer.map((val: any) => (
+              <div key={val._id} className='d-flex flex-stack py-4'>
                 <div className='d-flex align-items-center'>
                   <div className='symbol symbol-35px me-4'>
-                    <span className={clsx('symbol-label', `bg-light-${alert.state}`)}>
+                    <span
+                      className={clsx(
+                        'symbol-label',
+                        `bg-${
+                          val.status === 'OPEN'
+                            ? 'light-warning'
+                            : val.status === 'PAID'
+                            ? 'light-success'
+                            : val.status === 'CLOSE'
+                            ? 'danger'
+                            : 'light-danger'
+                        }`
+                      )}
+                    >
                       {' '}
                       <KTSVG
-                        path={`/media/${alert.icon}`}
-                        className={`svg-icon-2 svg-icon-${alert.state}`}
+                        path={
+                          val.status === 'OPEN'
+                            ? `/media/icons/duotune/maps/map001.svg`
+                            : val.status === 'PAID'
+                            ? `/media/icons/duotune/general/gen048.svg`
+                            : val.status === 'CLOSE'
+                            ? `/media/icons/duotune/general/gen040.svg`
+                            : `/media/icons/duotune/general/gen044.svg`
+                        }
+                        className={`svg-icon-2 svg-icon-${
+                          val.status === 'OPEN'
+                            ? 'warning'
+                            : val.status === 'PAID'
+                            ? 'success'
+                            : val.status === 'CLOSE'
+                            ? 'white'
+                            : 'danger'
+                        }`}
                       />
                     </span>
                   </div>
 
                   <div className='mb-0 me-2'>
                     <a href='#' className='fs-6 text-gray-800 text-hover-primary fw-bolder'>
-                      {alert.title}
+                      {val.toko}
                     </a>
-                    <div className='text-gray-400 fs-7'>{alert.description}</div>
+                    <div className='text-gray-400 fs-7'>{val.product}</div>
                   </div>
                 </div>
 
-                <span className='badge badge-light fs-8'>{alert.time}</span>
+                <span className='badge badge-light fs-8'>
+                  {moment(val.tgl_jatuh_tempo).diff(tglNow, 'months')} Month Left
+                </span>
               </div>
             ))}
           </div>

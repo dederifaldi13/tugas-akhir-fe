@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {Input, Space, Table} from 'antd'
+import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
 import {useSelector} from 'react-redux'
@@ -41,21 +41,6 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'toko',
     key: 'toko',
   },
-  // {
-  //   title: 'Alamat',
-  //   dataIndex: 'alamat',
-  //   key: 'alamat',
-  // },
-  // {
-  //   title: 'Telepon',
-  //   dataIndex: 'telepon',
-  //   key: 'telepon',
-  // },
-  // {
-  //   title: 'Email',
-  //   dataIndex: 'email',
-  //   key: 'email',
-  // },
   {
     title: 'Product',
     dataIndex: 'product',
@@ -94,6 +79,11 @@ const columns: ColumnsType<DataType> = [
     },
   },
   {
+    title: 'Tgl Jatuh Tempo',
+    dataIndex: 'tgl_jatuh_tempo',
+    key: 'tgl_jatuh_tempo',
+  },
+  {
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
@@ -121,6 +111,17 @@ const columns: ColumnsType<DataType> = [
             {status}
           </span>
         )
+      } else if (status === 'CLOSE') {
+        return (
+          <span className='badge badge-danger fs-7 fw-bold'>
+            <KTSVG
+              path='/media/icons/duotune/general/gen040.svg'
+              className='svg-icon-2 svg-icon-white'
+            />
+            &nbsp;
+            {status}
+          </span>
+        )
       } else {
         return (
           <span className='badge badge-light-danger fs-7 fw-bold'>
@@ -134,28 +135,6 @@ const columns: ColumnsType<DataType> = [
         )
       }
     },
-  },
-  {
-    title: 'Tgl Jatuh Tempo',
-    dataIndex: 'tgl_jatuh_tempo',
-    key: 'tgl_jatuh_tempo',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    align: 'center',
-    render: (_, record) => (
-      <Space size='middle'>
-        <button
-          className='btn btn-light-success btn-active-color-primary btn-sm me-1'
-          disabled={record.status === 'PAID' ? true : false}
-        >
-          <span className='indicator-label'>
-            Approve <KTSVG path='/media/icons/duotune/general/gen026.svg' className='svg-icon-3' />
-          </span>
-        </button>
-      </Space>
-    ),
   },
 ]
 

@@ -4,7 +4,7 @@ import { setLoading, stopLoading } from "../../../../../../setup/redux/reducers/
 import { IAppState } from "../../../../../../setup/redux/Store";
 import { EditUserType, EDIT_USER_SUCCESS, GetUserType, GET_USER_SUCCESS, PostUserType } from "./UserActionTypes";
 
-export const MASTER_USER_URL = `v1/users`
+export const MASTER_USER_URL = `user`
 
 export const GetMasterUser = () => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -33,7 +33,7 @@ export const GetMasterUser = () => {
 export const DeleteUser = (id: string) => {
     return async (dispatch: Dispatch<any>) => {
         dispatch(setLoading());
-        AxiosDelete(`v1/users/${id}`).then(() => {
+        AxiosDelete(`${MASTER_USER_URL}/${id}`).then(() => {
             PopUpAlert.default.AlertSuccessDelete()
         }).catch((error: any) => {
             console.log(error);
@@ -70,7 +70,7 @@ export const PutUser = (data: EditUserType) => {
             user_id: data.user_id,
             level: data.level.value
         }
-        AxiosPut('v1/users/' + data.id, sendData).then(() => {
+        AxiosPut(`${MASTER_USER_URL}/` + data.id, sendData).then(() => {
             PopUpAlert.default.AlertSuccessEdit()
             dispatch(stopLoading());
         }).catch((error) => {

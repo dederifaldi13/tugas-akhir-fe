@@ -17,6 +17,22 @@ export const stopLoading = () => {
   };
 };
 
+export const setLoadingApprove = () => {
+  return async (dispatch: Dispatch<IAppActions>) => {
+    dispatch({
+      type: "SET_LOADING_APPROVE",
+    });
+  };
+};
+
+export const stopLoadingApprove = () => {
+  return async (dispatch: Dispatch<IAppActions>) => {
+    dispatch({
+      type: "STOP_LOADING_APPROVE",
+    });
+  };
+};
+
 export const setSplashScreen = () => {
   return async (dispatch: Dispatch<IAppActions>) => {
     dispatch({

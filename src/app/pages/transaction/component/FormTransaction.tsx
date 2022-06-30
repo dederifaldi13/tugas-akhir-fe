@@ -2,25 +2,47 @@ import React from 'react'
 import {connect, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../setup'
-import {convertBase64} from '../../../../setup/helper/function'
+import {convertBase64, currencyMask} from '../../../../setup/helper/function'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {ReanderField} from '../../../modules/redux-form/BasicInput'
+import {ReanderField, ReanderFieldInputGroup} from '../../../modules/redux-form/BasicInput'
+import {setCameraAction} from '../redux/action/TransactionAction'
 // import FormAddNewTransactionValidate from '../../../setup/validate/FormAddNewTransactionValidate'
 
 interface Props {}
 
+const mapState = (state: RootState) => {
+  if (state.transactionconfirmpayment.feedback !== undefined) {
+    return {
+      initialValues: {
+        id: state.transactionconfirmpayment.feedback._id,
+        kode_toko: state.transactionconfirmpayment.feedback.kode_toko,
+        toko: state.transactionconfirmpayment.feedback.toko,
+        product: state.transactionconfirmpayment.feedback.product,
+        qty: state.transactionconfirmpayment.feedback.qty,
+        harga: state.transactionconfirmpayment.feedback.harga,
+        total_harga: state.transactionconfirmpayment.feedback.total_harga,
+        bulan: state.transactionconfirmpayment.feedback.bulan,
+        tgl_jatuh_tempo: state.transactionconfirmpayment.feedback.tgl_jatuh_tempo,
+      },
+    }
+  }
+}
+
 const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
-  //   const kodeToko = props.match.params.kode_toko
-  //   const product = props.match.params.product
   const {handleSubmit, pristine, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const getValue = async (event: {target: {files: any[]}}) => {
     const file = event.target.files[0]
     const base64 = await convertBase64(file)
     props.change('foto', base64)
-    // props.dispatch(drawing2dredux.actions.SetCameraAction(base64))
+    props.dispatch(setCameraAction(base64))
   }
-  const image = '-'
+  const image: any = useSelector<RootState>(
+    ({transactionconfirmpayment}) => transactionconfirmpayment.setCameraVal
+  )
+  const data: any = useSelector<RootState>(
+    ({transactionconfirmpayment}) => transactionconfirmpayment.feedback
+  )
 
   return (
     <>
@@ -28,6 +50,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
         <div className='row'>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='kode_toko'
               type='text'
               component={ReanderField}
@@ -38,16 +61,18 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
-              name='nama_toko'
+              readOnly
+              name='toko'
               type='text'
               component={ReanderField}
               nouperCase={true}
-              label='Nama Toko'
-              placeholder='Masukan Nama Toko'
+              label='Toko'
+              placeholder='Masukan Toko'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='product'
               type='text'
               component={ReanderField}
@@ -58,6 +83,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='qty'
               type='number'
               component={ReanderField}
@@ -68,19 +94,22 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='harga'
-              type='number'
+              type='text'
               component={ReanderField}
               nouperCase={true}
               label='Harga'
               placeholder='Masukan Harga'
+              {...currencyMask}
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='bulan'
               type='text'
-              component={ReanderField}
+              component={ReanderFieldInputGroup}
               nouperCase={true}
               label='Bulan'
               placeholder='Masukan Bulan'
@@ -88,16 +117,19 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='total_harga'
-              type='number'
+              type='text'
               component={ReanderField}
               nouperCase={true}
               label='Total Harga'
               placeholder='Masukan Total Harga'
+              {...currencyMask}
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
               name='tgl_jatuh_tempo'
               type='date'
               component={ReanderField}
@@ -106,7 +138,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               placeholder='Masukan Tanggal Jatuh Tempo'
             />
           </div>
-          <div className='col-lg-12'>
+          <div className='col-lg-6'>
             <div className='row'>
               <div className='col-lg-4'>
                 <img
@@ -152,6 +184,84 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               </div>
             </div>
           </div>
+          <div className='col-lg-6'>
+            <div className='row justify-content-end mt-2 mr-2'>
+              <div className='col-lg-12 d-grid'>
+                <table style={{height: '350px'}}>
+                  <tr>
+                    <td valign='bottom' colSpan={2}>
+                      <p
+                        style={{
+                          textAlign: 'center',
+                          fontSize: '24px',
+                          marginTop: 30,
+                        }}
+                      >
+                        Jumlah Transaksi
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td valign='bottom' colSpan={2}>
+                      <hr />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td valign='bottom' colSpan={2}>
+                      <p
+                        style={{
+                          textAlign: 'right',
+                          fontSize: '24px',
+                          marginTop: 30,
+                          marginBottom: -30,
+                        }}
+                      >
+                        Rp. {data !== undefined ? data.harga.toLocaleString() : 0}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td valign='bottom' colSpan={2}>
+                      <p
+                        style={{
+                          textAlign: 'right',
+                          fontSize: '24px',
+                          marginTop: 30,
+                          marginBottom: -30,
+                        }}
+                      >
+                        {data !== undefined ? data.qty.toLocaleString() : 0}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align='right'>x</td>
+                    <td valign='bottom'>
+                      <p
+                        style={{
+                          textAlign: 'right',
+                          fontSize: '24px',
+                          marginTop: 30,
+                        }}
+                      >
+                        <hr />
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p style={{fontSize: '22px'}}>Total Yg Harus Dibayar :</p>
+                    </td>
+                    <td valign='bottom'>
+                      <p style={{textAlign: 'right', fontSize: '24px'}}>
+                        Rp. {data !== undefined ? data.total_harga.toLocaleString() : 0}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
           <div className='col-lg-4 d-none'>
             <Field
               name='foto'
@@ -189,4 +299,4 @@ const form = reduxForm<{}, Props>({
   touchOnChange: true,
   //   validate: FormAddNewTransactionValidate,
 })(FormAddTransaction)
-export default connect()(form)
+export default connect(mapState, null)(form)

@@ -93,7 +93,7 @@ export class LayoutSetup {
     Array.from(document.body.attributes).forEach((attr) => {
       document.body.removeAttribute(attr.name)
     })
-    document.body.style.backgroundImage = `url(${toAbsoluteUrl('/media/patterns/header-bg.jpg')})`
+    document.body.style.backgroundImage = `url(${toAbsoluteUrl('/media/patterns/header-bg-dark.png')})`
     document.body.setAttribute('id', 'kt_body')
     if (config.main?.body?.backgroundImage) {
       document.body.style.backgroundImage = `url('${config.main.body.backgroundImage}')`

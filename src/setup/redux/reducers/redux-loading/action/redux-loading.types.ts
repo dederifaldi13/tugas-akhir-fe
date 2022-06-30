@@ -2,6 +2,8 @@ export const SET_LOADING = "SET_LOADING";
 export const STOP_LOADING = "STOP_LOADING";
 export const SET_SPLASHSCREEN = "SET_SPLASHSCREEN";
 export const STOP_SPLASHSCREEN = "STOP_SPLASHSCREEN";
+export const SET_LOADING_APPROVE = "SET_LOADING_APPROVE";
+export const STOP_LOADING_APPROVE = "STOP_LOADING_APPROVE";
 
 export type loading = {
   loading: boolean;
@@ -15,6 +17,14 @@ export interface setLoading {
 
 export interface stopLoading {
   type: typeof STOP_LOADING;
+}
+
+export interface setLoadingApprove {
+  type: typeof SET_LOADING_APPROVE;
+}
+
+export interface stopLoadingApprove {
+  type: typeof STOP_LOADING_APPROVE;
 }
 
 export interface setSplashScreen {

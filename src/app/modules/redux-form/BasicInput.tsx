@@ -275,6 +275,64 @@ export const ReanderField = ({
         (warning && <p>{warning}</p>))}
   </div>
 )
+
+export const ReanderFieldInputGroup = ({
+  input,
+  label,
+  type,
+  readOnly,
+  placeholder,
+  id,
+  tabIndex,
+  autoFocus,
+  ref,
+  customeCss,
+  minLength,
+  defaultValue,
+  maxLength,
+  nouperCase,
+  textColor = 'text-black',
+  meta: {touched, error, warning},
+}: any) => (
+  <div className='form-group'>
+    <label htmlFor='' className={textColor}>
+      {label || <> &nbsp; </>}
+    </label>
+    <div className='input-group'>
+      <input
+        onKeyPress={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault() //<===== This stops the form from being submitted
+          } else {
+          }
+        }}
+        {...input}
+        tabIndex={tabIndex}
+        ref={ref}
+        autoComplete='off'
+        type={type}
+        id={id}
+        style={{textTransform: !nouperCase ? 'uppercase' : 'none'}}
+        className={'form-control ' + customeCss}
+        readOnly={readOnly}
+        minLength={minLength}
+        maxLength={maxLength}
+        placeholder={placeholder}
+      />
+      <span className='input-group-text' id='basic-addon2'>
+        Bulan
+      </span>
+    </div>
+    {touched &&
+      ((error && (
+        <ul className='parsley-errors-list filled'>
+          <li className='parsley-required'> {error}.</li>
+        </ul>
+      )) ||
+        (warning && <p>{warning}</p>))}
+  </div>
+)
+
 export const ReanderCheckBox = ({
   input,
   label,

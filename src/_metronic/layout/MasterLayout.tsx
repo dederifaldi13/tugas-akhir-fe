@@ -38,7 +38,13 @@ const MasterLayout: React.FC = ({children}) => {
     <PageDataProvider>
       <div className='page d-flex flex-row flex-column-fluid'>
         <div className='wrapper d-flex flex-column flex-row-fluid' id='kt_wrapper'>
-          {!location.pathname.includes('payment-confirmation') && <HeaderWrapper />}
+          {location.pathname.includes('payment-confirmation') ? (
+            ''
+          ) : location.pathname.includes('success-payment') ? (
+            ''
+          ) : (
+            <HeaderWrapper />
+          )}
 
           <div id='kt_content' className='content d-flex flex-column flex-column-fluid'>
             <Toolbar />

@@ -76,8 +76,18 @@ const Topbar: FC = () => {
 
             <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink'></span>
           </div> */}
-          <div className='menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch'>
-            <span className='menu-title'>{dateString}</span>
+          <div className='input-group input-group-sm'>
+            <span className='input-group-text' id='inputGroup-sizing-sm'>
+              Tgl System
+            </span>
+            <input
+              readOnly
+              type='text'
+              className='form-control'
+              aria-label='Sizing example input'
+              aria-describedby='inputGroup-sizing-sm'
+              value={dateString}
+            />
           </div>
           {/* end::Menu wrapper */}
         </div>

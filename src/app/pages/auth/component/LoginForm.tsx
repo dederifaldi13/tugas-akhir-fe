@@ -63,7 +63,7 @@ export function LoginForm() {
       </div>
       {/* begin::Heading */}
 
-      {formik.status ? (
+      {/* {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
@@ -74,7 +74,7 @@ export function LoginForm() {
             continue.
           </div>
         </div>
-      )}
+      )} */}
 
       {/* begin::Form group */}
       <div className='fv-row mb-10'>

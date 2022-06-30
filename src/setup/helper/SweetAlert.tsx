@@ -30,6 +30,18 @@ function AlertSuccess(message: any) {
   })
 }
 
+function AlertSuccessPayment(message: any) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: message,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.open('/success-payment', '_self', '')
+    }
+  })
+}
+
 function AlertSuccessAdd() {
   Swal.fire({
     icon: 'success',
@@ -95,6 +107,7 @@ const data = {
   AlertSuccessEdit,
   AlertSuccessDelete,
   AlertSuccessCancel,
+  AlertSuccessPayment,
 }
 
 export default data

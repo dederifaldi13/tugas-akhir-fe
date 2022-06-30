@@ -16,6 +16,7 @@ import {RootState} from '../../setup'
 import {MasterInit} from '../../_metronic/layout/MasterInit'
 import {LoginPage} from '../pages/auth/LoginPage'
 import TransactionWrapper from '../pages/transaction/TransactionWrapper'
+import SuccessPaymentPage from '../pages/transaction/SuccesPaymentPage'
 
 const Routes: FC = () => {
   const location = useLocation()
@@ -29,12 +30,8 @@ const Routes: FC = () => {
           <Route>
             <LoginPage />
           </Route>
-        ) : !isAuthorized && location.pathname.includes('payment-confirmation') ? (
-          <Route>
-            <MasterLayout>
-              <TransactionWrapper />
-            </MasterLayout>
-          </Route>
+        ) : location.pathname.includes('payment-confirmation') ? (
+          <Redirect from='/auth' to='/payment-confirmation/:kode_toko/:product' />
         ) : (
           /*Otherwise redirect to root page (`/`)*/
           <Redirect from='/auth' to='/' />
@@ -42,19 +39,20 @@ const Routes: FC = () => {
 
         <Route path='/error' component={ErrorsPage} />
         <Route path='/logout' component={Logout} />
-        <MasterLayout>
-          <Route path='/payment-confirmation/:kode_toko/:product' component={TransactionWrapper} />
-        </MasterLayout>
 
         {!isAuthorized && !location.pathname.includes('payment-confirmation') ? (
           /*Redirect to `/auth` when user is not authorized*/
           <Redirect to='/auth/login' />
-        ) : !isAuthorized && location.pathname.includes('payment-confirmation') ? (
+        ) : location.pathname.includes('payment-confirmation') ? (
           <MasterLayout>
             <Route
               path='/payment-confirmation/:kode_toko/:product'
               component={TransactionWrapper}
             />
+          </MasterLayout>
+        ) : location.pathname.includes('success-payment') ? (
+          <MasterLayout>
+            <Route path='/success-payment' component={SuccessPaymentPage} />
           </MasterLayout>
         ) : (
           <MasterLayout>

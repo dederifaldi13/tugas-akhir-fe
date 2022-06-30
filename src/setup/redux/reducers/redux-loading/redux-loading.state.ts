@@ -2,12 +2,14 @@ import { IAppActions } from "../../Store";
 
 export interface DefaultLoadingI {
   loading: boolean;
+  loadingApprove: boolean;
   type: String;
   splashScreen: boolean;
 }
 
 const defaultState: DefaultLoadingI = {
   loading: false,
+  loadingApprove: false,
   type: "",
   splashScreen: true
 };
@@ -26,6 +28,16 @@ const loadingState = (
       return {
         ...state,
         loading: false,
+      };
+    case "SET_LOADING_APPROVE":
+      return {
+        ...state,
+        loadingApprove: true,
+      };
+    case "STOP_LOADING_APPROVE":
+      return {
+        ...state,
+        loadingApprove: false,
       };
     case "SET_SPLASHSCREEN":
       return {

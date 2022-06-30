@@ -74,7 +74,7 @@ const TableUser: React.FC = () => {
       render: (_, record) => (
         <Space size='middle'>
           <button
-            className='btn btn-light-warning btn-active-color-primary btn-sm me-1'
+            className='btn btn-light-warning btn-sm me-1'
             onClick={() => handleShow(record._id)}
           >
             <span className='indicator-label'>
@@ -82,7 +82,7 @@ const TableUser: React.FC = () => {
             </span>
           </button>
           <button
-            className='btn btn-light-danger btn-active-color-primary btn-sm me-1'
+            className='btn btn-light-danger btn-sm me-1'
             onClick={() => handleDelete(record._id)}
           >
             <span className='indicator-label'>

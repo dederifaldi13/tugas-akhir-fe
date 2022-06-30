@@ -1,20 +1,26 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import {Result} from 'antd'
 import React, {FC, useEffect} from 'react'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import {useParams} from 'react-router-dom'
+import {RootState} from '../../../setup'
 // import {KTSVG} from '../../../_metronic/helpers'
 import {PageTitle} from '../../../_metronic/layout/core'
 import FormTransaction from './component/FormTransaction'
+import {ConfirmPaymentAction, GetTransactionFilter} from './redux/action/TransactionAction'
 
 const TransactionWrapper: FC = () => {
+  const params: {kode_toko: string; product: string} = useParams()
+  const dataTrx: any = useSelector<RootState>(
+    ({transactionconfirmpayment}) => transactionconfirmpayment.feedback
+  )
   const dispatch = useDispatch()
-
   const handleSubmit = (data: any) => {
-    // dispatch(PostData(data))
-    console.log(data)
+    dispatch(ConfirmPaymentAction(data))
   }
   useEffect(() => {
-    // dispatch(GetPost())
-  }, [dispatch])
+    dispatch(GetTransactionFilter(params))
+  }, [dispatch, params])
 
   return (
     <>
@@ -42,7 +48,24 @@ const TransactionWrapper: FC = () => {
                 {/* end::Header */}
                 {/* begin::Body */}
                 <div className='card-body py-3'>
-                  <FormTransaction onSubmit={(data: any) => handleSubmit(data)} />
+                  {dataTrx?.status === 'PAID' ? (
+                    <Result
+                      title='Transaksi Ini Sudah Di Bayar !'
+                      extra={
+                        <button
+                          className='btn btn-primary'
+                          onClick={() => {
+                            window.open('', '_self', '')
+                            window.close()
+                          }}
+                        >
+                          <span className='indicator-label'>Ok</span>
+                        </button>
+                      }
+                    />
+                  ) : (
+                    <FormTransaction onSubmit={(data: any) => handleSubmit(data)} />
+                  )}
                 </div>
                 {/* begin::Body */}
               </div>
