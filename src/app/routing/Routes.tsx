@@ -25,13 +25,17 @@ const Routes: FC = () => {
   return (
     <>
       <Switch>
-        {!isAuthorized && !location.pathname.includes('payment-confirmation') ? (
+        {!isAuthorized &&
+        !location.pathname.includes('payment-confirmation') &&
+        !location.pathname.includes('success-payment') ? (
           /*Render auth page when user at `/auth` and not authorized.*/
           <Route>
             <LoginPage />
           </Route>
         ) : location.pathname.includes('payment-confirmation') ? (
           <Redirect from='/auth' to='/payment-confirmation/:kode_toko/:product' />
+        ) : location.pathname.includes('success-payment') ? (
+          <Redirect from='/auth' to='/success-payment' />
         ) : (
           /*Otherwise redirect to root page (`/`)*/
           <Redirect from='/auth' to='/' />
@@ -40,7 +44,9 @@ const Routes: FC = () => {
         <Route path='/error' component={ErrorsPage} />
         <Route path='/logout' component={Logout} />
 
-        {!isAuthorized && !location.pathname.includes('payment-confirmation') ? (
+        {!isAuthorized &&
+        !location.pathname.includes('payment-confirmation') &&
+        !location.pathname.includes('success-payment') ? (
           /*Redirect to `/auth` when user is not authorized*/
           <Redirect to='/auth/login' />
         ) : location.pathname.includes('payment-confirmation') ? (
