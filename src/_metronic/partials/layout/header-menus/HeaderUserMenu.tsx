@@ -27,13 +27,15 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <img alt='Logo' src={toAbsoluteUrl('/media/avatars/150-25.jpg')} />
+            <img alt='Logo' src={toAbsoluteUrl('/media/avatars/blank.png')} />
           </div>
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
               {user.user_id}
-              <span className='badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2'>{user.level}</span>
+              <span className='badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2'>
+                {user.level}
+              </span>
             </div>
             {/* <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
               {user.level}
@@ -119,13 +121,13 @@ const HeaderUserMenu: FC = () => {
         </div>
       </div> */}
 
-      <div className='menu-item px-5'>
+      {/* <div className='menu-item px-5'>
         <a href='#' className='menu-link px-5'>
           User Setting
         </a>
-      </div>
+      </div> */}
 
-      <div className='separator my-2'></div>
+      {/* <div className='separator my-2'></div> */}
 
       {/* <Languages /> */}
 

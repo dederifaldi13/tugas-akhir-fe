@@ -138,10 +138,9 @@ export const PostCustomer = (data: FormPostType) => {
     AxiosPost('customer', senddata).then((res: any) => {
       AxiosGet(`customer/by-kode-product?kode_toko=${res.kode_toko}&product=${res.product}`).then((res: any) => {
         const dataInvoice = res.data[0]
-        const pdf64 = InvoicePDF()
+        const pdf64 = InvoicePDF(dataInvoice)
         const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.product}`)
         postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.product}`).then((res: any) => {
-          console.log(res);
         }).catch((error: any) => {
           console.log(error);
         }).finally(() => {
@@ -171,7 +170,7 @@ export const ValidationPayment = (kode: string, product: string) => {
     AxiosPost('payment/validation', senddata).then((res: any) => {
       AxiosGet(`customer/by-kode-product?kode_toko=${res.kode_toko}&product=${res.product}`).then((res: any) => {
         const dataInvoice = res.data[0]
-        const pdf64 = InvoicePDF()
+        const pdf64 = InvoicePDF(dataInvoice)
         const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.product}`)
         postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.product}`).then((res: any) => {
           console.log(res);

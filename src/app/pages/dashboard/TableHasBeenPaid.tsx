@@ -130,7 +130,7 @@ const TableHasBeenPaid: React.FC = () => {
       dataIndex: 'harga',
       key: 'harga',
       align: 'right',
-      render: (_, {harga}) => <>{harga.toLocaleString()}</>,
+      render: (_, {harga}) => <>{'Rp. ' + harga.toLocaleString()}</>,
     },
     {
       title: 'Bulan',
@@ -142,7 +142,7 @@ const TableHasBeenPaid: React.FC = () => {
       dataIndex: 'total_harga',
       key: 'total_harga',
       align: 'right',
-      render: (_, {total_harga}) => <>{total_harga.toLocaleString()}</>,
+      render: (_, {total_harga}) => <>{'Rp. ' + total_harga.toLocaleString()}</>,
     },
     {
       title: 'Action',

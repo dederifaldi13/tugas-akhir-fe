@@ -31,6 +31,7 @@ export function MenuInner() {
           icon='/media/icons/duotune/general/gen001.svg'
         />
       </MenuInnerWithSub>
+      <MenuItem title='Report' to='/report' />
     </>
   )
 }

@@ -134,7 +134,7 @@ const TableDeactivate: React.FC = () => {
       key: 'harga',
       align: 'right',
       render: (_, {harga}) => {
-        return harga.toLocaleString()
+        return 'Rp. ' + harga.toLocaleString()
       },
     },
     {
@@ -148,7 +148,7 @@ const TableDeactivate: React.FC = () => {
       key: 'total_harga',
       align: 'right',
       render: (_, {total_harga}) => {
-        return total_harga.toLocaleString()
+        return 'Rp. ' + total_harga.toLocaleString()
       },
     },
     {
@@ -306,13 +306,17 @@ const TableDeactivate: React.FC = () => {
                     {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={4} align='right'>
-                    {dataTable.reduce((a: any, b: {harga: any}) => a + b.harga, 0).toLocaleString()}
+                    {'Rp. ' +
+                      dataTable
+                        .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
+                        .toLocaleString()}
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={5}></Table.Summary.Cell>
                   <Table.Summary.Cell index={6} align='right'>
-                    {dataTable
-                      .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
-                      .toLocaleString()}
+                    {'Rp. ' +
+                      dataTable
+                        .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
+                        .toLocaleString()}
                   </Table.Summary.Cell>
                 </Table.Summary.Row>
               </Table.Summary>

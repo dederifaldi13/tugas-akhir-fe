@@ -16,13 +16,13 @@ export const doLogin = (data: FormLoginType) => {
         AxiosPost(LOGIN_URL, data).then((res: any) => {
             const datafeedback: FeedbackLoginType = res
             // PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Login !')
+            dispatch({ type: LOGIN_SUCCESS, payload: { accessToken: datafeedback.access_token, user: datafeedback, refreshToken: datafeedback.refresh_token } })
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Berhasil Login',
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    dispatch({ type: LOGIN_SUCCESS, payload: { accessToken: datafeedback.access_token, user: datafeedback, refreshToken: datafeedback.refresh_token } })
                     await saveLocal('isLogin', 'true')
                     await saveLocal('token', datafeedback.access_token)
                     await saveLocal('userData', datafeedback)

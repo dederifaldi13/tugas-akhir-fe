@@ -10,6 +10,9 @@ export function PrivateRoutes() {
   const ServiceAdjustmentPage = lazy(
     () => import('../pages/service-adjustment/ServiceAdjustmentPage')
   )
+  const ReportCustomerPage = lazy(
+    () => import('../pages/report/report-customer/ReportCustomerPage')
+  )
 
   return (
     <Suspense fallback={<FallbackView />}>
@@ -19,6 +22,7 @@ export function PrivateRoutes() {
         <Route path='/master/product' component={ProductPage} />
         <Route path='/master/store' component={StorePage} />
         <Route path='/service-adjustment' component={ServiceAdjustmentPage} />
+        <Route path='/report' component={ReportCustomerPage} />
         <Redirect from='/auth' to='/dashboard' />
         <Redirect exact from='/' to='/dashboard' />
         <Redirect to='error/404' />

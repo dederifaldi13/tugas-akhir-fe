@@ -7,7 +7,7 @@ import {KTSVG} from '../../../_metronic/helpers'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {GetMasterProduct} from '../master/product/redux/action/ProductAction'
 import {GetMasterStore} from '../master/store/redux/action/StoreAction'
-import CustomerExcel from './excel/CustomerExcel'
+// import CustomerExcel from './excel/CustomerExcel'
 import FormAddNewTransaction from './FormAddNewTransaction'
 import {GetPayment, GetPost, PostCustomer} from './redux/actions/PostActions'
 import TableDashboard from './TableDashboard'
@@ -81,13 +81,13 @@ const DashboardWrapper: FC = () => {
                     <div className='col-lg-12'>
                       <TableDashboard />
                     </div>
-                    <div className='col-lg-12'>
+                    {/* <div className='col-lg-12'>
                       <div className='row justify-content-end mt-3'>
                         <div className='col-lg-2 d-grid'>
                           <CustomerExcel />
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 {/* begin::Body */}
@@ -105,7 +105,7 @@ const DashboardWrapper: FC = () => {
                   <h3 className='card-title align-items-start flex-column'>
                     <span className='card-label fw-bolder fs-3 mb-1'>Payment Data</span>
                     <span className='text-muted mt-1 fw-bold fs-7'>
-                      List Data Of Nagatech Customer VPS
+                      List Data Of Customer Already Paid
                     </span>
                   </h3>
                   <div className='card-toolbar'>

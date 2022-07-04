@@ -3,8 +3,8 @@ import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
 import {useSelector} from 'react-redux'
-import {RootState} from '../../../setup'
-import {KTSVG} from '../../../_metronic/helpers'
+import {RootState} from '../../../../../setup'
+import {KTSVG} from '../../../../../_metronic/helpers'
 
 interface DataType {
   key: string
@@ -88,7 +88,6 @@ const columns: ColumnsType<DataType> = [
     key: 'status',
     dataIndex: 'status',
     align: 'center',
-    fixed: 'right',
     render: (_, {status}) => {
       if (status === 'OPEN') {
         return (
@@ -139,8 +138,9 @@ const columns: ColumnsType<DataType> = [
   },
 ]
 
-const TableDashboard: React.FC = () => {
-  const newarrdata: any = useSelector<RootState>(({dashboard}) => dashboard.post) || []
+const TableReportCustomer: React.FC = () => {
+  const newarrdata: any =
+    useSelector<RootState>(({reportCustomer}) => reportCustomer.feedback) || []
   const [dataSource, setDataSource] = useState(newarrdata)
   const [value, setValue] = useState('')
   const [search, setSearch] = useState(false)
@@ -230,10 +230,9 @@ const TableDashboard: React.FC = () => {
             </>
           )
         }}
-        scroll={{x: 1200}}
       />
     </>
   )
 }
 
-export default TableDashboard
+export default TableReportCustomer

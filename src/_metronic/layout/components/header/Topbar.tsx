@@ -129,7 +129,7 @@ const Topbar: FC = () => {
           >
             <img
               className='h-25px w-25px rounded'
-              src={toAbsoluteUrl('/media/avatars/150-25.jpg')}
+              src={toAbsoluteUrl('/media/avatars/blank.png')}
               alt='metronic'
             />
           </div>

@@ -49,15 +49,17 @@ export function HeaderWrapper() {
 
         <div className='header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0'>
           <Link to='/'>
+            {/* dark */}
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/logos/logo-4.png')}
-              className='logo-default h-25px'
+              src={toAbsoluteUrl('/media/logos/nsi-logo.png')}
+              className='logo-default h-70px'
             />
+            {/* light */}
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/logos/logo-5.png')}
-              className='logo-sticky h-25px'
+              src={toAbsoluteUrl('/media/logos/nsi-logo.png')}
+              className='logo-sticky h-70px'
             />
           </Link>
         </div>
