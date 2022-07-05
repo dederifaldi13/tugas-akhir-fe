@@ -137,7 +137,9 @@ const TableUser: React.FC = () => {
       <div className='row justify-content-end mt-2 mb-2'>
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>
-      <Table columns={columns} dataSource={dataTable} />
+      <div className='table-responsive'>
+        <Table columns={columns} dataSource={dataTable} />
+      </div>
     </>
   )
 }

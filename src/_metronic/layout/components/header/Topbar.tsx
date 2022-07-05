@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import moment from 'moment'
+// import moment from 'moment'
 import React, {FC} from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../helpers'
 import {HeaderNotificationsMenu, HeaderUserMenu} from '../../../partials'
@@ -9,8 +9,8 @@ const toolbarButtonMarginClass = 'ms-1 ms-lg-3',
   toolbarUserAvatarHeightClass = 'symbol-30px symbol-md-40px',
   toolbarButtonIconSizeClass = 'svg-icon-1'
 
-const date = new Date()
-const dateString = moment(date).format('DD/MM/YYYY')
+// const date = new Date()
+// const dateString = moment(date).format('DD/MM/YYYY')
 
 const Topbar: FC = () => {
   return (
@@ -76,7 +76,7 @@ const Topbar: FC = () => {
 
             <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink'></span>
           </div> */}
-          <div className='input-group input-group-sm'>
+          {/* <div className='input-group input-group-sm'>
             <span className='input-group-text' id='inputGroup-sizing-sm'>
               Tgl System
             </span>
@@ -88,7 +88,7 @@ const Topbar: FC = () => {
               aria-describedby='inputGroup-sizing-sm'
               value={dateString}
             />
-          </div>
+          </div> */}
           {/* end::Menu wrapper */}
         </div>
 

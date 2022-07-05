@@ -7,6 +7,16 @@ import {ReanderField} from '../../../../modules/redux-form/BasicInput'
 
 interface Props {}
 
+const mapState = (state: RootState) => {
+  if (state.masterproduct.feedbackID !== undefined) {
+    return {
+      initialValues: {
+        product: state.masterproduct.feedbackID.product,
+      },
+    }
+  }
+}
+
 const FormAddNewProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {handleSubmit, pristine, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
@@ -49,6 +59,7 @@ const form = reduxForm<{}, Props>({
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
   touchOnChange: true,
+  enableReinitialize: true,
   validate: FormAddNewProductValidate,
 })(FormAddNewProduct)
-export default connect()(form)
+export default connect(mapState, null)(form)

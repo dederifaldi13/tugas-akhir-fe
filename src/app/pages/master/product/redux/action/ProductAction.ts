@@ -79,8 +79,8 @@ export const PutProduct = (data: EditProductType) => {
 
 export const GetMasterProductByID = (id: String) => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-        AxiosGet(MASTER_PRODUCT_URL + '/' + id).then((res: any) => {
-            dispatch({ type: EDIT_PRODUCT_SUCCESS, payload: { feedbackID: res.data } });
+        AxiosGet(MASTER_PRODUCT_URL + '/by-id/' + id).then((res: any) => {
+            dispatch({ type: EDIT_PRODUCT_SUCCESS, payload: { feedbackID: res.data[0] } });
         }).catch((error: any) => {
             console.log(error);
 

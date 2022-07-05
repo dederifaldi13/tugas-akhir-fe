@@ -32,6 +32,7 @@ const FormEditStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
           <div className='col-lg-6 mb-2 mt-2 d-none'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='id'
               type='text'
               component={ReanderField}
@@ -43,6 +44,7 @@ const FormEditStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='kode_toko'
               type='text'
               component={ReanderField}

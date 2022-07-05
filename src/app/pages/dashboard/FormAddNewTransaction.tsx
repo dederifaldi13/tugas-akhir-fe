@@ -94,6 +94,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               readOnly
               name='toko'
               type='text'
+              customeCss='form-control-solid'
               component={ReanderField}
               nouperCase={true}
               label='Toko'
@@ -103,6 +104,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='alamat'
               type='text'
               component={ReanderTextArea}
@@ -114,6 +116,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='telepon'
               type='text'
               component={ReanderField}
@@ -125,6 +128,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='email'
               type='email'
               component={ReanderField}
@@ -189,6 +193,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='total_harga'
               type='text'
               component={ReanderField}

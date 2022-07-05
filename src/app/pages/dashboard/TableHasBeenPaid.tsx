@@ -191,37 +191,41 @@ const TableHasBeenPaid: React.FC = () => {
       <div className='row justify-content-end mt-2 mb-2'>
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>
-      <Table
-        columns={columns}
-        dataSource={dataTable}
-        // expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
-        summary={(pageData) => {
-          return (
-            <>
-              <Table.Summary fixed>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} colSpan={5} align='right'>
-                    Total
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={3} align='right'>
-                    {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={4} align='right'>
-                    {dataTable.reduce((a: any, b: {harga: any}) => a + b.harga, 0).toLocaleString()}
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                  <Table.Summary.Cell index={6} align='right'>
-                    {dataTable
-                      .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
-                      .toLocaleString()}
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              </Table.Summary>
-            </>
-          )
-        }}
-      />
+      <div className='table-responsive'>
+        <Table
+          columns={columns}
+          dataSource={dataTable}
+          // expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
+          summary={(pageData) => {
+            return (
+              <>
+                <Table.Summary fixed>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} colSpan={5} align='right'>
+                      Total
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={3} align='right'>
+                      {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={4} align='right'>
+                      {dataTable
+                        .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
+                        .toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={5}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={6} align='right'>
+                      {dataTable
+                        .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
+                        .toLocaleString()}
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              </>
+            )
+          }}
+        />
+      </div>
     </>
   )
 }
