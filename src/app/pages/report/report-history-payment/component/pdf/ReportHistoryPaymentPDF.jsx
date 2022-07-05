@@ -1,7 +1,8 @@
 import {jsPDF} from 'jspdf'
 import 'jspdf-autotable'
+import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
 
-const ReportHistoryPaymentPDF = (data) => {
+const ReportHistoryPaymentPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4')
   let tableRows = []
   let tableColumn = []
@@ -9,13 +10,15 @@ const ReportHistoryPaymentPDF = (data) => {
   let finalY = 30
   doc.setFontSize(10)
   doc.text('History Payment Report', 14, 15)
-  doc.text('Nagatech SI', 180, 15)
+  // doc.text('Nagatech SI', 170, 15)
+  var imgData = toAbsoluteUrl('/media/logos/nsi-logo.png')
+  doc.addImage(imgData, 'JPEG', 165, 5, 30, 26)
 
-  doc.setFontSize(10)
   doc.setProperties({
     title: 'History Payment',
   })
-  //   doc.text(`PERIODE : ${head.tgl_dari} s/d ${head.tgl_sampai}`, 14, 25)
+  doc.setFontSize(9)
+  doc.text(`Periode : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
 
   tableColumn = [
     [
@@ -43,12 +46,12 @@ const ReportHistoryPaymentPDF = (data) => {
       {content: element.product},
       {content: element.qty, styles: {halign: 'right'}},
       {
-        content: element.harga.toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+        content: 'Rp. ' + element.harga.toLocaleString(),
         styles: {halign: 'right'},
       },
       {content: element.bulan},
       {
-        content: element.total_harga.toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+        content: 'Rp. ' + element.total_harga.toLocaleString(),
         styles: {halign: 'right'},
       },
     ]
@@ -56,12 +59,10 @@ const ReportHistoryPaymentPDF = (data) => {
   })
 
   const footer = [
-    {content: 'Total : ', colSpan: 6},
+    {content: 'Total : ', colSpan: 6, styles: {halign: 'right'}},
     {content: data.reduce((a, b) => a + b.qty, 0), styles: {halign: 'right'}},
     {
-      content: data
-        .reduce((a, b) => a + b.harga, 0)
-        .toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.harga, 0).toLocaleString(),
       styles: {halign: 'right'},
     },
     {
@@ -69,9 +70,7 @@ const ReportHistoryPaymentPDF = (data) => {
       styles: {halign: 'right'},
     },
     {
-      content: data
-        .reduce((a, b) => a + b.total_harga, 0)
-        .toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0).toLocaleString(),
       styles: {halign: 'right'},
     },
   ]

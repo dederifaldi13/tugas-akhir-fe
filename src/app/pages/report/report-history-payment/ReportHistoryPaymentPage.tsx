@@ -2,6 +2,7 @@
 import React, {FC, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../setup'
+import {getLocal} from '../../../../setup/encrypt'
 import {PageTitle} from '../../../../_metronic/layout/core'
 import {GetMasterProduct} from '../../master/product/redux/action/ProductAction'
 import {GetMasterStore} from '../../master/store/redux/action/StoreAction'
@@ -25,7 +26,9 @@ const ReportHistoryPaymentPage: FC = () => {
   const newarrdata: any =
     useSelector<RootState>(({reportHistoryPayment}) => reportHistoryPayment.feedback) || []
   const handlePrintPDF = () => {
-    ReportHistoryPaymentPDF(newarrdata)
+    getLocal('headLaporan').then((res) => {
+      ReportHistoryPaymentPDF(newarrdata, res)
+    })
   }
 
   return (

@@ -1,7 +1,8 @@
 import {jsPDF} from 'jspdf'
 import 'jspdf-autotable'
+import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
 
-const ReportCustomerPDF = (data) => {
+const ReportCustomerPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4')
   let tableRows = []
   let tableColumn = []
@@ -9,13 +10,15 @@ const ReportCustomerPDF = (data) => {
   let finalY = 30
   doc.setFontSize(10)
   doc.text('Customer Report', 14, 15)
-  doc.text('Nagatech SI', 180, 15)
+  // doc.text('Nagatech SI', 180, 15)
+  var imgData = toAbsoluteUrl('/media/logos/nsi-logo.png')
+  doc.addImage(imgData, 'JPEG', 165, 5, 30, 26)
 
-  doc.setFontSize(10)
   doc.setProperties({
     title: 'Customer',
   })
-  //   doc.text(`PERIODE : ${head.tgl_dari} s/d ${head.tgl_sampai}`, 14, 25)
+  doc.setFontSize(9)
+  doc.text(`Tgl Jatuh Tempo : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
 
   tableColumn = [
     [
@@ -27,6 +30,7 @@ const ReportCustomerPDF = (data) => {
       {content: `Harga`},
       {content: `Bulan`},
       {content: `Total Harga`},
+      {content: `Tgl Jatuh Tempo`},
       {content: `Status`},
     ],
   ]
@@ -40,26 +44,25 @@ const ReportCustomerPDF = (data) => {
       {content: element.product},
       {content: element.qty, styles: {halign: 'right'}},
       {
-        content: element.harga.toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+        content: 'Rp. ' + element.harga.toLocaleString(),
         styles: {halign: 'right'},
       },
       {content: element.bulan},
       {
-        content: element.total_harga.toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+        content: 'Rp. ' + element.total_harga.toLocaleString(),
         styles: {halign: 'right'},
       },
+      {content: element.tgl_jatuh_tempo},
       {content: element.status},
     ]
     tableRows.push(row)
   })
 
   const footer = [
-    {content: 'Total : ', colSpan: 4},
+    {content: 'Total : ', colSpan: 4, styles: {halign: 'right'}},
     {content: data.reduce((a, b) => a + b.qty, 0), styles: {halign: 'right'}},
     {
-      content: data
-        .reduce((a, b) => a + b.harga, 0)
-        .toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.harga, 0).toLocaleString(),
       styles: {halign: 'right'},
     },
     {
@@ -67,9 +70,7 @@ const ReportCustomerPDF = (data) => {
       styles: {halign: 'right'},
     },
     {
-      content: data
-        .reduce((a, b) => a + b.total_harga, 0)
-        .toLocaleString('id', {style: 'currency', currency: 'IDR'}),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0).toLocaleString(),
       styles: {halign: 'right'},
     },
   ]

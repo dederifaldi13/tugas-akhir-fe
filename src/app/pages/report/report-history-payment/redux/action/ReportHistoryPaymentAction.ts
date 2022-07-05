@@ -1,6 +1,7 @@
 import moment from "moment";
 import { Dispatch } from "redux";
 import { AxiosGet, getImage, PopUpAlert } from "../../../../../../setup";
+import { saveLocal } from "../../../../../../setup/encrypt";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../../setup/redux/Store";
 import { GET_HISTORY_PAYMENT_SUCCESS, HIDE_MODAL_BUKTI_BAYAR_SUCCESS, SET_NO_BAYAR, SHOW_MODAL_BUKTI_BAYAR_SUCCESS, TableHistoryPaymentReportType } from "./RerportHistoryPaymentActionTypes";
@@ -16,7 +17,7 @@ export const GetHistoryPaymentReport = (data: { kode_toko: { value: string, labe
         const tgl_akhir = moment(data.tgl_akhir).format('YYYY-MM-DD')
         const kode_toko = data.kode_toko.value
         const prod = data.product.value
-        AxiosGet(`${REPORT_HISTORY_PAYMENT_API}startDate=${tgl_awal}&endDate=${tgl_akhir}&kode_toko=${kode_toko}&product=${prod}`).then((res: any) => {
+        AxiosGet(`${REPORT_HISTORY_PAYMENT_API}startDate=${tgl_awal}&endDate=${tgl_akhir}&kode_toko=${kode_toko}&product=${prod}`).then(async (res: any) => {
             if (res.data.length === 0) {
                 PopUpAlert.default.AlertError('Data Laporan Kosong !')
                 dispatch({ type: GET_HISTORY_PAYMENT_SUCCESS, payload: { feedback: [] } });
@@ -43,6 +44,7 @@ export const GetHistoryPaymentReport = (data: { kode_toko: { value: string, labe
                 PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Melihat Laporan !')
                 dispatch(stopLoading())
             }
+            await saveLocal('headLaporan', { tgl_awal: tgl_awal, tgl_akhir: tgl_akhir })
         }).catch((error: any) => {
             console.log(error);
             PopUpAlert.default.AlertError('Gagal Melihat Laporan !')

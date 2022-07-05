@@ -40,6 +40,7 @@ const mapState = (state: RootState) => {
         qty: state.dashboard.qty,
         harga: state.dashboard.harga,
         total_harga: state.dashboard.totalHarga,
+        bulan: '6',
       },
     }
   } else {
@@ -54,6 +55,7 @@ const mapState = (state: RootState) => {
         qty: state.dashboard.qty,
         harga: state.dashboard.harga,
         total_harga: state.dashboard.totalHarga,
+        bulan: '6',
       },
     }
   }
@@ -182,6 +184,8 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
+              customeCss='form-control-solid'
               name='bulan'
               type='text'
               component={ReanderFieldInputGroup}

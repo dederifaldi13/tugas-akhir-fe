@@ -1,6 +1,7 @@
 import moment from "moment";
 import { Dispatch } from "redux";
 import { AxiosGet, PopUpAlert } from "../../../../../../setup";
+import { saveLocal } from "../../../../../../setup/encrypt";
 import { setLoading, stopLoading } from "../../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../../setup/redux/Store";
 import { GET_DATA_CUSTOMER_REPORT_SUCCESS, TableCustomerReportType } from "./RerportCustomerActionTypes";
@@ -12,7 +13,9 @@ export const GetCustomerReportAction = (data: { kode_toko: { value: string, labe
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
         let newarrdata: TableCustomerReportType[] = []
         dispatch(setLoading())
-        AxiosGet(`${REPORT_CUSTOMER_API}startDate=${moment(data.tgl_awal).format('YYYY-MM-DD')}&endDate=${moment(data.tgl_akhir).format('YYYY-MM-DD')}&kode_toko=${data.kode_toko.value}&product=${data.product.value}`).then((res: any) => {
+        const tgl_awal = moment(data.tgl_awal).format('YYYY-MM-DD')
+        const tgl_akhir = moment(data.tgl_akhir).format('YYYY-MM-DD')
+        AxiosGet(`${REPORT_CUSTOMER_API}startDate=${tgl_awal}&endDate=${tgl_akhir}&kode_toko=${data.kode_toko.value}&product=${data.product.value}`).then(async (res: any) => {
             if (res.data.length === 0) {
                 PopUpAlert.default.AlertError('Data Laporan Kosong !')
                 dispatch({ type: GET_DATA_CUSTOMER_REPORT_SUCCESS, payload: { feedback: [] } });
@@ -42,6 +45,7 @@ export const GetCustomerReportAction = (data: { kode_toko: { value: string, labe
                 PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Melihat Laporan !')
                 dispatch(stopLoading())
             }
+            await saveLocal('headLaporan', { tgl_awal: tgl_awal, tgl_akhir: tgl_akhir })
         }).catch((error: any) => {
             console.log(error);
             PopUpAlert.default.AlertError('Gagal Melihat Laporan !')

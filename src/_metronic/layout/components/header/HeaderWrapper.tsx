@@ -52,8 +52,8 @@ export function HeaderWrapper() {
             {/* dark */}
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/logos/nsi-logo.png')}
-              className='logo-default h-70px'
+              src={toAbsoluteUrl('/media/logos/nsi-logo-white.png')}
+              className='logo-default h-30px'
             />
             {/* light */}
             <img

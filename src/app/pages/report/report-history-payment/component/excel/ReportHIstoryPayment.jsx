@@ -178,7 +178,7 @@ const ReportHistoryPaymentExcel = () => {
         filename='History Payment'
         element={
           <button className={dataHistory.length === 0 ? 'd-none' : 'btn btn-md btn-light-success'}>
-            Export Excel
+            <i className='bi bi-file-earmark-excel'></i>Export Excel
           </button>
         }
       >

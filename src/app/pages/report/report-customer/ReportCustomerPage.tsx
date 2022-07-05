@@ -10,6 +10,7 @@ import TableReportCustomer from './component/TableReportCustomer'
 import {GetCustomerReportAction} from './redux/action/ReportCustomerAction'
 import ReportCustomerPDF from './component/pdf/ReportCustomerPDF'
 import {RootState} from '../../../../setup'
+import {getLocal} from '../../../../setup/encrypt'
 
 const ReportCustomerPage: FC = () => {
   const dispatch = useDispatch()
@@ -24,8 +25,11 @@ const ReportCustomerPage: FC = () => {
 
   const newarrdata: any =
     useSelector<RootState>(({reportCustomer}) => reportCustomer.feedback) || []
+
   const handlePrintPDF = () => {
-    ReportCustomerPDF(newarrdata)
+    getLocal('headLaporan').then((res) => {
+      ReportCustomerPDF(newarrdata, res)
+    })
   }
 
   return (

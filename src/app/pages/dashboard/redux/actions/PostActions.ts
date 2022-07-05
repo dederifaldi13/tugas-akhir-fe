@@ -154,7 +154,7 @@ export const PostCustomer = (data: FormPostType) => {
     }).catch((error: any) => {
       console.log(error);
       dispatch(stopLoading())
-      PopUpAlert.default.AlertError('Gagal Menambahkan Data')
+      PopUpAlert.default.AlertError(error.response.data.message)
     })
   };
 };

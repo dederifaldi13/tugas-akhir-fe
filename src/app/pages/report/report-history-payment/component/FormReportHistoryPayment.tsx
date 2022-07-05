@@ -100,7 +100,11 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
         <div className='row justify-content-end mt-2 mr-2'>
           <div className='col-lg-2 d-grid'>
             <button className='btn btn-primary' disabled={submitting || isSending}>
-              {!isSending && <span className='indicator-label'>Simpan</span>}
+              {!isSending && (
+                <span className='indicator-label'>
+                  <i className='bi bi-search'></i>Find Data
+                </span>
+              )}
               {isSending && (
                 <span className='indicator-progress' style={{display: 'block'}}>
                   Please wait...
