@@ -48,7 +48,24 @@ const TransactionWrapper: FC = () => {
                 {/* end::Header */}
                 {/* begin::Body */}
                 <div className='card-body py-3'>
-                  {dataTrx?.status === 'PAID' ? (
+                  {dataTrx === undefined ? (
+                    <Result
+                      status='404'
+                      title='404'
+                      subTitle='Sorry, the page you visited does not exist.'
+                      extra={
+                        <button
+                          className='btn btn-primary'
+                          onClick={() => {
+                            window.open('', '_self', '')
+                            window.close()
+                          }}
+                        >
+                          <span className='indicator-label'>Ok</span>
+                        </button>
+                      }
+                    />
+                  ) : dataTrx?.status === 'PAID' ? (
                     <Result
                       title='Transaksi Ini Sudah Di Bayar !'
                       extra={

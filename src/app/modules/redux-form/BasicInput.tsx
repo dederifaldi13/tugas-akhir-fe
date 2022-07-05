@@ -467,9 +467,9 @@ export const InputDate = ({
   maxDate,
   meta: {touched, error, warning},
 }: any) => (
-  <div className='input-group mb-3'>
+  <div className='form-group'>
     <label htmlFor='' className='text-black'>
-      {label}
+      {label || <> &nbsp; </>}
     </label>
     <div className='customDatePickerWidth'>
       <DatePicker

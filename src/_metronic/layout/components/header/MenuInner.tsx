@@ -31,7 +31,23 @@ export function MenuInner() {
           icon='/media/icons/duotune/general/gen001.svg'
         />
       </MenuInnerWithSub>
-      <MenuItem title='Report' to='/report' />
+      <MenuInnerWithSub
+        title='Report'
+        to='/report'
+        menuPlacement='bottom-start'
+        menuTrigger='click'
+      >
+        <MenuItem
+          to='/report/report-customer'
+          title='Customer Report'
+          icon='/media/icons/duotune/general/gen032.svg'
+        />
+        <MenuItem
+          to='/report/report-history-payment'
+          title='History Payment Report'
+          icon='/media/icons/duotune/finance/fin010.svg'
+        />
+      </MenuInnerWithSub>
     </>
   )
 }

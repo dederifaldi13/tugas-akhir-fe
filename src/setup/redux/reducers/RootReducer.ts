@@ -9,6 +9,7 @@ import masterProductReducer from "../../../app/pages/master/product/redux/Produc
 import masterStoreReducer from "../../../app/pages/master/store/redux/StoreReducer";
 import serviceAdjustmentReducer from "../../../app/pages/service-adjustment/redux/ServiceAdjustmentReducer";
 import reportCustomerReducer from "../../../app/pages/report/report-customer/redux/ReportCustomerReducer";
+import reportHistoryPaymentReducer from "../../../app/pages/report/report-history-payment/redux/ReportHistoryPaymentReducer";
 
 const RootReducer = combineReducers({
   auth: loginReducer,
@@ -20,6 +21,7 @@ const RootReducer = combineReducers({
   transactionconfirmpayment: TransactionReducer,
   serviceAdjustment: serviceAdjustmentReducer,
   reportCustomer: reportCustomerReducer,
+  reportHistoryPayment: reportHistoryPaymentReducer,
   form: reducerForm,
 });
 

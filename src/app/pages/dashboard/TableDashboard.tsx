@@ -88,7 +88,7 @@ const columns: ColumnsType<DataType> = [
     key: 'status',
     dataIndex: 'status',
     align: 'center',
-    fixed: 'right',
+    // fixed: 'right',
     render: (_, {status}) => {
       if (status === 'OPEN') {
         return (
@@ -230,7 +230,7 @@ const TableDashboard: React.FC = () => {
             </>
           )
         }}
-        scroll={{x: 1200}}
+        // scroll={{x: 1200}}
       />
     </>
   )

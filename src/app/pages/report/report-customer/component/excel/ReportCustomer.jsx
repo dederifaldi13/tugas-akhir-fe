@@ -8,7 +8,16 @@ const ExcelSheet = ReactExport.ExcelFile.ExcelSheet
 
 const ReportCustomerExcel = () => {
   const dataCustomer = useSelector((state) => state.reportCustomer.feedback)
-  //   const newarr = []
+  const headStyle = {
+    border: {
+      top: {style: 'thin', color: '000000'},
+      bottom: {style: 'thin', color: '000000'},
+      left: {style: 'thin', color: '000000'},
+      right: {style: 'thin', color: '000000'},
+    },
+    font: {bold: true},
+    fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
+  }
 
   let multiDataSet = [
     {
@@ -16,156 +25,57 @@ const ReportCustomerExcel = () => {
         {
           title: 'No',
           width: {wpx: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Kode Toko / Customer',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         }, //pixels width
         {
           title: 'Nama Toko / Customer',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         }, //char width
         {
           title: 'Alamat',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Product',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Qty',
           width: {wpx: 80},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Harga',
           width: {wpx: 90},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Bulan',
           width: {wpx: 80},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Total Harga',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Tgl Jatuh Tempo',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Status',
           width: {wch: 25},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
       ],
       data: [],
@@ -561,7 +471,7 @@ const ReportCustomerExcel = () => {
         filename='Daftar VPS Client'
         element={
           <button className={dataCustomer.length === 0 ? 'd-none' : 'btn btn-md btn-light-success'}>
-            Export Excel
+            <i className='bi bi-file-earmark-excel'></i>Export Excel
           </button>
         }
       >

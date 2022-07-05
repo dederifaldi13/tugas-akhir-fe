@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {connect, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
-import FormSearchReportCustomerValidation from '../../../../../setup/validate/FormSearchReportCustomerValidation'
+import FormSearchReportHistoryPaymentValidation from '../../../../../setup/validate/FormSearchReportCustomerValidation'
 import {InputDate, ReanderSelect2} from '../../../../modules/redux-form/BasicInput'
 
 interface Props {}
@@ -25,7 +25,7 @@ const mapState = (state: RootState) => {
   }
 }
 
-const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {handleSubmit, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataTokoSelect = [{value: 'ALL', label: 'SEMUA'}]
@@ -116,11 +116,11 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
 }
 
 const form = reduxForm<{}, Props>({
-  form: 'FormReportCustomer',
+  form: 'FormReportHistoryPayment',
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
   touchOnChange: true,
   enableReinitialize: true,
-  validate: FormSearchReportCustomerValidation,
-})(FormReportCustomer)
+  validate: FormSearchReportHistoryPaymentValidation,
+})(FormReportHistoryPayment)
 export default connect(mapState, null)(form)
