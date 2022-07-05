@@ -58,7 +58,7 @@ const FormAddNewStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               name='email'
-              type='text'
+              type='email'
               component={ReanderField}
               nouperCase={true}
               label='Email'

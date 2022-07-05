@@ -178,16 +178,15 @@ export const ValidationPayment = (kode: string, product: string) => {
           console.log(error);
         }).finally(() => {
           PopUpAlert.default.AlertSuccess('Berhasil Di Validasi')
-          dispatch(stopLoading())
+          dispatch(stopLoadingApprove());
         })
       }).catch((error: any) => {
         console.log(error);
-        dispatch(stopLoading())
+        dispatch(stopLoadingApprove());
       })
     }).catch((error: any) => {
       console.log(error);
       PopUpAlert.default.AlertError('Gagal Memvalidasi Data')
-    }).finally(() => {
       dispatch(stopLoadingApprove());
     })
   };

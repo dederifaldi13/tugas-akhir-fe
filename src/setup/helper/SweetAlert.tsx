@@ -46,7 +46,7 @@ function AlertSuccessAdd() {
   Swal.fire({
     icon: 'success',
     title: 'Success',
-    text: 'Berahasil Menambahkan Data',
+    text: 'Berhasil Menambahkan Data',
   }).then((result) => {
     if (result.isConfirmed) {
       window.location.reload()
@@ -58,7 +58,7 @@ function AlertSuccessEdit() {
   Swal.fire({
     icon: 'success',
     title: 'Success',
-    text: 'Berahasil Merubah Data',
+    text: 'Berhasil Merubah Data',
   }).then((result) => {
     if (result.isConfirmed) {
       window.location.reload()
@@ -70,7 +70,7 @@ function AlertSuccessDelete() {
   Swal.fire({
     icon: 'success',
     title: 'Success',
-    text: 'Berahasil Menghapus Data',
+    text: 'Berhasil Menghapus Data',
   }).then((result) => {
     if (result.isConfirmed) {
       window.location.reload()
@@ -82,7 +82,7 @@ function AlertSuccessCancel() {
   Swal.fire({
     icon: 'success',
     title: 'Success',
-    text: 'Berahasil Membatalkan Data',
+    text: 'Berhasil Membatalkan Data',
   }).then((result) => {
     if (result.isConfirmed) {
       window.location.reload()
