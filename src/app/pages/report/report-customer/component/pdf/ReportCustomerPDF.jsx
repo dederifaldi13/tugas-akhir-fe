@@ -12,19 +12,23 @@ const ReportCustomerPDF = (data, head) => {
   doc.text('Customer Report', 14, 15)
   // doc.text('Nagatech SI', 180, 15)
   var imgData = toAbsoluteUrl('/media/logos/nsi-logo.png')
-  doc.addImage(imgData, 'JPEG', 165, 5, 30, 26)
+  doc.addImage(imgData, 'png', 165, 5, 30, 26)
 
   doc.setProperties({
     title: 'Customer',
   })
   doc.setFontSize(9)
-  doc.text(`Tgl Jatuh Tempo : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
+  if (head.tgl_awal === 'SEMUA' && head.tgl_akhir === 'SEMUA') {
+    doc.text(`Tgl Jatuh Tempo : Semua`, 14, 25)
+  } else {
+    doc.text(`Tgl Jatuh Tempo : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
+  }
 
   tableColumn = [
     [
       {content: `No`},
-      {content: `Kode Toko / Customer`},
-      {content: `Nama Toko / Customer`},
+      {content: `Toko / Customer`},
+      {content: `Alamat`},
       {content: `Product`},
       {content: `Qty`},
       {content: `Harga`},
@@ -39,8 +43,8 @@ const ReportCustomerPDF = (data, head) => {
   data.forEach((element) => {
     const row = [
       {content: no++},
-      {content: element.kode_toko},
       {content: element.toko},
+      {content: element.kode_toko},
       {content: element.product},
       {content: element.qty, styles: {halign: 'right'}},
       {
@@ -112,7 +116,7 @@ const ReportCustomerPDF = (data, head) => {
   })
   tableRows = []
   tableColumn = []
-  finalY = doc.autoTableEndPosY() + 20
+  finalY = doc.lastAutoTable.finalY + 20
 
   const pages = doc.internal.getNumberOfPages()
   const pageWidth = doc.internal.pageSize.width

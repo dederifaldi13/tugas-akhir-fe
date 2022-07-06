@@ -4,7 +4,8 @@ import {connect, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormSearchReportCustomerValidation from '../../../../../setup/validate/FormSearchReportCustomerValidation'
-import {InputDate, ReanderSelect2} from '../../../../modules/redux-form/BasicInput'
+import {InputDate, ReanderCheckBox, ReanderSelect2} from '../../../../modules/redux-form/BasicInput'
+import {SetCheckAllAction} from '../redux/action/ReportCustomerAction'
 
 interface Props {}
 
@@ -32,6 +33,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
   const dataProductSelect = [{value: 'ALL', label: 'SEMUA'}]
   const dataToko: any = useSelector<RootState>(({masterstore}) => masterstore.feedback) || []
   const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
+  const isChecked: any = useSelector<RootState>(({reportCustomer}) => reportCustomer.all) || false
   dataToko.forEach((element: any) => {
     dataTokoSelect.push({value: element.kode_toko, label: element.toko})
   })
@@ -49,6 +51,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
         <div className='row'>
           <div className='col-lg-4 mb-2 mt-2'>
             <Field
+              disabled={isChecked}
               name='tgl_awal'
               component={InputDate}
               label='Tanggal Dari'
@@ -58,9 +61,9 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               placeholder='Masukan Tanggal Dari'
             />
           </div>
-
           <div className='col-lg-4 mb-2 mt-2'>
             <Field
+              disabled={isChecked}
               name='tgl_akhir'
               component={InputDate}
               type='text'
@@ -94,6 +97,16 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                 setProduct(e)
               }}
               defaultValue={{value: Product.value, label: Product.label}}
+            />
+          </div>
+          <div className='col-lg-4 mb-2 mt-2 d-none'>
+            <Field
+              name='all'
+              label='All'
+              type='checkbox'
+              id='switcher_checkbox_1'
+              component={ReanderCheckBox}
+              onChange={(e: any) => props.dispatch(SetCheckAllAction(e.target.checked))}
             />
           </div>
         </div>

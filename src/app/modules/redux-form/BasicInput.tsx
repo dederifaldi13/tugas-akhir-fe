@@ -463,6 +463,7 @@ export const InputDate = ({
   id,
   selected,
   customInput,
+  disabled,
   minDate,
   maxDate,
   meta: {touched, error, warning},
@@ -482,6 +483,7 @@ export const InputDate = ({
         dropdownMode='select'
         dateFormat='yyyy-MM-dd'
         autoComplete='off'
+        disabled={disabled}
         minDate={minDate}
         {...input}
         onKeyDown={(event) => {

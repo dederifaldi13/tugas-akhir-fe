@@ -1,4 +1,5 @@
 export const GET_DATA_CUSTOMER_REPORT_SUCCESS = "GET_DATA_CUSTOMER_REPORT_SUCCESS";
+export const SET_ALL_CHECKBOX = "SET_ALL_CHECKBOX"
 
 export type GetCustomerReportType = {
     _id: String;

@@ -12,7 +12,7 @@ const ReportHistoryPaymentPDF = (data, head) => {
   doc.text('History Payment Report', 14, 15)
   // doc.text('Nagatech SI', 170, 15)
   var imgData = toAbsoluteUrl('/media/logos/nsi-logo.png')
-  doc.addImage(imgData, 'JPEG', 165, 5, 30, 26)
+  doc.addImage(imgData, 'png', 165, 5, 30, 26)
 
   doc.setProperties({
     title: 'History Payment',

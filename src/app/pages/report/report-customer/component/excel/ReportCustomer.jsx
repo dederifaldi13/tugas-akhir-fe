@@ -28,12 +28,7 @@ const ReportCustomerExcel = () => {
           style: headStyle,
         },
         {
-          title: 'Kode Toko / Customer',
-          width: {wch: 20},
-          style: headStyle,
-        }, //pixels width
-        {
-          title: 'Nama Toko / Customer',
+          title: 'Toko / Customer',
           width: {wch: 20},
           style: headStyle,
         }, //char width
@@ -88,30 +83,6 @@ const ReportCustomerExcel = () => {
     multiDataSet[0].data.push([
       {
         value: no++,
-        style: {
-          fill: {
-            patternType: 'solid',
-            fgColor: {
-              rgb:
-                element.status === 'OPEN'
-                  ? 'fff8dd'
-                  : element.status === 'PAID'
-                  ? 'e8fff3'
-                  : element.status === 'CLOSE'
-                  ? 'FFFF0000'
-                  : 'fff5f8',
-            },
-          },
-          border: {
-            top: {style: 'thin', color: '000000'},
-            bottom: {style: 'thin', color: '000000'},
-            left: {style: 'thin', color: '000000'},
-            right: {style: 'thin', color: '000000'},
-          },
-        },
-      },
-      {
-        value: element.kode_toko,
         style: {
           fill: {
             patternType: 'solid',
@@ -362,15 +333,6 @@ const ReportCustomerExcel = () => {
         border: {
           top: {style: 'thin', color: '000000'},
           left: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
-    },
-    {
-      value: '',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
           bottom: {style: 'thin', color: '000000'},
         },
       },
