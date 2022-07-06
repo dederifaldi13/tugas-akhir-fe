@@ -9,7 +9,7 @@ import {useFormik} from 'formik'
 // import {login} from '../redux/AuthCRUD'
 // import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {doLogin} from '../redux/action/LoginAction'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+// import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {RootState} from '../../../../setup'
 
 const loginSchema = Yup.object().shape({
@@ -54,14 +54,9 @@ export function LoginForm() {
     >
       {/* begin::Heading */}
       <div className='text-center mb-10'>
-        <img alt='Logo' src={toAbsoluteUrl('/media/logos/nsi-logo.png')} className='h-95px' />
-        <h1 className='text-dark mb-3'>Sign In</h1>
-        {/* <div className='text-gray-400 fw-bold fs-4'>
-          New Here?{' '}
-          <Link to='/auth/registration' className='link-primary fw-bolder'>
-            Create an Account
-          </Link>
-        </div> */}
+        <h1 className='text-dark mb-3'>Welcome</h1>
+        <div className='text-gray-400 fw-bold fs-4'> Nagatech Sistem Integrator App</div>
+        {/* <img alt='Logo' src={toAbsoluteUrl('/media/logos/nsi-logo.png')} width={'45%'} /> */}
       </div>
       {/* begin::Heading */}
 

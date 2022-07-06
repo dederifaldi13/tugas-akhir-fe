@@ -10,8 +10,8 @@ import {
   ILayoutCSSVariables,
   IPageTitle,
 } from './LayoutModels'
-import {toAbsoluteUrl} from '../../helpers'
-import {DefaultLayoutConfig} from './DefaultLayoutConfig'
+import { toAbsoluteUrl } from '../../helpers'
+import { DefaultLayoutConfig } from './DefaultLayoutConfig'
 
 const LAYOUT_CONFIG_KEY = process.env.REACT_APP_BASE_LAYOUT_CONFIG_KEY || 'LayoutConfig'
 
@@ -93,7 +93,7 @@ export class LayoutSetup {
     Array.from(document.body.attributes).forEach((attr) => {
       document.body.removeAttribute(attr.name)
     })
-    document.body.style.backgroundImage = `url(${toAbsoluteUrl('/media/patterns/header-bg-dark.png')})`
+    document.body.style.backgroundImage = `url(${toAbsoluteUrl('/media/patterns/headerbg2.jpg')})`
     document.body.setAttribute('id', 'kt_body')
     if (config.main?.body?.backgroundImage) {
       document.body.style.backgroundImage = `url('${config.main.body.backgroundImage}')`
@@ -274,7 +274,7 @@ export class LayoutSetup {
 
   public static updatePartialConfig(fieldsToUpdate: Partial<ILayout>): ILayout {
     const config = LayoutSetup.config
-    const updatedConfig = {...config, ...fieldsToUpdate}
+    const updatedConfig = { ...config, ...fieldsToUpdate }
     LayoutSetup.initCSSClasses()
     LayoutSetup.initCSSVariables()
     LayoutSetup.initHTMLAttributes()

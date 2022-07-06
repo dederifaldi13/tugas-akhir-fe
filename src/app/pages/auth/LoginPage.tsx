@@ -16,7 +16,7 @@ export function LoginPage() {
     <div
       className='d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed'
       style={{
-        backgroundImage: `url(${toAbsoluteUrl('/media/illustrations/sigma-1/14.png')})`,
+        backgroundImage: `url(${toAbsoluteUrl('/media/patterns/background2.jpg')})`,
       }}
     >
       {/* begin::Content */}
@@ -27,7 +27,7 @@ export function LoginPage() {
         </a> */}
         {/* end::Logo */}
         {/* begin::Wrapper */}
-        <div className='w-lg-500px bg-white rounded shadow-sm p-10 p-lg-15 mx-auto'>
+        <div className='w-lg-500px bg-white rounded shadow-sm p-10 p-lg-10 mx-auto'>
           <Switch>
             <Route path='/auth/login' component={LoginForm} />
             <Redirect from='/auth' exact={true} to='/auth/login' />
@@ -38,7 +38,7 @@ export function LoginPage() {
       </div>
       {/* end::Content */}
       {/* begin::Footer */}
-      <div className='d-flex flex-center flex-column-auto p-10'>
+      {/* <div className='d-flex flex-center flex-column-auto p-10'>
         <div className='d-flex align-items-center fw-bold fs-6'>
           <a href='#' className='text-muted text-hover-primary px-2'>
             About
@@ -52,7 +52,7 @@ export function LoginPage() {
             Contact Us
           </a>
         </div>
-      </div>
+      </div> */}
       {/* end::Footer */}
     </div>
   )
