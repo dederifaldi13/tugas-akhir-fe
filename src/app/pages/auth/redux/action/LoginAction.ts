@@ -3,7 +3,7 @@ import { ThunkDispatch } from 'redux-thunk'
 import Swal from 'sweetalert2'
 import { AxiosPost, PopUpAlert } from "../../../../../setup"
 import { getLocal, saveLocal } from "../../../../../setup/encrypt"
-import { stopSplashScreen } from '../../../../../setup/redux/reducers/redux-loading/action/redux-loading'
+import { setLoading, stopLoading, stopSplashScreen } from '../../../../../setup/redux/reducers/redux-loading/action/redux-loading'
 import { IAppState } from "../../../../../setup/redux/Store"
 import { FormLoginType } from "./FormLoginTypes"
 import { FeedbackLoginType, IS_LOGIN, LOGIN_SUCCESS, LOGOUT_SUCCESS } from "./LoginActionTypes"
@@ -13,6 +13,7 @@ export const LOGIN_URL = `auth/login`
 
 export const doLogin = (data: FormLoginType) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => IAppState): Promise<void> => {
+        dispatch(setLoading())
         AxiosPost(LOGIN_URL, data).then((res: any) => {
             const datafeedback: FeedbackLoginType = res
             // PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Login !')
@@ -23,6 +24,7 @@ export const doLogin = (data: FormLoginType) => {
                 text: 'Berhasil Login',
             }).then(async (result) => {
                 if (result.isConfirmed) {
+                    dispatch(stopLoading())
                     await saveLocal('isLogin', 'true')
                     await saveLocal('token', datafeedback.access_token)
                     await saveLocal('userData', datafeedback)
@@ -31,7 +33,8 @@ export const doLogin = (data: FormLoginType) => {
             })
         }).catch((error: any) => {
             console.log(error);
-            PopUpAlert.default.AlertError('Gagal Login !')
+            dispatch(stopLoading())
+            PopUpAlert.default.AlertError(error.response.data.message)
             localStorage.clear()
             dispatch({ type: LOGOUT_SUCCESS })
         })

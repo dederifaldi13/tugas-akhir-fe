@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState} from 'react'
-import {useDispatch} from 'react-redux'
+import React from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import * as Yup from 'yup'
 import clsx from 'clsx'
 // import {Link} from 'react-router-dom'
@@ -9,7 +9,8 @@ import {useFormik} from 'formik'
 // import {login} from '../redux/AuthCRUD'
 // import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {doLogin} from '../redux/action/LoginAction'
-import { toAbsoluteUrl } from '../../../../_metronic/helpers'
+import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import {RootState} from '../../../../setup'
 
 const loginSchema = Yup.object().shape({
   user_id: Yup.string()
@@ -34,13 +35,12 @@ const initialValues = {
 */
 
 export function LoginForm() {
-  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
+  const loading = useSelector<RootState>(({loader}) => loader.loading)
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: (values, {setStatus, setSubmitting}) => {
-      setLoading(true)
+    onSubmit: (values) => {
       dispatch(doLogin(values))
     },
   })
@@ -152,7 +152,7 @@ export function LoginForm() {
           type='submit'
           id='kt_sign_in_submit'
           className='btn btn-lg btn-primary w-100 mb-5'
-          disabled={formik.isSubmitting || !formik.isValid}
+          disabled={loading as boolean}
         >
           {!loading && <span className='indicator-label'>Continue</span>}
           {loading && (
