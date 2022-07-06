@@ -12,6 +12,7 @@ export const REPORT_CUSTOMER_API = `customer/report?`
 export const GetCustomerReportAction = (data: {
     kode_toko: { value: string, label: string },
     product: { value: string, label: string },
+    status: { value: string, label: string },
     tgl_akhir: string,
     tgl_awal: string,
     all: boolean
@@ -56,7 +57,7 @@ export const GetCustomerReportAction = (data: {
         } else {
             const tgl_awal = moment(data.tgl_awal).format('YYYY-MM-DD')
             const tgl_akhir = moment(data.tgl_akhir).format('YYYY-MM-DD')
-            AxiosGet(`${REPORT_CUSTOMER_API}startDate=${tgl_awal}&endDate=${tgl_akhir}&kode_toko=${data.kode_toko.value}&product=${data.product.value}`).then(async (res: any) => {
+            AxiosGet(`${REPORT_CUSTOMER_API}startDate=${tgl_awal}&endDate=${tgl_akhir}&kode_toko=${data.kode_toko.value}&product=${data.product.value}&status=${data.status.value}`).then(async (res: any) => {
                 if (res.data.length === 0) {
                     PopUpAlert.default.AlertError('Data Laporan Kosong !')
                     dispatch({ type: GET_DATA_CUSTOMER_REPORT_SUCCESS, payload: { feedback: [] } });

@@ -22,6 +22,10 @@ const mapState = (state: RootState) => {
         value: 'ALL',
         label: 'SEMUA',
       },
+      status: {
+        value: 'ALL',
+        label: 'SEMUA',
+      },
     },
   }
 }
@@ -40,8 +44,16 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
   dataProduct.forEach((element: any) => {
     dataProductSelect.push({value: element.product, label: element.product})
   })
+  const dataStatus = [
+    {value: 'ALL', label: 'SEMUA'},
+    {value: 'OPEN', label: 'OPEN'},
+    {value: 'OVER DUE', label: 'OVER DUE'},
+    {value: 'PAID', label: 'PAID'},
+    {value: 'CANCEL', label: 'CANCEL'},
+  ]
   const [kodeToko, setKodeToko] = useState({value: 'ALL', label: 'SEMUA'})
   const [Product, setProduct] = useState({value: 'ALL', label: 'SEMUA'})
+  const [Status, setStatus] = useState({value: 'ALL', label: 'SEMUA'})
   const [tgl_awal, setTglAwal] = useState(new Date())
   const [tgl_akhir, setTglAkhir] = useState(new Date())
 
@@ -97,6 +109,19 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                 setProduct(e)
               }}
               defaultValue={{value: Product.value, label: Product.label}}
+            />
+          </div>
+          <div className='col-lg-4 mb-2 mt-2'>
+            <Field
+              name='status'
+              component={ReanderSelect2}
+              options={dataStatus}
+              label='Status'
+              placeholder='Pilih Status'
+              onChange={(e: any) => {
+                setStatus(e)
+              }}
+              defaultValue={{value: Status.value, label: Status.label}}
             />
           </div>
           <div className='col-lg-4 mb-2 mt-2 d-none'>
