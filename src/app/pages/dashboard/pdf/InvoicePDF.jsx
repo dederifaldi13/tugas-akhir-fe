@@ -1,8 +1,10 @@
 import {jsPDF} from 'jspdf'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import angkaTerbilang from '@develoka/angka-terbilang-js'
+import moment from 'moment'
 
 const InvoicePDF = (data) => {
+  const today = moment().format('YYYY-MM-DD')
   const doc = new jsPDF('p', 'mm', 'a4')
   //   doc.text(`Faktur Maintenance`, 14, 15)
   doc.setFontSize(20)
@@ -17,7 +19,7 @@ const InvoicePDF = (data) => {
   var imgData = toAbsoluteUrl('/media/patterns/Invoice.jpeg')
   doc.addImage(imgData, 'JPEG', 15, 15, 180, 220)
   doc.text(`-`, 47, 70)
-  doc.text(data.tgl_jatuh_tempo, 47, 76)
+  doc.text(today, 47, 76)
   doc.text(data.toko, 142, 69)
   doc.text(data.alamat, 142, 75)
   doc.text(data.telepon, 142, 86)
@@ -31,6 +33,7 @@ const InvoicePDF = (data) => {
   doc.text(data.total_harga.toLocaleString(), 165, 152)
   doc.setTextColor(0, 0, 0)
   doc.text(angkaTerbilang(data.total_harga), 133, 165)
+  doc.text('Tgl Jatuh Tempo : ' + data.tgl_jatuh_tempo, 26, 173)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-BoldItalic.ttf'), 'Lora', 'bold-italic')
   doc.setFont('Lora', 'bold-italic')
   doc.text(data.toko.toLocaleString(), 152, 211)

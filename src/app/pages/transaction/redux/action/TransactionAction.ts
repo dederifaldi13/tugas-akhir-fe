@@ -38,8 +38,7 @@ export const ConfirmPaymentAction = (data: FormPayType) => {
         }
         AxiosPost('payment/pay', sendData).then((res: any) => {
             const file = dataURLtoFile(data.foto)
-            postImage(file, res.no_bayar).then(() => {
-            }).catch((error: any) => {
+            postImage(file, res.no_bayar).catch((error: any) => {
                 console.log(error);
                 PopUpAlert.default.AlertError('Gagal Menyimpan Gambar !')
             }).finally(() => {

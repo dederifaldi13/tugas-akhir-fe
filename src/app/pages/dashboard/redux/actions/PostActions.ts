@@ -177,7 +177,7 @@ export const ValidationPayment = (kode: string, product: string) => {
         }).catch((error: any) => {
           console.log(error);
         }).finally(() => {
-          PopUpAlert.default.AlertSuccess('Berhasil Di Validasi')
+          PopUpAlert.default.AlertSuccess('Berhasil Melakukan Validasi')
           dispatch(stopLoadingApprove());
         })
       }).catch((error: any) => {
@@ -186,7 +186,7 @@ export const ValidationPayment = (kode: string, product: string) => {
       })
     }).catch((error: any) => {
       console.log(error);
-      PopUpAlert.default.AlertError('Gagal Memvalidasi Data')
+      PopUpAlert.default.AlertError('Gagal Melakukan Validasi Data')
       dispatch(stopLoadingApprove());
     })
   };
