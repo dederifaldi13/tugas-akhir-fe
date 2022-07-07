@@ -33,7 +33,7 @@ const HeaderNotificationsMenu: FC = () => {
           Notifications <span className='fs-8 opacity-75 ps-3'>{dataCustomer.length} reports</span>
         </h3>
         <button
-          className='btn btn-light-primary btn-sm me-1 '
+          className='btn btn-light-primary btn-sm me-1 d-none'
           // onClick={() => dispatch(SendEmailAndWhatsApp())}
           onClick={() => dispatch(CreateAndSendPDFWithLoop())}
           disabled={isSending}
