@@ -99,7 +99,7 @@ const CustomerExcel = () => {
         },
         {
           title: 'Harga',
-          width: {wpx: 90},
+          width: {wch: 20},
           style: {
             border: {
               top: {style: 'thin', color: '000000'},

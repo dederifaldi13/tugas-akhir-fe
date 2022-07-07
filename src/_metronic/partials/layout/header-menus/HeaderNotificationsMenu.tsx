@@ -27,13 +27,13 @@ const HeaderNotificationsMenu: FC = () => {
     >
       <div
         className='d-flex flex-column bgi-no-repeat rounded-top'
-        style={{backgroundImage: `url('${toAbsoluteUrl('/media/misc/pattern-1.jpg')}')`}}
+        style={{backgroundImage: `url('${toAbsoluteUrl('/media/patterns/headerbgnew.jpg')}')`}}
       >
         <h3 className='text-white fw-bold px-9 mt-10 mb-6'>
           Notifications <span className='fs-8 opacity-75 ps-3'>{dataCustomer.length} reports</span>
         </h3>
         <button
-          className='btn btn-light-primary btn-sm me-1 d-none'
+          className='btn btn-light-primary btn-sm me-1 '
           // onClick={() => dispatch(SendEmailAndWhatsApp())}
           onClick={() => dispatch(CreateAndSendPDFWithLoop())}
           disabled={isSending}

@@ -10,19 +10,31 @@ const InvoicePDF = (data) => {
   doc.setFontSize(20)
   //   doc.text(data.toko, 80, 15)
 
-  doc.setFontSize(10)
+  doc.setFontSize(9)
   doc.setProperties({
     title: 'Faktur Maintenance',
   })
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
-  var imgData = toAbsoluteUrl('/media/patterns/Invoice.jpeg')
+  var imgData = toAbsoluteUrl('/media/patterns/fakturnew.jpg')
   doc.addImage(imgData, 'JPEG', 15, 15, 180, 220)
-  doc.text(`-`, 47, 70)
-  doc.text(today, 47, 76)
-  doc.text(data.toko, 142, 69)
-  doc.text(data.alamat, 142, 75)
-  doc.text(data.telepon, 142, 86)
+  doc.text(`-`, 57, 64)
+  doc.text(today, 57, 68)
+  doc.text(data.tgl_jatuh_tempo, 57, 72)
+  doc.text(data.toko, 142, 64)
+  let jml_alamat = data.alamat.length
+  if (jml_alamat > 20) {
+    doc.text(data.alamat.slice(0, 37), 142, 68)
+  }
+  if (jml_alamat > 50) {
+    doc.text(data.alamat.slice(37, 100), 142, 72)
+  }
+  // if (jml_alamat > 80) {
+  //   doc.text(data.alamat.slice(78, 100), 142, 74)
+  // }
+  // doc.text(data.alamat, 142, 68)
+  // doc.text(data.alamat.slice(0, 25), 142, 68)
+  doc.text(data.telepon, 142, 78)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Regular.ttf'), 'Lora', 'normal')
   doc.setFont('Lora', 'normal')
   doc.text(data.product, 30, 108)
@@ -32,8 +44,7 @@ const InvoicePDF = (data) => {
   doc.setTextColor(255, 255, 255)
   doc.text(data.total_harga.toLocaleString(), 165, 152)
   doc.setTextColor(0, 0, 0)
-  doc.text(angkaTerbilang(data.total_harga), 133, 165)
-  doc.text('Tgl Jatuh Tempo : ' + data.tgl_jatuh_tempo, 26, 173)
+  doc.text(angkaTerbilang(data.total_harga), 130, 165)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-BoldItalic.ttf'), 'Lora', 'bold-italic')
   doc.setFont('Lora', 'bold-italic')
   doc.text(data.toko.toLocaleString(), 152, 211)

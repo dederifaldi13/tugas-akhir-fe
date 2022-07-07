@@ -49,7 +49,7 @@ const ReportCustomerExcel = () => {
         },
         {
           title: 'Harga',
-          width: {wpx: 90},
+          width: {wch: 20},
           style: headStyle,
         },
         {
