@@ -38,11 +38,13 @@ const TableHasBeenPaid: React.FC = () => {
   const [dataSource, setDataSource] = useState(newarrdata)
   const [value, setValue] = useState('')
   const [search, setSearch] = useState(false)
+  const [noBayar, setNoBayar] = useState('-')
 
   const handleClose = () => {
     dispatch(CloseModalBuktiBayar())
   }
   const handleShow = (no_bayar: string) => {
+    setNoBayar(no_bayar)
     dispatch(GetGambarByNoBayar(no_bayar))
   }
 
@@ -93,14 +95,15 @@ const TableHasBeenPaid: React.FC = () => {
           <button
             className='btn btn-light-primary btn-sm me-1'
             onClick={() => handleShow(record.no_bayar)}
-            disabled={isSending}
+            disabled={isSending && noBayar === record.no_bayar}
           >
-            {!isSending && <span className='indicator-label'>Lihat Bukti</span>}
-            {isSending && (
+            {isSending && noBayar === record.no_bayar ? (
               <span className='indicator-progress' style={{display: 'block'}}>
                 Please wait...
                 <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
               </span>
+            ) : (
+              <span className='indicator-label'>Lihat Bukti</span>
             )}
           </button>
         </Space>
@@ -151,19 +154,18 @@ const TableHasBeenPaid: React.FC = () => {
           <button
             className='btn btn-light-success btn-sm me-1'
             onClick={() => handleValid(record.kode_toko, record.product)}
-            disabled={isSendingApprove}
+            disabled={isSendingApprove && noBayar === record.no_bayar}
           >
             <span className='indicator-label'>
-              {!loadapprove && (
-                <span className='indicator-label'>
-                  Approve
-                  <KTSVG path='/media/icons/duotune/general/gen026.svg' className='svg-icon-3' />
-                </span>
-              )}
-              {loadapprove && (
+              {loadapprove && noBayar === record.no_bayar ? (
                 <span className='indicator-progress' style={{display: 'block'}}>
                   Please wait...
                   <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                </span>
+              ) : (
+                <span className='indicator-label'>
+                  Approve
+                  <KTSVG path='/media/icons/duotune/general/gen026.svg' className='svg-icon-3' />
                 </span>
               )}
             </span>
