@@ -30,8 +30,8 @@ class ExcelReport extends Component {
         <ReactHTMLTableToExcel
           id='test-table-xls-button'
           table='table-to-xls'
-          filename='History Paymen'
-          sheet='History Paymen'
+          filename='History Payment'
+          sheet='History Payment'
           className={this.props.dataExcel.length === 0 ? 'd-none' : 'btn btn-md btn-light-success'}
           buttonText={
             <span className='indicator-label'>
