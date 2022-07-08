@@ -4,7 +4,6 @@ import React, {FC, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {useParams} from 'react-router-dom'
 import {RootState} from '../../../setup'
-// import {KTSVG} from '../../../_metronic/helpers'
 import {PageTitle} from '../../../_metronic/layout/core'
 import FormTransaction from './component/FormTransaction'
 import {ConfirmPaymentAction, GetTransactionFilter} from './redux/action/TransactionAction'
@@ -38,12 +37,7 @@ const TransactionWrapper: FC = () => {
                       Form Confirmation Payment Customer
                     </span>
                   </h3>
-                  <div className='card-toolbar'>
-                    {/* <button className='btn btn-sm btn-light-primary'>
-                      <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                      New Transaction
-                    </button> */}
-                  </div>
+                  <div className='card-toolbar'></div>
                 </div>
                 {/* end::Header */}
                 {/* begin::Body */}

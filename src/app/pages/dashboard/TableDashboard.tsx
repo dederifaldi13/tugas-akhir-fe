@@ -231,7 +231,6 @@ const TableDashboard: React.FC = () => {
               </>
             )
           }}
-          // scroll={{x: 1200}}
         />
       </div>
     </>

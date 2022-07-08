@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Result} from 'antd'
 import React, {FC} from 'react'
-// import {PageTitle} from '../../../_metronic/layout/core'
 
 const SuccessPaymentPage: FC = () => {
   return (
@@ -10,7 +9,6 @@ const SuccessPaymentPage: FC = () => {
         <div className='col-lg-12'>
           <div className='card card-custom'>
             <div className='card-body p-9'>
-              {/* <PageTitle breadcrumbs={[]}>Success</PageTitle> */}
               <div className={`card mb-5 mb-xl-8`}>
                 {/* begin::Header */}
                 <div className='card-header border-0 pt-5'>

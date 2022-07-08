@@ -16,7 +16,7 @@ const App: React.FC<Props> = ({basename}) => {
     if (navigator.onLine) {
       Swal.fire({
         position: 'center',
-        imageUrl: toAbsoluteUrl('/media/illustrations/unitedpalms-1/5.png'),
+        imageUrl: toAbsoluteUrl('/media/illustrations/new/jungle-success-1.png'),
         imageWidth: 250,
         imageHeight: 250,
         title: 'Looks like your connection is Back, You Can Use Our Website Again',
@@ -29,7 +29,7 @@ const App: React.FC<Props> = ({basename}) => {
     } else {
       Swal.fire({
         position: 'center',
-        imageUrl: toAbsoluteUrl('/media/illustrations/unitedpalms-1/5.png'),
+        imageUrl: toAbsoluteUrl('/media/illustrations/new/handy-meditating-cloud.gif'),
         title: 'Looks like you lost your internet connection',
         imageWidth: 250,
         imageHeight: 250,

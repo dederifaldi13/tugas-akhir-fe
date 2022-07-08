@@ -128,11 +128,7 @@ const TableUser: React.FC = () => {
         <Modal.Body>
           <FormEditUser onSubmit={(data: any) => handleSubmit(data)} />
         </Modal.Body>
-        <Modal.Footer>
-          {/* <Button variant='primary' onClick={handleClose}>
-                Save Changes
-              </Button> */}
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
       <div className='row justify-content-end mt-2 mb-2'>
         <div className='col-lg-2 d-grid'>{SearchBar}</div>

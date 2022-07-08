@@ -8,7 +8,23 @@ const ExcelSheet = ReactExport.ExcelFile.ExcelSheet
 
 const CustomerExcel = () => {
   const dataCustomer = useSelector((state) => state.dashboard.post)
-  //   const newarr = []
+  const headStyle = {
+    border: {
+      top: {style: 'thin', color: '000000'},
+      bottom: {style: 'thin', color: '000000'},
+      left: {style: 'thin', color: '000000'},
+      right: {style: 'thin', color: '000000'},
+    },
+    font: {bold: true},
+    fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
+  }
+
+  const footerMidStyle = {
+    border: {
+      top: {style: 'thin', color: '000000'},
+      bottom: {style: 'thin', color: '000000'},
+    },
+  }
 
   let multiDataSet = [
     {
@@ -16,156 +32,57 @@ const CustomerExcel = () => {
         {
           title: 'No',
           width: {wpx: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Kode Toko / Customer',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         }, //pixels width
         {
           title: 'Nama Toko / Customer',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         }, //char width
         {
           title: 'Alamat',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Product',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Qty',
           width: {wpx: 80},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Harga',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Bulan',
           width: {wpx: 80},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Total Harga',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Tgl Jatuh Tempo',
           width: {wch: 20},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
         {
           title: 'Status',
           width: {wch: 25},
-          style: {
-            border: {
-              top: {style: 'thin', color: '000000'},
-              bottom: {style: 'thin', color: '000000'},
-              left: {style: 'thin', color: '000000'},
-              right: {style: 'thin', color: '000000'},
-            },
-            font: {bold: true},
-            fill: {patternType: 'solid', fgColor: {rgb: 'dce6f1'}},
-          },
+          style: headStyle,
         },
       ],
       data: [],
@@ -458,48 +375,23 @@ const CustomerExcel = () => {
     },
     {
       value: '',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: '',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: '',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: 'Total : ',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: dataCustomer.reduce((a, b) => a + b.qty, 0),
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: dataCustomer
@@ -515,12 +407,7 @@ const CustomerExcel = () => {
     },
     {
       value: '',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: dataCustomer
@@ -536,12 +423,7 @@ const CustomerExcel = () => {
     },
     {
       value: '',
-      style: {
-        border: {
-          top: {style: 'thin', color: '000000'},
-          bottom: {style: 'thin', color: '000000'},
-        },
-      },
+      style: footerMidStyle,
     },
     {
       value: '',

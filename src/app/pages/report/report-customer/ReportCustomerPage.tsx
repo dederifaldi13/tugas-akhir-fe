@@ -4,13 +4,14 @@ import {useDispatch, useSelector} from 'react-redux'
 import {PageTitle} from '../../../../_metronic/layout/core'
 import {GetMasterProduct} from '../../master/product/redux/action/ProductAction'
 import {GetMasterStore} from '../../master/store/redux/action/StoreAction'
-import ReportCustomerExcel from './component/excel/ReportCustomer'
+// import ReportCustomerExcel from './component/excel/ReportCustomer'
 import FormReportCustomer from './component/FormReportCustomer'
 import TableReportCustomer from './component/TableReportCustomer'
 import {GetCustomerReportAction} from './redux/action/ReportCustomerAction'
 import ReportCustomerPDF from './component/pdf/ReportCustomerPDF'
 import {RootState} from '../../../../setup'
 import {getLocal} from '../../../../setup/encrypt'
+import ExcelReport from './component/excel/ReportCustomerXLSX'
 
 const ReportCustomerPage: FC = () => {
   const dispatch = useDispatch()
@@ -64,7 +65,8 @@ const ReportCustomerPage: FC = () => {
                     <div className='col-lg-12 mt-4'>
                       <div className='row'>
                         <div className='col-lg-2'>
-                          <ReportCustomerExcel />
+                          {/* <ReportCustomerExcel /> */}
+                          <ExcelReport dataExcel={newarrdata} />
                         </div>
                         <div className={newarrdata.length === 0 ? 'd-none' : 'col-lg-2'}>
                           <button className='btn btn-danger' onClick={() => handlePrintPDF()}>

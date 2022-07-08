@@ -47,11 +47,7 @@ const DashboardWrapper: FC = () => {
             <Modal.Body>
               <FormAddNewTransaction onSubmit={(data: any) => handleSubmit(data)} />
             </Modal.Body>
-            <Modal.Footer>
-              {/* <Button variant='primary' onClick={handleClose}>
-                Save Changes
-              </Button> */}
-            </Modal.Footer>
+            <Modal.Footer></Modal.Footer>
           </Modal>
         </div>
         <div className='col-lg-12'>
@@ -81,13 +77,6 @@ const DashboardWrapper: FC = () => {
                     <div className='col-lg-12'>
                       <TableDashboard />
                     </div>
-                    {/* <div className='col-lg-12'>
-                      <div className='row justify-content-end mt-3'>
-                        <div className='col-lg-2 d-grid'>
-                          <CustomerExcel />
-                        </div>
-                      </div>
-                    </div> */}
                   </div>
                 </div>
                 {/* begin::Body */}
@@ -108,12 +97,7 @@ const DashboardWrapper: FC = () => {
                       List Data Of Customer Already Paid
                     </span>
                   </h3>
-                  <div className='card-toolbar'>
-                    {/* <button className='btn btn-sm btn-light-primary' onClick={handleShow}>
-                      <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                      New Transaction
-                    </button> */}
-                  </div>
+                  <div className='card-toolbar'></div>
                 </div>
                 {/* end::Header */}
                 {/* begin::Body */}

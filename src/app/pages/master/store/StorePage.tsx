@@ -38,11 +38,7 @@ const StorePage: FC = () => {
             <Modal.Body>
               <FormAddNewStore onSubmit={(data: any) => handleSubmit(data)} />
             </Modal.Body>
-            <Modal.Footer>
-              {/* <Button variant='primary' onClick={handleClose}>
-                Save Changes
-              </Button> */}
-            </Modal.Footer>
+            <Modal.Footer></Modal.Footer>
           </Modal>
         </div>
         <div className='col-lg-12'>

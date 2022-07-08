@@ -5,6 +5,7 @@ import { AxiosPost, PopUpAlert } from "../../../../../setup"
 import { getLocal, saveLocal } from "../../../../../setup/encrypt"
 import { setLoading, stopLoading, stopSplashScreen } from '../../../../../setup/redux/reducers/redux-loading/action/redux-loading'
 import { IAppState } from "../../../../../setup/redux/Store"
+import { toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import { FormLoginType } from "./FormLoginTypes"
 import { FeedbackLoginType, IS_LOGIN, LOGIN_SUCCESS, LOGOUT_SUCCESS } from "./LoginActionTypes"
 
@@ -16,7 +17,6 @@ export const doLogin = (data: FormLoginType) => {
         dispatch(setLoading())
         AxiosPost(LOGIN_URL, data).then((res: any) => {
             const datafeedback: FeedbackLoginType = res
-            // PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Login !')
             dispatch({ type: LOGIN_SUCCESS, payload: { accessToken: datafeedback.access_token, user: datafeedback, refreshToken: datafeedback.refresh_token } })
             Swal.fire({
                 icon: 'success',
@@ -67,9 +67,21 @@ export const isLogin = () => {
                         dispatch(stopSplashScreen())
                     })
                 }).catch((error: any) => {
-                    localStorage.clear()
-                    dispatch({ type: LOGOUT_SUCCESS })
-                    dispatch(stopSplashScreen())
+                    if (error.message === 'Network Error') {
+                        Swal.fire({
+                            position: 'center',
+                            imageUrl: toAbsoluteUrl('/media/illustrations/new/handy-meditating-cloud.gif'),
+                            title: 'Looks like you lost your internet connection !',
+                            imageWidth: 250,
+                            imageHeight: 250,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                        })
+                    } else {
+                        localStorage.clear()
+                        dispatch({ type: LOGOUT_SUCCESS })
+                        dispatch(stopSplashScreen())
+                    }
                 })
             })
         } else {

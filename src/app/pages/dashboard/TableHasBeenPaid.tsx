@@ -2,7 +2,6 @@
 import {Image, Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
-// import {Modal} from 'react-bootstrap-v5'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../setup'
 import {KTSVG} from '../../../_metronic/helpers'
@@ -34,7 +33,6 @@ const TableHasBeenPaid: React.FC = () => {
   const loadapprove = useSelector<RootState>(({loader}) => loader.loadingApprove)
   const isSending = load as boolean
   const isSendingApprove = loadapprove as boolean
-  // const showmodal = useSelector<RootState>(({dashboard}) => dashboard.showModalBuktiBayar)
   const showmodal: boolean = useSelector((state: RootState) => state.dashboard.showModalBuktiBayar)
   const image: any = useSelector<RootState>(({dashboard}) => dashboard.image)
   const [dataSource, setDataSource] = useState(newarrdata)
@@ -182,7 +180,6 @@ const TableHasBeenPaid: React.FC = () => {
         src={image}
         preview={{
           visible: showmodal,
-          // src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
           onVisibleChange: (value) => {
             handleClose()
           },
@@ -195,7 +192,6 @@ const TableHasBeenPaid: React.FC = () => {
         <Table
           columns={columns}
           dataSource={dataTable}
-          // expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
           summary={(pageData) => {
             return (
               <>

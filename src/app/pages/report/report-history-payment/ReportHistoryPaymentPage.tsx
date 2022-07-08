@@ -6,7 +6,7 @@ import {getLocal} from '../../../../setup/encrypt'
 import {PageTitle} from '../../../../_metronic/layout/core'
 import {GetMasterProduct} from '../../master/product/redux/action/ProductAction'
 import {GetMasterStore} from '../../master/store/redux/action/StoreAction'
-import ReportHistoryPaymentExcel from './component/excel/ReportHIstoryPayment'
+import ExcelReport from './component/excel/ReportHistoryPaymentXLSX'
 import FormHistoryPaymentReport from './component/FormReportHistoryPayment'
 import ReportHistoryPaymentPDF from './component/pdf/ReportHistoryPaymentPDF'
 import TableHistoryPaymentReport from './component/TableReportHistoryPayment'
@@ -66,7 +66,7 @@ const ReportHistoryPaymentPage: FC = () => {
                     <div className='col-lg-12 mt-4'>
                       <div className='row'>
                         <div className='col-lg-2'>
-                          <ReportHistoryPaymentExcel />
+                          <ExcelReport dataExcel={newarrdata} />
                         </div>
                         <div className={newarrdata.length === 0 ? 'd-none' : 'col-lg-2'}>
                           <button className='btn btn-danger' onClick={() => handlePrintPDF()}>

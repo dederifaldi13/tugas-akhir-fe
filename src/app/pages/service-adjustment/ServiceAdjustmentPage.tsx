@@ -2,7 +2,6 @@
 import React, {FC, useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 import {PageTitle} from '../../../_metronic/layout/core'
-// import TableActivate from './component/TableActivate'
 import TableDeactivate from './component/TableDeactivate'
 import {GetActiveCustomerAction} from './redux/action/ServiceAdjustmentAction'
 
@@ -40,27 +39,6 @@ const ServiceAdjustmentPage: FC = () => {
             </div>
           </div>
         </div>
-        {/* <div className='col-lg-12 mt-4'>
-          <div className='card card-custom'>
-            <div className='card-body p-9'>
-              <PageTitle breadcrumbs={[]}>Service Adjustment</PageTitle>
-              <div className={`card mb-5 mb-xl-8`}>
-                <div className='card-header border-0 pt-5'>
-                  <h3 className='card-title align-items-start flex-column'>
-                    <span className='card-label fw-bolder fs-3 mb-1'>Deactive Data</span>
-                    <span className='text-muted mt-1 fw-bold fs-7'>
-                      List Data Of Nagatech Customer VPS
-                    </span>
-                  </h3>
-                  <div className='card-toolbar'></div>
-                </div>
-                <div className='card-body py-3'>
-                  <TableActivate />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
     </>
   )
