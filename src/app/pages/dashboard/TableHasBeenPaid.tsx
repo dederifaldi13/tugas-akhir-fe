@@ -61,6 +61,9 @@ const TableHasBeenPaid: React.FC = () => {
         const filteredData = newarrdata.filter(
           (entry: DataType) =>
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.no_bayar.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.tanggal_bayar.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.toko.toUpperCase().includes(currValue.toUpperCase())
         )
         setDataSource(filteredData)
