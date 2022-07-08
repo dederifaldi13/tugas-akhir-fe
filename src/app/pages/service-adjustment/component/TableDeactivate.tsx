@@ -50,20 +50,30 @@ const TableDeactivate: React.FC = () => {
       onChange={(e) => {
         const currValue = e.target.value
         setValue(currValue)
-        const filteredData = newarrdata.filter(
-          (entry: DataType) =>
-            entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.status.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.tgl_jatuh_tempo.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.bulan.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.harga.toString().includes(currValue) ||
-            entry.qty.toString().includes(currValue) ||
-            entry.total_harga.toString().includes(currValue)
-        )
-        setDataSource(filteredData)
-        setSearch(true)
+        if (currValue.toUpperCase() === 'ACTIVE') {
+          const filteredData = newarrdata.filter((entry: DataType) => entry.status !== 'CLOSE')
+          setDataSource(filteredData)
+          setSearch(true)
+        } else if (currValue.toUpperCase() === 'DEACTIVE') {
+          const filteredData = newarrdata.filter((entry: DataType) => entry.status === 'CLOSE')
+          setDataSource(filteredData)
+          setSearch(true)
+        } else {
+          const filteredData = newarrdata.filter(
+            (entry: DataType) =>
+              entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.status.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.tgl_jatuh_tempo.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.bulan.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.harga.toString().includes(currValue) ||
+              entry.qty.toString().includes(currValue) ||
+              entry.total_harga.toString().includes(currValue)
+          )
+          setDataSource(filteredData)
+          setSearch(true)
+        }
       }}
     />
   )
