@@ -25,9 +25,13 @@ export const doLogin = (data: FormLoginType) => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     dispatch(stopLoading())
-                    await saveLocal('isLogin', 'true')
-                    await saveLocal('token', datafeedback.access_token)
-                    await saveLocal('userData', datafeedback)
+                    saveLocal('isLogin', 'true').then(() => {
+                        saveLocal('token', datafeedback.access_token).then(() => {
+                            saveLocal('userData', datafeedback).then(() => {
+                                window.location.reload()
+                            })
+                        })
+                    })
 
                 }
             })

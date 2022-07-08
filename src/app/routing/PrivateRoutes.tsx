@@ -1,8 +1,15 @@
 import React, {Suspense, lazy} from 'react'
+import {shallowEqual, useSelector} from 'react-redux'
 import {Redirect, Route, Switch} from 'react-router-dom'
+import {RootState} from '../../setup'
 import {FallbackView} from '../../_metronic/partials'
+import {UserModelNew} from '../modules/auth/models/UserModel'
 
 export function PrivateRoutes() {
+  const user: UserModelNew = useSelector<RootState>(
+    ({auth}) => auth.user,
+    shallowEqual
+  ) as UserModelNew
   const DashboardWrapper = lazy(() => import('../pages/dashboard/DashboardWrapper'))
   const UserPage = lazy(() => import('../pages/master/user/UserPage'))
   const ProductPage = lazy(() => import('../pages/master/product/ProductPage'))
@@ -21,10 +28,14 @@ export function PrivateRoutes() {
     <Suspense fallback={<FallbackView />}>
       <Switch>
         <Route path='/dashboard' component={DashboardWrapper} />
-        <Route path='/master/user' component={UserPage} />
+        {(user.level === 'OWNER' || user.level === 'MANAGER') && (
+          <Route path='/master/user' component={UserPage} />
+        )}
         <Route path='/master/product' component={ProductPage} />
         <Route path='/master/store' component={StorePage} />
-        <Route path='/service-adjustment' component={ServiceAdjustmentPage} />
+        {(user.level === 'OWNER' || user.level === 'MANAGER') && (
+          <Route path='/service-adjustment' component={ServiceAdjustmentPage} />
+        )}
         <Route path='/report/report-customer' component={ReportCustomerPage} />
         <Route path='/report/report-history-payment' component={ReportHistoryPaymentPage} />
         <Redirect from='/auth' to='/dashboard' />

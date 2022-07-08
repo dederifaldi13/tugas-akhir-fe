@@ -80,7 +80,6 @@ const TableDeactivate: React.FC = () => {
       confirmButtonText: 'Yakin',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(kode, product)
         dispatch(PostDeactivateData(kode, product))
       }
     })
@@ -97,7 +96,6 @@ const TableDeactivate: React.FC = () => {
       confirmButtonText: 'Yakin',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(kode, product)
         dispatch(PostActivateData(kode, product))
       }
     })
@@ -162,48 +160,24 @@ const TableDeactivate: React.FC = () => {
       dataIndex: 'status',
       align: 'center',
       render: (_, {status}) => {
-        if (status === 'OPEN') {
-          return (
-            <span className='badge badge-light-warning fs-7 fw-bold'>
-              <KTSVG
-                path='/media/icons/duotune/maps/map001.svg'
-                className='svg-icon-2 svg-icon-warning'
-              />
-              &nbsp;
-              {status}
-            </span>
-          )
-        } else if (status === 'PAID') {
-          return (
-            <span className='badge badge-light-success fs-7 fw-bold'>
-              <KTSVG
-                path='/media/icons/duotune/general/gen048.svg'
-                className='svg-icon-2 svg-icon-success'
-              />
-              &nbsp;
-              {status}
-            </span>
-          )
-        } else if (status === 'CLOSE') {
+        if (status === 'CLOSE') {
           return (
             <span className='badge badge-danger fs-7 fw-bold'>
               <KTSVG
                 path='/media/icons/duotune/general/gen040.svg'
                 className='svg-icon-2 svg-icon-white'
               />
-              &nbsp;
-              {status}
+              &nbsp; Deactive
             </span>
           )
         } else {
           return (
-            <span className='badge badge-light-danger fs-7 fw-bold'>
+            <span className='badge badge-light-success fs-7 fw-bold'>
               <KTSVG
-                path='/media/icons/duotune/general/gen044.svg'
-                className='svg-icon-2 svg-icon-danger'
+                path='/media/icons/duotune/general/gen048.svg'
+                className='svg-icon-2 svg-icon-success'
               />
-              &nbsp;
-              {status}
+              &nbsp; Active
             </span>
           )
         }
@@ -245,7 +219,7 @@ const TableDeactivate: React.FC = () => {
               <span className='indicator-label'>
                 {!load && (
                   <span className='indicator-label'>
-                    Deactive
+                    Deactivate
                     <KTSVG path='/media/icons/duotune/general/gen050.svg' className='svg-icon-1' />
                   </span>
                 )}

@@ -291,6 +291,7 @@ export const ReanderFieldInputGroup = ({
   defaultValue,
   maxLength,
   nouperCase,
+  labelGroup,
   textColor = 'text-black',
   meta: {touched, error, warning},
 }: any) => (
@@ -320,7 +321,7 @@ export const ReanderFieldInputGroup = ({
         placeholder={placeholder}
       />
       <span className='input-group-text' id='basic-addon2'>
-        Bulan
+        {labelGroup || 'Bulan'}
       </span>
     </div>
     {touched &&

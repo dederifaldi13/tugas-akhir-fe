@@ -119,8 +119,7 @@ const columns: ColumnsType<DataType> = [
               path='/media/icons/duotune/general/gen040.svg'
               className='svg-icon-2 svg-icon-white'
             />
-            &nbsp;
-            {status}
+            &nbsp; Deactive
           </span>
         )
       } else {

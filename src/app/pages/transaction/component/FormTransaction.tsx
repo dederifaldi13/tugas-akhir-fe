@@ -51,6 +51,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='kode_toko'
               type='text'
               component={ReanderField}
@@ -62,6 +63,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='toko'
               type='text'
               component={ReanderField}
@@ -73,6 +75,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='product'
               type='text'
               component={ReanderField}
@@ -84,6 +87,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='qty'
               type='number'
               component={ReanderField}
@@ -95,6 +99,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='harga'
               type='text'
               component={ReanderField}
@@ -107,6 +112,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='bulan'
               type='text'
               component={ReanderFieldInputGroup}
@@ -118,6 +124,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='total_harga'
               type='text'
               component={ReanderField}
@@ -130,6 +137,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
+              customeCss='form-control-solid'
               name='tgl_jatuh_tempo'
               type='date'
               component={ReanderField}
@@ -142,10 +150,10 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             <div className='row'>
               <div className='col-lg-4'>
                 <img
-                  src={image === '-' ? toAbsoluteUrl('/media/notfound/notfoundimage.jpg') : image}
+                  src={image === '-' ? toAbsoluteUrl('/media/illustrations/new/clip-add-image.png') : image}
                   alt='img'
                   height='265px'
-                  width='305px'
+                  width='325px'
                 />
               </div>
             </div>
@@ -277,7 +285,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
         <div className='row justify-content-end mt-2 mr-2'>
           <div className='col-lg-2 d-grid'>
             <button className='btn btn-primary' disabled={pristine || submitting || isSending}>
-              {!isSending && <span className='indicator-label'>Simpan</span>}
+              {!isSending && <span className='indicator-label'>Konfirmasi Pembayaran</span>}
               {isSending && (
                 <span className='indicator-progress' style={{display: 'block'}}>
                   Please wait...
