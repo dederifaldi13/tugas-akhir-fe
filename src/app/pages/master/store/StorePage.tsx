@@ -44,12 +44,14 @@ const StorePage: FC = () => {
         <div className='col-lg-12'>
           <div className='card card-custom'>
             <div className='card-body p-9'>
-              <PageTitle breadcrumbs={[]}>Master Store</PageTitle>
+              <PageTitle breadcrumbs={[]}>Master Store / Customer</PageTitle>
               <div className={`card mb-5 mb-xl-8`}>
                 {/* begin::Header */}
                 <div className='card-header border-0 pt-5'>
                   <h3 className='card-title align-items-start flex-column'>
-                    <span className='card-label fw-bolder fs-3 mb-1'>Master Store Data</span>
+                    <span className='card-label fw-bolder fs-3 mb-1'>
+                      Master Store / Customer Data
+                    </span>
                     <span className='text-muted mt-1 fw-bold fs-7'>
                       List Data Of Nagatech Store Customer
                     </span>
@@ -57,7 +59,7 @@ const StorePage: FC = () => {
                   <div className='card-toolbar'>
                     <button className='btn btn-sm btn-light-primary' onClick={handleShow}>
                       <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                      New Store
+                      New Store / Customer
                     </button>
                   </div>
                 </div>

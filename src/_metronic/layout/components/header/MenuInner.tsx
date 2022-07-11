@@ -39,7 +39,7 @@ export function MenuInner() {
         />
         <MenuItem
           to='/master/store'
-          title='Master Store'
+          title='Master Store / Customer'
           icon='/media/icons/duotune/ecommerce/ecm004.svg'
         />
       </MenuInnerWithSub>
