@@ -2,13 +2,16 @@
 import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
+import Lottie from 'react-lottie'
 import {useSelector} from 'react-redux'
 import {RootState} from '../../../setup'
+import animationlist from '../../../_metronic/assets/animation'
 import {KTSVG} from '../../../_metronic/helpers'
 
 interface DataType {
-  key: string
+  key: number
   _id: string
+  created_at: string
   kode_toko: string
   toko: string
   alamat: string
@@ -21,6 +24,8 @@ interface DataType {
   total_harga: number
   tgl_jatuh_tempo: string
   status: string
+  kode_cabang: string
+  tipe_program: string
 }
 
 interface ExpandedDataType {
@@ -47,13 +52,40 @@ const columns: ColumnsType<DataType> = [
     key: 'product',
   },
   {
+    title: 'Tipe',
+    dataIndex: 'tipe_program',
+    key: 'tipe_program',
+    render: (_, {tipe_program}) => {
+      if (tipe_program === 'ONLINE') {
+        return (
+          <span className='badge badge-success fs-7 fw-bold'>
+            {/* <KTSVG
+              path='/media/icons/duotune/maps/map001.svg'
+              className='svg-icon-2 svg-icon-light'
+            /> */}
+            &nbsp;
+            {tipe_program}
+          </span>
+        )
+      } else {
+        return (
+          <span className='badge badge-dark fs-7 fw-bold'>
+            {/* <KTSVG
+              path='/media/icons/duotune/maps/map001.svg'
+              className='svg-icon-2 svg-icon-light'
+            /> */}
+            &nbsp;
+            {tipe_program}
+          </span>
+        )
+      }
+    },
+  },
+  {
     title: 'Qty',
     dataIndex: 'qty',
     key: 'qty',
     align: 'right',
-    render: (_, {qty}) => {
-      return qty.toLocaleString()
-    },
   },
   {
     title: 'Harga',
@@ -86,53 +118,61 @@ const columns: ColumnsType<DataType> = [
   {
     title: 'Status',
     key: 'status',
-    dataIndex: 'status',
     align: 'center',
     // fixed: 'right',
-    render: (_, {status}) => {
-      if (status === 'OPEN') {
+    render: (_, record) => {
+      if (record.tipe_program === 'OFFLINE') {
         return (
-          <span className='badge badge-light-warning fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/maps/map001.svg'
-              className='svg-icon-2 svg-icon-warning'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
-      } else if (status === 'PAID') {
-        return (
-          <span className='badge badge-light-success fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/general/gen048.svg'
-              className='svg-icon-2 svg-icon-success'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
-      } else if (status === 'CLOSE') {
-        return (
-          <span className='badge badge-danger fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/general/gen040.svg'
-              className='svg-icon-2 svg-icon-white'
-            />
-            &nbsp; Deactive
+          <span className='badge badge-light-dark fs-7 fw-bold'>
+            <i className='bi bi-wifi-off text-dark'></i>
+            &nbsp; {record.status}
           </span>
         )
       } else {
-        return (
-          <span className='badge badge-light-danger fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/general/gen044.svg'
-              className='svg-icon-2 svg-icon-danger'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
+        if (record.status === 'OPEN') {
+          return (
+            <span className='badge badge-light-warning fs-7 fw-bold'>
+              <KTSVG
+                path='/media/icons/duotune/maps/map001.svg'
+                className='svg-icon-2 svg-icon-warning'
+              />
+              &nbsp;
+              {record.status}
+            </span>
+          )
+        } else if (record.status === 'PAID') {
+          return (
+            <span className='badge badge-light-success fs-7 fw-bold'>
+              <KTSVG
+                path='/media/icons/duotune/general/gen048.svg'
+                className='svg-icon-2 svg-icon-success'
+              />
+              &nbsp;
+              {record.status}
+            </span>
+          )
+        } else if (record.status === 'CLOSE') {
+          return (
+            <span className='badge badge-danger fs-7 fw-bold'>
+              <KTSVG
+                path='/media/icons/duotune/general/gen040.svg'
+                className='svg-icon-2 svg-icon-white'
+              />
+              &nbsp; {record.status}
+            </span>
+          )
+        } else {
+          return (
+            <span className='badge badge-light-danger fs-7 fw-bold'>
+              <KTSVG
+                path='/media/icons/duotune/general/gen044.svg'
+                className='svg-icon-2 svg-icon-danger'
+              />
+              &nbsp;
+              {record.status}
+            </span>
+          )
+        }
       }
     },
   },
@@ -155,9 +195,13 @@ const TableDashboard: React.FC = () => {
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.tipe_program.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.status.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.tgl_jatuh_tempo.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.bulan.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.alamat.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.telepon.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.email.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.harga.toString().includes(currValue) ||
             entry.qty.toString().includes(currValue) ||
             entry.total_harga.toString().includes(currValue)
@@ -190,6 +234,23 @@ const TableDashboard: React.FC = () => {
     return <Table columns={columns} dataSource={data} pagination={false} />
   }
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
+
   return (
     <>
       <div className='row justify-content-end mt-2 mb-2'>
@@ -200,17 +261,23 @@ const TableDashboard: React.FC = () => {
           columns={columns}
           dataSource={dataTable}
           expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
+          scroll={{x: 1350}}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
           summary={(pageData) => {
             return (
               <>
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={3} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={4} align='right'>
                       Total
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={3} align='right'>
-                      {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
+                      {dataTable.reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={4} align='right'>
                       {'Rp. ' +

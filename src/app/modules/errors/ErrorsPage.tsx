@@ -43,7 +43,7 @@ const ErrorsPage: React.FC = () => {
                   </a>
                 </div>
               </div>
-              <div
+              {/* <div
                 className='
           d-flex
           flex-row-auto
@@ -58,7 +58,7 @@ const ErrorsPage: React.FC = () => {
                     '/media/illustrations/new/jungle-page-not-found-1.png'
                   )}')`,
                 }}
-              ></div>
+              ></div> */}
             </div>
 
             <div className='d-flex flex-center flex-column-auto p-10'>

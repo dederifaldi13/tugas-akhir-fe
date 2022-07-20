@@ -2,8 +2,9 @@ import React from 'react'
 import {connect, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
-import FormAddNewStoreValidate from '../../../../../setup/validate/FormAddNewProduct'
+import FormAddNewStoreValidate from '../../../../../setup/validate/FormAddNewStoreValidate'
 import {ReanderField} from '../../../../modules/redux-form/BasicInput'
+import TableAlamat from './TableAlamat'
 
 interface Props {}
 
@@ -35,35 +36,11 @@ const FormAddNewStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
               placeholder='Masukan Toko'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='alamat'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Alamat'
-              placeholder='Masukan Alamat'
-            />
+          <div className='col-lg-12'>
+            <div className='separator mt-3 mb-3 opacity-100'></div>
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='telepon'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Telepon'
-              placeholder='Masukan Telepon'
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='email'
-              type='email'
-              component={ReanderField}
-              nouperCase={true}
-              label='Email'
-              placeholder='Masukan Email'
-            />
+          <div className='col-lg-12'>
+            <TableAlamat />
           </div>
         </div>
         <div className='row justify-content-end mt-2 mr-2'>

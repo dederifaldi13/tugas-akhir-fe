@@ -74,7 +74,7 @@ export const isLogin = () => {
                     if (error.message === 'Network Error') {
                         Swal.fire({
                             position: 'center',
-                            imageUrl: toAbsoluteUrl('/media/illustrations/new/handy-meditating-cloud.gif'),
+                            imageUrl: toAbsoluteUrl('/media/illustrations/new/noconnection.gif'),
                             title: 'Looks like you lost your internet connection !',
                             imageWidth: 250,
                             imageHeight: 250,

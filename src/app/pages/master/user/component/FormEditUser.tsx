@@ -38,6 +38,10 @@ const FormEditUser: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
       value: 'ADMIN',
       label: 'ADMIN',
     },
+    {
+      value: 'CUSTOMER',
+      label: 'CUSTOMER',
+    },
   ]
 
   return (

@@ -4,8 +4,24 @@ import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/functi
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
 import InvoicePDF from "../../pdf/InvoicePDF";
-
-import { COUNT_TOTAL_HARGA, COUNT_TOTAL_QTY, FormPostType, GET_TOKO_BY_KODE, HIDE_MODAL_BUKTI_BAYAR_SUCCESS, PAYMENT_DATA_SUCCESS, PostType, POST_SUCCESS, RequestValidationType, SET_PRODUCT, SHOW_MODAL_BUKTI_BAYAR_SUCCESS, TableDataType, TablePaymentDataType } from "./PostActionTypes";
+import {
+  CabangType,
+  COUNT_TOTAL_HARGA,
+  COUNT_TOTAL_QTY,
+  FormPostType,
+  GET_TOKO_BY_KODE,
+  HIDE_MODAL_BUKTI_BAYAR_SUCCESS,
+  PAYMENT_DATA_SUCCESS,
+  PostType,
+  POST_SUCCESS,
+  RequestValidationType,
+  SET_CABANG,
+  SET_CABANG_BY_ID,
+  SET_PRODUCT,
+  SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
+  TableDataType,
+  TablePaymentDataType
+} from "./PostActionTypes";
 
 export const GetPost = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -26,7 +42,9 @@ export const GetPost = () => {
           telepon: res.data[index].telepon,
           tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
           total_harga: res.data[index].total_harga,
-          __v: res.data[index].__v,
+          created_at: res.data[index].created_at,
+          kode_cabang: res.data[index].kode_cabang,
+          tipe_program: res.data[index].tipe_program,
           _id: res.data[index]._id
         }
         newarrdata.push(obj)
@@ -55,7 +73,10 @@ export const GetPayment = () => {
           __v: res.data[index].__v,
           _id: res.data[index]._id,
           no_bayar: res.data[index].no_bayar,
-          tanggal_bayar: res.data[index].tanggal_bayar
+          tanggal_bayar: res.data[index].tanggal_bayar,
+          status: res.data[index].status,
+          tipe_pembayaran: res.data[index].tipe_pembayaran,
+          created_at: res.data[index].created_at
         }
         newarrdata.push(obj)
       }
@@ -66,9 +87,13 @@ export const GetPayment = () => {
   };
 };
 
-export const SetProduct = (value: String) => {
+export const SetProduct = (data: { value: string, label: string }) => {
   return async (dispatch: Dispatch<any>) => {
-    dispatch({ type: SET_PRODUCT, payload: { product: value } })
+    if (data.label.includes('OFFLINE')) {
+      dispatch({ type: SET_PRODUCT, payload: { product: data.value, tipe_program: 'OFFLINE' } })
+    } else {
+      dispatch({ type: SET_PRODUCT, payload: { product: data.value, tipe_program: 'ONLINE' } })
+    }
   };
 };
 
@@ -94,11 +119,23 @@ export const CloseModalBuktiBayar = () => {
 
 export const GetMasterStoreByKodeToko = (kode: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({ type: SET_CABANG_BY_ID, payload: { cabangTokoByID: undefined } });
+    dispatch({ type: SET_CABANG, payload: { cabangToko: [] } });
+    dispatch({ type: GET_TOKO_BY_KODE, payload: { dataTokoByKode: undefined } });
     AxiosGet('store/by-kode/' + kode).then((res: any) => {
       dispatch({ type: GET_TOKO_BY_KODE, payload: { dataTokoByKode: res.data[0] } });
+      dispatch({ type: SET_CABANG, payload: { cabangToko: res.data[0].cabang } });
     }).catch((error: any) => {
       console.log(error);
     })
+  };
+};
+
+export const SetCabangByID = (id: String) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const dataCabang = getState().dashboard.cabangToko
+    const dataCabangfillter = dataCabang?.find((item: CabangType) => item._id === id)
+    dispatch({ type: SET_CABANG_BY_ID, payload: { cabangTokoByID: dataCabangfillter } });
   };
 };
 
@@ -121,35 +158,74 @@ export const CountTotalHarga = (value: any) => {
 
 export const PostCustomer = (data: FormPostType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch(setLoading());
-    const senddata: PostType = {
-      kode_toko: data.kode_toko.value,
-      toko: data.toko,
-      alamat: data.alamat,
-      email: data.email,
-      telepon: data.telepon,
-      product: data.product.value,
-      qty: parseInt(data.qty.toString()),
-      harga: parseInt(data.harga.toString()),
-      bulan: data.bulan,
-      total_harga: parseInt(data.total_harga.toString()),
-      tgl_jatuh_tempo: data.tgl_jatuh_tempo
+    let senddata: PostType = {
+      kode_toko: '',
+      toko: '',
+      product: '',
+      email: '',
+      telepon: '',
+      qty: 0,
+      harga: 0,
+      bulan: '',
+      total_harga: 0,
+      tgl_jatuh_tempo: '',
+      kode_cabang: '',
+      tipe_program: ''
     }
+    dispatch(setLoading());
+    if (data.tipe_program === 'OFFLINE') {
+      senddata = {
+        kode_toko: data.kode_toko.value,
+        toko: data.toko,
+        kode_cabang: data.kode_cabang.value,
+        product: data.product.value,
+        email: data.email,
+        telepon: data.telepon,
+        tipe_program: data.tipe_program,
+        qty: 1,
+        harga: 0,
+        bulan: '-',
+        total_harga: 0,
+        tgl_jatuh_tempo: '-'
+      }
+    } else {
+      senddata = {
+        kode_toko: data.kode_toko.value,
+        toko: data.toko,
+        kode_cabang: data.kode_cabang.value,
+        product: data.product.value,
+        email: data.email,
+        telepon: data.telepon,
+        tipe_program: data.tipe_program,
+        qty: parseInt(data.qty.toString()),
+        harga: parseInt(data.harga.toString()),
+        bulan: data.bulan,
+        total_harga: parseInt(data.total_harga.toString()),
+        tgl_jatuh_tempo: data.tgl_jatuh_tempo
+      }
+    }
+
     AxiosPost('customer', senddata).then((res: any) => {
-      AxiosGet(`customer/by-kode-product?kode_toko=${res.kode_toko}&product=${res.product}`).then((res: any) => {
-        const dataInvoice = res.data[0]
+      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((resget: any) => {
+        const dataInvoice = resget.data[0]
         const pdf64 = InvoicePDF(dataInvoice)
-        const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.product}`)
-        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.product}`).then((res: any) => {
+        const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
+        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).then((res: any) => {
+          console.log(res);
         }).catch((error: any) => {
           console.log(error);
-        }).finally(() => {
+        })
+      }).finally(() => {
+        const userData = {
+          user_name: senddata.kode_toko,
+          user_id: data.telepon,
+          password: '12345678',
+          level: 'CUSTOMER'
+        }
+        AxiosPost('auth/register', userData).finally(() => {
           PopUpAlert.default.AlertSuccessAdd()
           dispatch(stopLoading())
         })
-      }).catch((error: any) => {
-        console.log(error);
-        dispatch(stopLoading())
       })
     }).catch((error: any) => {
       console.log(error);
@@ -160,7 +236,7 @@ export const PostCustomer = (data: FormPostType) => {
 };
 
 
-export const ValidationPayment = (kode: string, product: string) => {
+export const ValidationPayment = (kode: string, product: string, nobyr: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoadingApprove());
     const senddata: RequestValidationType = {
@@ -168,17 +244,14 @@ export const ValidationPayment = (kode: string, product: string) => {
       product: product,
     }
     AxiosPost('payment/validation', senddata).then((res: any) => {
-      AxiosGet(`customer/by-kode-product?kode_toko=${res.kode_toko}&product=${res.product}`).then((res: any) => {
+      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((res: any) => {
         const dataInvoice = res.data[0]
         const pdf64 = InvoicePDF(dataInvoice)
-        const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.product}`)
-        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.product}`).then((res: any) => {
-          console.log(res);
-        }).catch((error: any) => {
-          console.log(error);
-        }).finally(() => {
+        const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
+        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).finally(() => {
           PopUpAlert.default.AlertSuccess('Berhasil Melakukan Validasi')
           dispatch(stopLoadingApprove());
+
         })
       }).catch((error: any) => {
         console.log(error);
@@ -227,15 +300,17 @@ export const CreateAndSendPDFWithLoop = () => {
           telepon: res.data[index].telepon,
           tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
           total_harga: res.data[index].total_harga,
-          __v: res.data[index].__v,
+          created_at: res.data[index].created_at,
+          kode_cabang: res.data[index].kode_cabang,
+          tipe_program: res.data[index].tipe_program,
           _id: res.data[index]._id
         }
         newarrdata.push(obj)
       }
       newarrdata.forEach((element) => {
         const pdf64 = InvoicePDF(element)
-        const file = dataURLtoPDFFile(pdf64, `${element.kode_toko}-${element.product}`)
-        postPDF(file, `${element.kode_toko}-${element.product}`).then((res: any) => {
+        const file = dataURLtoPDFFile(pdf64, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`)
+        postPDF(file, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`).then((res: any) => {
           console.log(res);
         }).finally(() => {
           dispatch(stopLoading())

@@ -32,7 +32,7 @@ const HeaderUserMenu: FC = () => {
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
-              {user.user_id}
+              {user.user_name}
               <span className='badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2'>
                 {user.level}
               </span>

@@ -1,8 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Result} from 'antd'
 import React, {FC} from 'react'
+import Lottie from 'react-lottie'
+import animationlist from '../../../_metronic/assets/animation'
 
 const SuccessPaymentPage: FC = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.paymentsuccess,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
   return (
     <>
       <div className='row'>
@@ -28,6 +38,7 @@ const SuccessPaymentPage: FC = () => {
                     title='Berhasil Melakukan Pembayaran!'
                     subTitle='Terimakasih Sudah Melakukan Pembayaran'
                     extra={[
+                      <Lottie options={defaultOptions} height={400} width={400} />,
                       <button
                         className='btn btn-primary'
                         onClick={() => {

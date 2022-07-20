@@ -58,6 +58,7 @@ class ExcelReport extends Component {
               <td style={headStyle}>Toko / Customer</td>
               <td style={headStyle}>Alamat</td>
               <td style={headStyle}>Product</td>
+              <td style={headStyle}>Tipe</td>
               <td style={headStyle}>Qty</td>
               <td style={headStyle}>Harga</td>
               <td style={headStyle}>Bulan</td>
@@ -103,6 +104,7 @@ class ExcelReport extends Component {
                   <td style={bodyStyle}>{row.toko}</td>
                   <td style={bodyStyle}>{row.alamat}</td>
                   <td style={bodyStyle}>{row.product}</td>
+                  <td style={bodyStyle}>{row.tipe_program}</td>
                   <td style={bodyStyleNumber}>{row.qty}</td>
                   <td style={bodyStyleNumber}>Rp. {row.harga.toLocaleString()}</td>
                   <td style={bodyStyle}>{row.bulan}</td>
@@ -115,16 +117,24 @@ class ExcelReport extends Component {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={4} style={footerStyle}>
+              <td colSpan={5} style={footerStyle}>
                 Total :
               </td>
-              <td style={footerStyle}>{this.props.dataExcel.reduce((a, b) => a + b.qty, 0)}</td>
               <td style={footerStyle}>
-                Rp. {this.props.dataExcel.reduce((a, b) => a + b.harga, 0).toLocaleString()}
+                {this.props.dataExcel.reduce((a, b) => a + parseInt(b.qty || 0), 0)}
+              </td>
+              <td style={footerStyle}>
+                Rp.{' '}
+                {this.props.dataExcel
+                  .reduce((a, b) => parseInt(a + b.harga || 0), 0)
+                  .toLocaleString()}
               </td>
               <td style={footerStyle}></td>
               <td style={footerStyle}>
-                Rp. {this.props.dataExcel.reduce((a, b) => a + b.total_harga, 0).toLocaleString()}
+                Rp.{' '}
+                {this.props.dataExcel
+                  .reduce((a, b) => parseInt(a + b.total_harga || 0), 0)
+                  .toLocaleString()}
               </td>
             </tr>
           </tfoot>

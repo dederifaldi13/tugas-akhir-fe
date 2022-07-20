@@ -4,6 +4,8 @@ export const SET_CAMERA_SUCCESS = "SET_CAMERA_SUCCESS";
 export type ParamsGetTransactionType = {
     kode_toko: string
     product: string
+    kode_cabang: string
+    tipe_program: string
 }
 
 export type GetTransactionType = {

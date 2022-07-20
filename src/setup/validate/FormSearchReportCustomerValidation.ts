@@ -1,5 +1,5 @@
 import { FormErrors } from 'redux-form'
-import { IFormReportCustomer } from '../model/FormSearchReportCustomerModel'
+import { IFormReportCustomer } from '../model/ModelValidation'
 
 const FormSearchReportCustomerValidation = (values: IFormReportCustomer): FormErrors<IFormReportCustomer> => {
     const errors: FormErrors<IFormReportCustomer> = {}

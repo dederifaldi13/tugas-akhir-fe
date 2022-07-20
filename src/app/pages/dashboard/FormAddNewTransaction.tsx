@@ -8,7 +8,6 @@ import {
   ReanderField,
   ReanderFieldInputGroup,
   ReanderSelect2,
-  ReanderTextArea,
 } from '../../modules/redux-form/BasicInput'
 import {GetProductType} from '../master/product/redux/action/ProductActionTypes'
 import {GetStoreType} from '../master/store/redux/action/StoreActionTypes'
@@ -16,6 +15,7 @@ import {
   CountTotalHarga,
   CountTotalHargaQty,
   GetMasterStoreByKodeToko,
+  SetCabangByID,
   SetProduct,
 } from './redux/actions/PostActions'
 
@@ -23,35 +23,73 @@ interface Props {}
 
 const mapState = (state: RootState) => {
   if (state.dashboard.dataTokoByKode !== undefined) {
-    return {
-      initialValues: {
-        kode_toko: {
-          value: state.dashboard.dataTokoByKode.kode_toko,
-          label: state.dashboard.dataTokoByKode.kode_toko,
+    if (state.dashboard.cabangTokoByID !== undefined) {
+      return {
+        initialValues: {
+          kode_toko: {
+            value: state.dashboard.dataTokoByKode.kode_toko,
+            label: state.dashboard.dataTokoByKode.kode_toko,
+          },
+          toko: state.dashboard.dataTokoByKode.toko,
+          kode_cabang: {
+            value: state.dashboard.cabangTokoByID._id,
+            label: state.dashboard.cabangTokoByID.alamat,
+          },
+          telepon: state.dashboard.cabangTokoByID.telepon,
+          email: state.dashboard.cabangTokoByID.email,
+          product: {
+            value: state.dashboard.product,
+            label: state.dashboard.product,
+          },
+          tipe_program: state.dashboard.tipe_program,
+          qty: state.dashboard.qty,
+          harga: state.dashboard.harga,
+          total_harga: state.dashboard.totalHarga,
+          bulan: '6',
         },
-        toko: state.dashboard.dataTokoByKode.toko,
-        alamat: state.dashboard.dataTokoByKode.alamat,
-        telepon: state.dashboard.dataTokoByKode.telepon,
-        email: state.dashboard.dataTokoByKode.email,
-        product: {
-          value: state.dashboard.product,
-          label: state.dashboard.product,
+      }
+    } else {
+      return {
+        initialValues: {
+          kode_toko: {
+            value: state.dashboard.dataTokoByKode.kode_toko,
+            label: state.dashboard.dataTokoByKode.kode_toko,
+          },
+          toko: state.dashboard.dataTokoByKode.toko,
+          kode_cabang: {
+            value: state.dashboard.dataTokoByKode.cabang[0]._id,
+            label: state.dashboard.dataTokoByKode.cabang[0].alamat,
+          },
+          telepon: '',
+          email: '',
+          product: {
+            value: state.dashboard.product,
+            label: state.dashboard.product,
+          },
+          tipe_program: state.dashboard.tipe_program,
+          qty: state.dashboard.qty,
+          harga: state.dashboard.harga,
+          total_harga: state.dashboard.totalHarga,
+          bulan: '6',
         },
-        qty: state.dashboard.qty,
-        harga: state.dashboard.harga,
-        total_harga: state.dashboard.totalHarga,
-        bulan: '6',
-      },
+      }
     }
   } else {
     return {
       initialValues: {
         kode_toko: '',
         toko: '',
-        alamat: '',
+        kode_cabang: {
+          value: '',
+          label: '',
+        },
         telepon: '',
         email: '',
-        product: '',
+        product: {
+          value: '',
+          label: '',
+        },
+        tipe_program: state.dashboard.tipe_program,
         qty: state.dashboard.qty,
         harga: state.dashboard.harga,
         total_harga: state.dashboard.totalHarga,
@@ -67,7 +105,10 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataToko: any = useSelector<RootState>(({masterstore}) => masterstore.feedback) || []
   const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
-  // const total = useSelector<RootState>(({dashboard}) => dashboard.totalHarga)
+  const data: any = useSelector<RootState>(({dashboard}) => dashboard.dataTokoByKode) || []
+  const dataCabang = data.cabang || []
+  const CabangID: any = useSelector<RootState>(({dashboard}) => dashboard.cabangTokoByID)
+  const tipe_program: any = useSelector<RootState>(({dashboard}) => dashboard.tipe_program)
 
   return (
     <>
@@ -105,14 +146,24 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='alamat'
-              type='text'
-              component={ReanderTextArea}
-              nouperCase={true}
+              name='kode_cabang'
+              component={ReanderSelect2}
+              options={dataCabang.map((list: any) => {
+                let data = {
+                  value: list._id,
+                  label: list.alamat,
+                }
+                return data
+              })}
               label='Alamat'
-              placeholder='Masukan Alamat'
+              onChange={(e: any) => {
+                dispatch(SetCabangByID(e.value))
+              }}
+              placeholder='Pilih Alamat'
+              defaultValue={{
+                value: CabangID !== undefined ? CabangID._id : 'Pilih Alamat',
+                label: CabangID !== undefined ? CabangID.alamat : 'Pilih Alamat',
+              }}
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
@@ -146,16 +197,28 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               options={dataProduct.map((list: GetProductType) => {
                 let data = {
                   value: list.product,
-                  label: list.product,
+                  label: `${list.product} - ${list.tipe_program}`,
                 }
                 return data
               })}
               label='Product'
               placeholder='Pilih Product'
-              onChange={(e: any) => dispatch(SetProduct(e.value))}
+              onChange={(e: any) => dispatch(SetProduct(e))}
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              readOnly
+              name='tipe_program'
+              type='text'
+              customeCss='form-control-solid'
+              component={ReanderField}
+              nouperCase={true}
+              label='Tipe'
+              placeholder='Masukan Tipe'
+            />
+          </div>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
               name='qty'
               type='number'
@@ -168,7 +231,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               }}
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
               name='harga'
               type='text'
@@ -182,10 +245,10 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               }}
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
-              readOnly
-              customeCss='form-control-solid'
+              // readOnly
+              // customeCss='form-control-solid'
               name='bulan'
               type='text'
               component={ReanderFieldInputGroup}
@@ -194,7 +257,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               placeholder='Masukan Bulan'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
               readOnly
               customeCss='form-control-solid'
@@ -207,7 +270,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               placeholder='Masukan Total Harga'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
               name='tgl_jatuh_tempo'
               type='date'
@@ -220,7 +283,10 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
         </div>
         <div className='row justify-content-end mt-2 mr-2'>
           <div className='col-lg-2 d-grid'>
-            <button className='btn btn-primary' disabled={pristine || submitting || isSending}>
+            <button
+              className='btn btn-primary'
+              disabled={tipe_program === 'ONLINE' ? submitting || isSending || pristine : false}
+            >
               {!isSending && <span className='indicator-label'>Simpan</span>}
               {isSending && (
                 <span className='indicator-progress' style={{display: 'block'}}>

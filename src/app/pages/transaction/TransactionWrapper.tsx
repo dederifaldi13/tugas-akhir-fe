@@ -9,13 +9,18 @@ import FormTransaction from './component/FormTransaction'
 import {ConfirmPaymentAction, GetTransactionFilter} from './redux/action/TransactionAction'
 
 const TransactionWrapper: FC = () => {
-  const params: {kode_toko: string; product: string} = useParams()
+  const params: {
+    kode_toko: string
+    product: string
+    kode_cabang: string
+    tipe_program: string
+  } = useParams()
   const dataTrx: any = useSelector<RootState>(
     ({transactionconfirmpayment}) => transactionconfirmpayment.feedback
   )
   const dispatch = useDispatch()
   const handleSubmit = (data: any) => {
-    dispatch(ConfirmPaymentAction(data))
+    dispatch(ConfirmPaymentAction(data, params))
   }
   useEffect(() => {
     dispatch(GetTransactionFilter(params))

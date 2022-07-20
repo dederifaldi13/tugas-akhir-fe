@@ -1,6 +1,7 @@
 export { default as setupAxios } from './axios/SetupAxios'
 export * from './redux/reducers/RootReducer'
 export { AxiosPost } from './axios/AxiosPost'
+export { AxiosPostiPayMu } from './axios/AxiosPost'
 export { AxiosGet } from './axios/AxiosGet'
 export { AxiosDelete } from './axios/AxiosDelete'
 export { AxiosPut } from './axios/AxiosPut'

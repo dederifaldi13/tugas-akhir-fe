@@ -2,8 +2,10 @@
 import {Image, Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../../setup'
+import animationlist from '../../../../../_metronic/assets/animation'
 import {CloseModalBuktiBayar, GetGambarByNoBayar} from '../redux/action/ReportHistoryPaymentAction'
 
 interface DataType {
@@ -66,6 +68,23 @@ const TableReportHistoryPayment: React.FC = () => {
     />
   )
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
 
   const columns: ColumnsType<DataType> = [
     {
@@ -164,6 +183,11 @@ const TableReportHistoryPayment: React.FC = () => {
         <Table
           columns={columns}
           dataSource={dataTable}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
           summary={(pageData) => {
             return (
               <>

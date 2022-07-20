@@ -3,9 +3,11 @@ import {Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
 import {Modal} from 'react-bootstrap-v5'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import Swal from 'sweetalert2'
 import {RootState} from '../../../../../setup'
+import animationlist from '../../../../../_metronic/assets/animation'
 import {KTSVG} from '../../../../../_metronic/helpers'
 import {DeleteUser, GetMasterUserByID, PutUser} from '../redux/action/UserAction'
 import FormEditUser from './FormEditUser'
@@ -113,6 +115,24 @@ const TableUser: React.FC = () => {
     />
   )
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
+
   return (
     <>
       <Modal show={show} onHide={handleClose} centered size='lg'>
@@ -134,7 +154,15 @@ const TableUser: React.FC = () => {
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>
       <div className='table-responsive'>
-        <Table columns={columns} dataSource={dataTable} />
+        <Table
+          columns={columns}
+          dataSource={dataTable}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
+        />
       </div>
     </>
   )

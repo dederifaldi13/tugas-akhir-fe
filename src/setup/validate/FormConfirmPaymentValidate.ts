@@ -1,6 +1,6 @@
 import { FormErrors } from 'redux-form'
 import { PopUpAlert } from '..'
-import { IFormConfirmPayment } from '../model/FormConfirmPaymentModel'
+import { IFormConfirmPayment } from '../model/ModelValidation'
 
 const FormConfirmPaymentValidation = (values: IFormConfirmPayment): FormErrors<IFormConfirmPayment> => {
     const errors: FormErrors<IFormConfirmPayment> = {}

@@ -18,7 +18,7 @@ const ReportCustomerPDF = (data, head) => {
     title: 'Customer',
   })
   doc.setFontSize(9)
-  if (head.tgl_awal === 'SEMUA' && head.tgl_akhir === 'SEMUA') {
+  if (head.tgl_awal === 'all' && head.tgl_akhir === 'all') {
     doc.text(`Tgl Jatuh Tempo : Semua`, 14, 25)
   } else {
     doc.text(`Tgl Jatuh Tempo : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
@@ -30,6 +30,7 @@ const ReportCustomerPDF = (data, head) => {
       {content: `Toko / Customer`},
       {content: `Alamat`},
       {content: `Product`},
+      {content: `Tipe`},
       {content: `Qty`},
       {content: `Harga`},
       {content: `Bulan`},
@@ -46,6 +47,7 @@ const ReportCustomerPDF = (data, head) => {
       {content: element.toko},
       {content: element.kode_toko},
       {content: element.product},
+      {content: element.tipe_program},
       {content: element.qty, styles: {halign: 'right'}},
       {
         content: 'Rp. ' + element.harga.toLocaleString(),
@@ -63,10 +65,10 @@ const ReportCustomerPDF = (data, head) => {
   })
 
   const footer = [
-    {content: 'Total : ', colSpan: 4, styles: {halign: 'right'}},
-    {content: data.reduce((a, b) => a + b.qty, 0), styles: {halign: 'right'}},
+    {content: 'Total : ', colSpan: 5, styles: {halign: 'right'}},
+    {content: data.reduce((a, b) => a + parseInt(b.qty || 0), 0), styles: {halign: 'right'}},
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.harga, 0).toLocaleString(),
+      content: 'Rp. ' + data.reduce((a, b) => a + parseInt(b.harga || 0), 0).toLocaleString(),
       styles: {halign: 'right'},
     },
     {
@@ -74,7 +76,7 @@ const ReportCustomerPDF = (data, head) => {
       styles: {halign: 'right'},
     },
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0).toLocaleString(),
+      content: 'Rp. ' + data.reduce((a, b) => a + parseInt(b.total_harga || 0), 0).toLocaleString(),
       styles: {halign: 'right'},
     },
   ]
@@ -83,7 +85,7 @@ const ReportCustomerPDF = (data, head) => {
   const printed = [
     {
       content: `Printed By Admin`,
-      colSpan: 9,
+      colSpan: 10,
       styles: {
         fontStyle: 'italic',
         textColor: '#000',

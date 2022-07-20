@@ -17,6 +17,8 @@ import {MasterInit} from '../../_metronic/layout/MasterInit'
 import {LoginPage} from '../pages/auth/LoginPage'
 import TransactionWrapper from '../pages/transaction/TransactionWrapper'
 import SuccessPaymentPage from '../pages/transaction/SuccesPaymentPage'
+import PaymentMethodWrapper from '../pages/payment-method/PaymentMethodWrapper'
+import ReturnPage from '../pages/transaction/ReturnPage'
 
 const Routes: FC = () => {
   const location = useLocation()
@@ -27,15 +29,30 @@ const Routes: FC = () => {
       <Switch>
         {!isAuthorized &&
         !location.pathname.includes('payment-confirmation') &&
-        !location.pathname.includes('success-payment') ? (
+        !location.pathname.includes('success-payment') &&
+        !location.pathname.includes('return-payment') &&
+        !location.pathname.includes('payment-method') ? (
           /*Render auth page when user at `/auth` and not authorized.*/
           <Route>
             <LoginPage />
           </Route>
         ) : location.pathname.includes('payment-confirmation') ? (
-          <Redirect from='/auth' to='/payment-confirmation/:kode_toko/:product' />
+          <Redirect
+            from='/auth'
+            to='/payment-confirmation/:kode_toko/:product/:tipe_program/:kode_cabang'
+          />
         ) : location.pathname.includes('success-payment') ? (
           <Redirect from='/auth' to='/success-payment' />
+        ) : location.pathname.includes('payment-method') ? (
+          <Redirect
+            from='/auth'
+            to='/payment-method/:kode_toko/:product/:tipe_program/:kode_cabang'
+          />
+        ) : location.pathname.includes('return-payment') ? (
+          <Redirect
+            from='/auth'
+            to='/return-payment/:kode_toko/:product/:tipe_program/:kode_cabang'
+          />
         ) : (
           /*Otherwise redirect to root page (`/`)*/
           <Redirect from='/auth' to='/' />
@@ -46,19 +63,35 @@ const Routes: FC = () => {
 
         {!isAuthorized &&
         !location.pathname.includes('payment-confirmation') &&
-        !location.pathname.includes('success-payment') ? (
+        !location.pathname.includes('success-payment') &&
+        !location.pathname.includes('return-payment') &&
+        !location.pathname.includes('payment-method') ? (
           /*Redirect to `/auth` when user is not authorized*/
           <Redirect to='/auth/login' />
         ) : location.pathname.includes('payment-confirmation') ? (
           <MasterLayout>
             <Route
-              path='/payment-confirmation/:kode_toko/:product'
+              path='/payment-confirmation/:kode_toko/:product/:tipe_program/:kode_cabang'
               component={TransactionWrapper}
             />
           </MasterLayout>
         ) : location.pathname.includes('success-payment') ? (
           <MasterLayout>
             <Route path='/success-payment' component={SuccessPaymentPage} />
+          </MasterLayout>
+        ) : location.pathname.includes('payment-method') ? (
+          <MasterLayout>
+            <Route
+              path='/payment-method/:kode_toko/:product/:tipe_program/:kode_cabang'
+              component={PaymentMethodWrapper}
+            />
+          </MasterLayout>
+        ) : location.pathname.includes('return-payment') ? (
+          <MasterLayout>
+            <Route
+              path='/return-payment/:kode_toko/:product/:tipe_program/:kode_cabang'
+              component={ReturnPage}
+            />
           </MasterLayout>
         ) : (
           <MasterLayout>

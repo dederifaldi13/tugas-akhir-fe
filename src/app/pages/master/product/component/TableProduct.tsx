@@ -3,11 +3,18 @@ import {Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
 import {Modal} from 'react-bootstrap-v5'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import Swal from 'sweetalert2'
 import {RootState} from '../../../../../setup'
+import animationlist from '../../../../../_metronic/assets/animation'
 import {KTSVG} from '../../../../../_metronic/helpers'
-import {DeleteProduct, GetMasterProductByID, PutProduct} from '../redux/action/ProductAction'
+import {
+  DeleteProduct,
+  GetMasterProductByID,
+  HideModalAction,
+  PutProduct,
+} from '../redux/action/ProductAction'
 import {TableProductType} from '../redux/action/ProductActionTypes'
 import FormEditProduct from './FormEditProduct'
 
@@ -30,15 +37,15 @@ const TableProduct: React.FC = () => {
   }
 
   const newarrdata: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
+  const show: any = useSelector<RootState>(({masterproduct}) => masterproduct.modal) as boolean
   const [dataSource, setDataSource] = useState(newarrdata)
   const [value, setValue] = useState('')
   const [search, setSearch] = useState(false)
 
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
+  // const [show, setShow] = useState(false)
+  const handleClose = () => dispatch(HideModalAction())
   const handleShow = (id: String) => {
     dispatch(GetMasterProductByID(id))
-    setShow(true)
   }
   const handleSubmit = (data: any) => {
     dispatch(PutProduct(data))
@@ -49,6 +56,11 @@ const TableProduct: React.FC = () => {
       title: 'Product',
       dataIndex: 'product',
       key: 'product',
+    },
+    {
+      title: 'Tipe',
+      dataIndex: 'tipe_program',
+      key: 'tipe',
     },
     {
       title: 'Action',
@@ -93,6 +105,24 @@ const TableProduct: React.FC = () => {
     />
   )
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
+
   return (
     <>
       <Modal show={show} onHide={handleClose} centered size='lg'>
@@ -114,7 +144,15 @@ const TableProduct: React.FC = () => {
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>
       <div className='table-responsive'>
-        <Table columns={columns} dataSource={dataTable} />
+        <Table
+          columns={columns}
+          dataSource={dataTable}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
+        />
       </div>
     </>
   )

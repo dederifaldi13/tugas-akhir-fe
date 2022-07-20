@@ -3,13 +3,28 @@ import {Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
 import {Modal} from 'react-bootstrap-v5'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import Swal from 'sweetalert2'
 import {RootState} from '../../../../../setup'
+import animationlist from '../../../../../_metronic/assets/animation'
 import {KTSVG} from '../../../../../_metronic/helpers'
-import {DeleteStore, GetMasterStoreByID, PutStore} from '../redux/action/StoreAction'
+import {
+  DeleteStore,
+  GetMasterStoreByID,
+  HideModalCabangEdit,
+  PutStore,
+} from '../redux/action/StoreAction'
 import {TableStoreType} from '../redux/action/StoreActionTypes'
 import FormEditStore from './FormEditStore'
+
+interface ExpandedDataType {
+  key: React.Key
+  _id: string
+  alamat: string
+  telepon: string
+  email: string
+}
 
 const TableStore: React.FC = () => {
   const dispatch = useDispatch()
@@ -34,11 +49,11 @@ const TableStore: React.FC = () => {
   const [value, setValue] = useState('')
   const [search, setSearch] = useState(false)
 
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
+  const show = useSelector<RootState>(({masterstore}) => masterstore.modalEdit)
+  const isSending = useSelector<RootState>(({loader}) => loader.loading)
+  const handleClose = () => dispatch(HideModalCabangEdit())
   const handleShow = (id: String) => {
     dispatch(GetMasterStoreByID(id))
-    setShow(true)
   }
   const handleSubmit = (data: any) => {
     dispatch(PutStore(data))
@@ -56,21 +71,6 @@ const TableStore: React.FC = () => {
       key: 'toko',
     },
     {
-      title: 'Alamat',
-      dataIndex: 'alamat',
-      key: 'alamat',
-    },
-    {
-      title: 'Telepon',
-      dataIndex: 'telepon',
-      key: 'telepon',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
       title: 'Action',
       key: 'action',
       align: 'center',
@@ -79,9 +79,21 @@ const TableStore: React.FC = () => {
           <button
             className='btn btn-light-warning btn-sm me-1'
             onClick={() => handleShow(record._id)}
+            disabled={isSending as boolean}
           >
             <span className='indicator-label'>
-              Edit <KTSVG path='/media/icons/duotune/general/gen055.svg' className='svg-icon-3' />
+              {!isSending && (
+                <span className='indicator-label'>
+                  Edit{' '}
+                  <KTSVG path='/media/icons/duotune/general/gen055.svg' className='svg-icon-3' />
+                </span>
+              )}
+              {isSending && (
+                <span className='indicator-progress' style={{display: 'block'}}>
+                  Please wait...
+                  <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                </span>
+              )}
             </span>
           </button>
           <button
@@ -107,7 +119,6 @@ const TableStore: React.FC = () => {
         const filteredData = newarrdata.filter(
           (entry: TableStoreType) =>
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.alamat.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.toko.toUpperCase().includes(currValue.toUpperCase())
         )
         setDataSource(filteredData)
@@ -116,11 +127,52 @@ const TableStore: React.FC = () => {
     />
   )
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
+  const expandedRowRenderTable = (id: any) => {
+    const columns: ColumnsType<ExpandedDataType> = [
+      {title: 'Alamat', dataIndex: 'alamat', key: 'alamat'},
+      {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
+      {title: 'Email', dataIndex: 'email', key: 'email'},
+    ]
+
+    const data: any = []
+    for (let i = 0; i < dataTable.length; ++i) {
+      for (let index = 0; index < dataTable[i].cabang.length; index++) {
+        if (dataTable[i]._id === id) {
+          data.push({
+            key: i,
+            _id: dataTable[i].cabang[index]._id,
+            alamat: dataTable[i].cabang[index].alamat,
+            telepon: dataTable[i].cabang[index].telepon,
+            email: dataTable[i].cabang[index].email,
+          })
+        }
+      }
+    }
+    return <Table columns={columns} dataSource={data} pagination={false} />
+  }
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
+
   return (
     <>
       <Modal show={show} onHide={handleClose} centered size='lg'>
         <Modal.Header>
-          <Modal.Title>Add New Store</Modal.Title>
+          <Modal.Title>Edit Store</Modal.Title>
           <button className='btn btn-icon btn-danger' onClick={handleClose}>
             <KTSVG
               path='/media/icons/duotune/general/gen042.svg'
@@ -137,7 +189,16 @@ const TableStore: React.FC = () => {
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>
       <div className='table-responsive'>
-        <Table columns={columns} dataSource={dataTable} />
+        <Table
+          columns={columns}
+          dataSource={dataTable}
+          expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
+        />
       </div>
     </>
   )

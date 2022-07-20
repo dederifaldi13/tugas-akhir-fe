@@ -10,18 +10,26 @@ import masterStoreReducer from "../../../app/pages/master/store/redux/StoreReduc
 import serviceAdjustmentReducer from "../../../app/pages/service-adjustment/redux/ServiceAdjustmentReducer";
 import reportCustomerReducer from "../../../app/pages/report/report-customer/redux/ReportCustomerReducer";
 import reportHistoryPaymentReducer from "../../../app/pages/report/report-history-payment/redux/ReportHistoryPaymentReducer";
+import PaymentMethodReducer from "../../../app/pages/payment-method/redux/PaymentMethodReducer";
+import IPaymuReducer from "../../../app/pages/iPaymuTransactionPage/redux/iPaymuReducer";
+import reportHistoryPaymentiPaymuReducer from "../../../app/pages/report/report-history-payment-ipaymu/redux/ReportHistoryPaymentiPaymuReducer";
+import dashboardcustomerreducer from "../../../app/pages/dashboard-customer/redux/DashboardCustomerReducer";
 
 const RootReducer = combineReducers({
   auth: loginReducer,
   dashboard: postReducer,
+  dashboardcustomer: dashboardcustomerreducer,
   loader: loadingState,
   masteruser: masterUserReducer,
   masterproduct: masterProductReducer,
   masterstore: masterStoreReducer,
   transactionconfirmpayment: TransactionReducer,
+  paymentmethod: PaymentMethodReducer,
+  paymentqr: IPaymuReducer,
   serviceAdjustment: serviceAdjustmentReducer,
   reportCustomer: reportCustomerReducer,
   reportHistoryPayment: reportHistoryPaymentReducer,
+  reportHistoryPaymentiPaymu: reportHistoryPaymentiPaymuReducer,
   form: reducerForm,
 });
 

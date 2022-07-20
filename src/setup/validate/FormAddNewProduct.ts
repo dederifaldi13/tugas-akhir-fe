@@ -1,5 +1,5 @@
 import { FormErrors } from 'redux-form'
-import { IFormAddNewProduct } from '../model/FormAddNewProduct'
+import { IFormAddNewProduct } from '../model/ModelValidation'
 
 const FormAddNewProduct = (values: IFormAddNewProduct): FormErrors<IFormAddNewProduct> => {
     const errors: FormErrors<IFormAddNewProduct> = {}

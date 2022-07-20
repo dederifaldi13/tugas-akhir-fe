@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { AxiosDelete, AxiosGet, AxiosPost, AxiosPut, PopUpAlert } from "../../../../../../setup";
 import { setLoading, stopLoading } from "../../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../../setup/redux/Store";
-import { EditProductType, EDIT_PRODUCT_SUCCESS, GetProductType, GET_PRODUCT_SUCCESS, PostProductType, TableProductType } from "./ProductActionTypes";
+import { EditProductType, EDIT_PRODUCT_SUCCESS, GetProductType, GET_PRODUCT_SUCCESS, HIDE_MODAL, PostProductType, SHOW_MODAL, TableProductType } from "./ProductActionTypes";
 
 export const MASTER_PRODUCT_URL = `product`
 
@@ -16,7 +16,8 @@ export const GetMasterProduct = () => {
                     _id: res.data[index]._id,
                     __v: res.data[index].__v,
                     created_at: res.data[index].created_at,
-                    product: res.data[index].product
+                    product: res.data[index].product,
+                    tipe_program: res.data[index].tipe_program
                 }
                 newarrdata.push(obj)
             }
@@ -46,7 +47,8 @@ export const PostProduct = (data: PostProductType) => {
     return async (dispatch: Dispatch<any>) => {
         dispatch(setLoading());
         const sendData = {
-            product: data.product
+            product: data.product,
+            tipe_program: data.tipe_program.value
         }
         AxiosPost(MASTER_PRODUCT_URL, sendData).then(() => {
             PopUpAlert.default.AlertSuccessAdd()
@@ -64,7 +66,8 @@ export const PutProduct = (data: EditProductType) => {
     return async (dispatch: Dispatch<any>) => {
         dispatch(setLoading());
         const sendData = {
-            product: data.product
+            product: data.product,
+            tipe_program: data.tipe_program.value
         }
         AxiosPut(MASTER_PRODUCT_URL + '/' + data.id, sendData).then(() => {
             PopUpAlert.default.AlertSuccessEdit()
@@ -81,9 +84,21 @@ export const GetMasterProductByID = (id: String) => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
         AxiosGet(MASTER_PRODUCT_URL + '/by-id/' + id).then((res: any) => {
             dispatch({ type: EDIT_PRODUCT_SUCCESS, payload: { feedbackID: res.data[0] } });
+            dispatch({ type: SHOW_MODAL });
         }).catch((error: any) => {
             console.log(error);
-
         })
+    };
+};
+
+export const ShowModalAction = () => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        dispatch({ type: SHOW_MODAL });
+    };
+};
+
+export const HideModalAction = () => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        dispatch({ type: HIDE_MODAL });
     };
 };

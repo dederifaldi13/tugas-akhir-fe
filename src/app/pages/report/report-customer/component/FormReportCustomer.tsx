@@ -1,36 +1,64 @@
 import moment from 'moment'
 import React, {useState} from 'react'
-import {connect, useSelector} from 'react-redux'
+import {connect, shallowEqual, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormSearchReportCustomerValidation from '../../../../../setup/validate/FormSearchReportCustomerValidation'
-import {InputDate, ReanderCheckBox, ReanderSelect2} from '../../../../modules/redux-form/BasicInput'
+import {UserModelNew} from '../../../../modules/auth/models/UserModel'
+import {
+  InputDate,
+  ReanderCheckBox,
+  ReanderField,
+  ReanderSelect2,
+} from '../../../../modules/redux-form/BasicInput'
 import {SetCheckAllAction} from '../redux/action/ReportCustomerAction'
 
 interface Props {}
 
 const mapState = (state: RootState) => {
-  return {
-    initialValues: {
-      tgl_awal: moment().format('YYYY-MM-DD'),
-      tgl_akhir: moment().format('YYYY-MM-DD'),
-      kode_toko: {
-        value: 'ALL',
-        label: 'SEMUA',
+  if (state.auth.user?.level === 'CUSTOMER') {
+    return {
+      initialValues: {
+        tgl_awal: moment().format('YYYY-MM-DD'),
+        tgl_akhir: moment().format('YYYY-MM-DD'),
+        kode_toko: state.auth.user.user_name,
+        product: {
+          value: 'ALL',
+          label: 'SEMUA',
+        },
+        status: {
+          value: 'ALL',
+          label: 'SEMUA',
+        },
       },
-      product: {
-        value: 'ALL',
-        label: 'SEMUA',
+    }
+  } else {
+    return {
+      initialValues: {
+        tgl_awal: moment().format('YYYY-MM-DD'),
+        tgl_akhir: moment().format('YYYY-MM-DD'),
+        kode_toko: {
+          value: 'ALL',
+          label: 'SEMUA',
+        },
+        product: {
+          value: 'ALL',
+          label: 'SEMUA',
+        },
+        status: {
+          value: 'ALL',
+          label: 'SEMUA',
+        },
       },
-      status: {
-        value: 'ALL',
-        label: 'SEMUA',
-      },
-    },
+    }
   }
 }
 
 const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+  const user: UserModelNew = useSelector<RootState>(
+    ({auth}) => auth.user,
+    shallowEqual
+  ) as UserModelNew
   const {handleSubmit, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataTokoSelect = [{value: 'ALL', label: 'SEMUA'}]
@@ -49,7 +77,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
     {value: 'OPEN', label: 'OPEN'},
     {value: 'OVER DUE', label: 'OVER DUE'},
     {value: 'PAID', label: 'PAID'},
-    {value: 'CANCEL', label: 'CANCEL'},
+    {value: 'CLOSE', label: 'CLOSE'},
   ]
   const [kodeToko, setKodeToko] = useState({value: 'ALL', label: 'SEMUA'})
   const [Product, setProduct] = useState({value: 'ALL', label: 'SEMUA'})
@@ -85,19 +113,35 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               placeholder='Masukan Tanggal Akhir'
             />
           </div>
-          <div className='col-lg-4 mb-2 mt-2'>
-            <Field
-              name='kode_toko'
-              component={ReanderSelect2}
-              options={dataTokoSelect}
-              label='Toko'
-              placeholder='Pilih Toko'
-              onChange={(e: any) => {
-                setKodeToko(e)
-              }}
-              defaultValue={{value: kodeToko.value, label: kodeToko.label}}
-            />
-          </div>
+          {user.level === 'CUSTOMER' ? (
+            <div className='col-lg-4 mb-2 mt-2'>
+              <Field
+                readOnly
+                name='kode_toko'
+                type='text'
+                customeCss='form-control-solid'
+                component={ReanderField}
+                nouperCase={true}
+                label='Toko'
+                placeholder='Masukan Toko'
+              />
+            </div>
+          ) : (
+            <div className='col-lg-4 mb-2 mt-2'>
+              <Field
+                name='kode_toko'
+                component={ReanderSelect2}
+                options={dataTokoSelect}
+                label='Toko'
+                placeholder='Pilih Toko'
+                onChange={(e: any) => {
+                  setKodeToko(e)
+                }}
+                defaultValue={{value: kodeToko.value, label: kodeToko.label}}
+              />
+            </div>
+          )}
+
           <div className='col-lg-4 mb-2 mt-2'>
             <Field
               name='product'
@@ -124,7 +168,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               defaultValue={{value: Status.value, label: Status.label}}
             />
           </div>
-          <div className='col-lg-4 mb-2 mt-2 d-none'>
+          <div className='col-lg-4 mb-2 mt-2'>
             <Field
               name='all'
               label='All'

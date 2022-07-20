@@ -32,4 +32,5 @@ export interface UserModelNew {
   level: string
   refresh_token: string
   user_id: string
+  user_name: string
 }

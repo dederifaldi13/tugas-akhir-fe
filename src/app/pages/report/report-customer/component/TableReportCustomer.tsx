@@ -2,9 +2,12 @@
 import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
-import {useSelector} from 'react-redux'
+import Lottie from 'react-lottie'
+import {shallowEqual, useSelector} from 'react-redux'
 import {RootState} from '../../../../../setup'
+import animationlist from '../../../../../_metronic/assets/animation'
 import {KTSVG} from '../../../../../_metronic/helpers'
+import {UserModelNew} from '../../../../modules/auth/models/UserModel'
 
 interface DataType {
   key: string
@@ -15,6 +18,7 @@ interface DataType {
   telepon: string
   email: string
   product: string
+  tipe_program: string
   qty: number
   harga: number
   bulan: string
@@ -30,115 +34,11 @@ interface ExpandedDataType {
   email: string
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Kode Toko / Customer',
-    dataIndex: 'kode_toko',
-    key: 'kode_toko',
-  },
-  {
-    title: 'Nama Toko / Customer',
-    dataIndex: 'toko',
-    key: 'toko',
-  },
-  {
-    title: 'Product',
-    dataIndex: 'product',
-    key: 'product',
-  },
-  {
-    title: 'Qty',
-    dataIndex: 'qty',
-    key: 'qty',
-    align: 'right',
-    render: (_, {qty}) => {
-      return qty.toLocaleString()
-    },
-  },
-  {
-    title: 'Harga',
-    dataIndex: 'harga',
-    key: 'harga',
-    align: 'right',
-    render: (_, {harga}) => {
-      return 'Rp. ' + harga.toLocaleString()
-    },
-  },
-  {
-    title: 'Bulan',
-    dataIndex: 'bulan',
-    key: 'bulan',
-  },
-  {
-    title: 'Total Harga',
-    dataIndex: 'total_harga',
-    key: 'total_harga',
-    align: 'right',
-    render: (_, {total_harga}) => {
-      return 'Rp. ' + total_harga.toLocaleString()
-    },
-  },
-  {
-    title: 'Tgl Jatuh Tempo',
-    dataIndex: 'tgl_jatuh_tempo',
-    key: 'tgl_jatuh_tempo',
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    dataIndex: 'status',
-    align: 'center',
-    render: (_, {status}) => {
-      if (status === 'OPEN') {
-        return (
-          <span className='badge badge-light-warning fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/maps/map001.svg'
-              className='svg-icon-2 svg-icon-warning'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
-      } else if (status === 'PAID') {
-        return (
-          <span className='badge badge-light-success fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/general/gen048.svg'
-              className='svg-icon-2 svg-icon-success'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
-      } else if (status === 'CLOSE') {
-        return (
-          <span className='badge badge-danger fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/general/gen040.svg'
-              className='svg-icon-2 svg-icon-white'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
-      } else {
-        return (
-          <span className='badge badge-light-danger fs-7 fw-bold'>
-            <KTSVG
-              path='/media/icons/duotune/general/gen044.svg'
-              className='svg-icon-2 svg-icon-danger'
-            />
-            &nbsp;
-            {status}
-          </span>
-        )
-      }
-    },
-  },
-]
-
 const TableReportCustomer: React.FC = () => {
+  const user: UserModelNew = useSelector<RootState>(
+    ({auth}) => auth.user,
+    shallowEqual
+  ) as UserModelNew
   const newarrdata: any =
     useSelector<RootState>(({reportCustomer}) => reportCustomer.feedback) || []
   const [dataSource, setDataSource] = useState(newarrdata)
@@ -156,6 +56,7 @@ const TableReportCustomer: React.FC = () => {
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.tipe_program.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.status.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.tgl_jatuh_tempo.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.bulan.toUpperCase().includes(currValue.toUpperCase()) ||
@@ -169,6 +70,169 @@ const TableReportCustomer: React.FC = () => {
     />
   )
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const image = <Lottie options={defaultOptions} height={400} width={400} />
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'Kode Toko / Customer',
+      dataIndex: 'kode_toko',
+      key: 'kode_toko',
+    },
+    {
+      title: 'Nama Toko / Customer',
+      dataIndex: 'toko',
+      key: 'toko',
+    },
+    {
+      title: 'Product',
+      dataIndex: 'product',
+      key: 'product',
+    },
+    {
+      title: 'Tipe',
+      dataIndex: 'tipe_program',
+      key: 'tipe_program',
+      render: (_, {tipe_program}) => {
+        if (tipe_program === 'ONLINE') {
+          return (
+            <span className='badge badge-success fs-7 fw-bold'>
+              {/* <KTSVG
+                path='/media/icons/duotune/maps/map001.svg'
+                className='svg-icon-2 svg-icon-light'
+              /> */}
+              &nbsp;
+              {tipe_program}
+            </span>
+          )
+        } else {
+          return (
+            <span className='badge badge-dark fs-7 fw-bold'>
+              {/* <KTSVG
+                path='/media/icons/duotune/maps/map001.svg'
+                className='svg-icon-2 svg-icon-light'
+              /> */}
+              &nbsp;
+              {tipe_program}
+            </span>
+          )
+        }
+      },
+    },
+    {
+      title: 'Qty',
+      dataIndex: 'qty',
+      key: 'qty',
+      align: 'right',
+      render: (_, {qty}) => {
+        return qty.toLocaleString()
+      },
+    },
+    {
+      title: 'Harga',
+      dataIndex: 'harga',
+      key: 'harga',
+      align: 'right',
+      render: (_, {harga}) => {
+        return 'Rp. ' + harga.toLocaleString()
+      },
+    },
+    {
+      title: 'Bulan',
+      dataIndex: 'bulan',
+      key: 'bulan',
+    },
+    {
+      title: 'Total Harga',
+      dataIndex: 'total_harga',
+      key: 'total_harga',
+      align: 'right',
+      render: (_, {total_harga}) => {
+        return 'Rp. ' + total_harga.toLocaleString()
+      },
+    },
+    {
+      title: 'Tgl Jatuh Tempo',
+      dataIndex: 'tgl_jatuh_tempo',
+      key: 'tgl_jatuh_tempo',
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      align: 'center',
+      render: (_, record) => {
+        if (record.tipe_program === 'OFFLINE') {
+          return (
+            <span className='badge badge-light-dark fs-7 fw-bold'>
+              <i className='bi bi-wifi-off text-dark'></i>
+              &nbsp; {user.level === 'CUSTOMER' ? 'OFFLINE' : record.status}
+            </span>
+          )
+        } else {
+          if (record.status === 'OPEN' || record.status === 'BELUM BAYAR') {
+            return (
+              <span className='badge badge-light-warning fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/maps/map001.svg'
+                  className='svg-icon-2 svg-icon-warning'
+                />
+                &nbsp;
+                {user.level === 'CUSTOMER' ? 'BELUM BAYAR' : record.status}
+              </span>
+            )
+          } else if (record.status === 'PAID' || record.status === 'SUDAH BAYAR') {
+            return (
+              <span className='badge badge-light-success fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/general/gen048.svg'
+                  className='svg-icon-2 svg-icon-success'
+                />
+                &nbsp;
+                {user.level === 'CUSTOMER' ? 'SUDAH BAYAR' : record.status}
+              </span>
+            )
+          } else if (record.status === 'CLOSE' || record.status === 'TIDAK AKTIF') {
+            return (
+              <span className='badge badge-danger fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/general/gen040.svg'
+                  className='svg-icon-2 svg-icon-white'
+                />
+                &nbsp;
+                {user.level === 'CUSTOMER' ? 'TIDAK AKTIF' : record.status}
+              </span>
+            )
+          } else {
+            return (
+              <span className='badge badge-light-danger fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/general/gen044.svg'
+                  className='svg-icon-2 svg-icon-danger'
+                />
+                &nbsp;
+                {user.level === 'CUSTOMER' ? 'JATUH TEMPO' : record.status}
+              </span>
+            )
+          }
+        }
+      },
+    },
+  ]
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
@@ -201,29 +265,39 @@ const TableReportCustomer: React.FC = () => {
           columns={columns}
           dataSource={dataTable}
           expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
+          locale={{
+            emptyText() {
+              return <>{image}Data Not Found</>
+            },
+          }}
           summary={(pageData) => {
             return (
               <>
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={3} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={4} align='right'>
                       Total
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={3} align='right'>
-                      {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
+                      {dataTable
+                        .reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)
+                        .toLocaleString()}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={4} align='right'>
                       {'Rp. ' +
                         dataTable
-                          .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
+                          .reduce((a: any, b: {harga: any}) => a + parseInt(b.harga || 0), 0)
                           .toLocaleString()}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={5}></Table.Summary.Cell>
                     <Table.Summary.Cell index={6} align='right'>
                       {'Rp. ' +
                         dataTable
-                          .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
+                          .reduce(
+                            (a: any, b: {total_harga: any}) => a + parseInt(b.total_harga || 0),
+                            0
+                          )
                           .toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

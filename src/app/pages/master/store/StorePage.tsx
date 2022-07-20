@@ -6,14 +6,17 @@ import {KTSVG} from '../../../../_metronic/helpers'
 import {PageTitle} from '../../../../_metronic/layout/core'
 import FormAddNewStore from './component/FormAddNewStore'
 import TableStore from './component/TableStore'
-import {GetMasterStore, PostStore} from './redux/action/StoreAction'
+import {GetDataCabangLocal, GetMasterStore, PostStore} from './redux/action/StoreAction'
 
 const StorePage: FC = () => {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false)
 
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleShow = () => {
+    dispatch(GetDataCabangLocal())
+    setShow(true)
+  }
   const handleSubmit = (data: any) => {
     dispatch(PostStore(data))
   }

@@ -4,6 +4,7 @@ import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormEditStoreValidate from '../../../../../setup/validate/FormAddNewProduct'
 import {ReanderField} from '../../../../modules/redux-form/BasicInput'
+import TableAlamatEdit from './TableAlamatEdit'
 
 interface Props {}
 
@@ -11,18 +12,16 @@ const mapState = (state: RootState) => {
   if (state.masterstore.feedbackID !== undefined) {
     return {
       initialValues: {
+        id: state.masterstore.feedbackID._id,
         kode_toko: state.masterstore.feedbackID.kode_toko,
         toko: state.masterstore.feedbackID.toko,
-        alamat: state.masterstore.feedbackID.alamat,
-        telepon: state.masterstore.feedbackID.telepon,
-        email: state.masterstore.feedbackID.email,
       },
     }
   }
 }
 
 const FormEditStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
-  const {handleSubmit, pristine, submitting} = props
+  const {handleSubmit, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
 
   return (
@@ -63,40 +62,16 @@ const FormEditStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
               placeholder='Masukan Toko'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='alamat'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Alamat'
-              placeholder='Masukan Alamat'
-            />
+          <div className='col-lg-12'>
+            <div className='separator mt-3 mb-3 opacity-100'></div>
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='telepon'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Telepon'
-              placeholder='Masukan Telepon'
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='email'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Email'
-              placeholder='Masukan Email'
-            />
+          <div className='col-lg-12'>
+            <TableAlamatEdit />
           </div>
         </div>
         <div className='row justify-content-end mt-2 mr-2'>
           <div className='col-lg-2 d-grid'>
-            <button className='btn btn-primary' disabled={pristine || submitting || isSending}>
+            <button className='btn btn-primary' disabled={submitting || isSending}>
               {!isSending && <span className='indicator-label'>Simpan</span>}
               {isSending && (
                 <span className='indicator-progress' style={{display: 'block'}}>

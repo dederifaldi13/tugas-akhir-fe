@@ -2,8 +2,10 @@
 import {Image, Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../setup'
+import animationlist from '../../../_metronic/assets/animation'
 import {KTSVG} from '../../../_metronic/helpers'
 import {
   CloseModalBuktiBayar,
@@ -14,6 +16,7 @@ import {
 interface DataType {
   key: string
   _id: string
+  created_at: string
   no_bayar: string
   tanggal_bayar: string
   kode_toko: string
@@ -23,6 +26,8 @@ interface DataType {
   harga: number
   bulan: string
   total_harga: number
+  status: string
+  tipe_pembayaran: string
   __v: number
 }
 
@@ -48,8 +53,9 @@ const TableHasBeenPaid: React.FC = () => {
     dispatch(GetGambarByNoBayar(no_bayar))
   }
 
-  const handleValid = (kode: string, product: string) => {
-    dispatch(ValidationPayment(kode, product))
+  const handleValid = (kode: string, product: string, nobyr: string) => {
+    setNoBayar(nobyr)
+    dispatch(ValidationPayment(kode, product, nobyr))
   }
   const SearchBar = (
     <Input
@@ -90,27 +96,38 @@ const TableHasBeenPaid: React.FC = () => {
       key: 'no_bayar',
     },
     {
+      title: 'Tipe Pembayaran',
+      dataIndex: 'tipe_pembayaran',
+      key: 'tipe_pembayaran',
+    },
+    {
       title: 'Bukti Pembayaran',
       key: 'action',
       align: 'center',
-      render: (_, record) => (
-        <Space size='middle'>
-          <button
-            className='btn btn-light-primary btn-sm me-1'
-            onClick={() => handleShow(record.no_bayar)}
-            disabled={isSending && noBayar === record.no_bayar}
-          >
-            {isSending && noBayar === record.no_bayar ? (
-              <span className='indicator-progress' style={{display: 'block'}}>
-                Please wait...
-                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-              </span>
-            ) : (
-              <span className='indicator-label'>Lihat Bukti</span>
-            )}
-          </button>
-        </Space>
-      ),
+      render: (_, record) => {
+        if (record.tipe_pembayaran === 'iPaymu') {
+          return '-'
+        } else {
+          return (
+            <Space size='middle'>
+              <button
+                className='btn btn-light-primary btn-sm me-1'
+                onClick={() => handleShow(record.no_bayar)}
+                disabled={isSending && noBayar === record.no_bayar}
+              >
+                {isSending && noBayar === record.no_bayar ? (
+                  <span className='indicator-progress' style={{display: 'block'}}>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                ) : (
+                  <span className='indicator-label'>Lihat Bukti</span>
+                )}
+              </button>
+            </Space>
+          )
+        }
+      },
     },
     {
       title: 'Tgl Bayar',
@@ -156,7 +173,7 @@ const TableHasBeenPaid: React.FC = () => {
         <Space size='middle'>
           <button
             className='btn btn-light-success btn-sm me-1'
-            onClick={() => handleValid(record.kode_toko, record.product)}
+            onClick={() => handleValid(record.kode_toko, record.product, record.no_bayar)}
             disabled={isSendingApprove && noBayar === record.no_bayar}
           >
             <span className='indicator-label'>
@@ -178,6 +195,23 @@ const TableHasBeenPaid: React.FC = () => {
     },
   ]
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
+
   return (
     <>
       <Image
@@ -197,6 +231,12 @@ const TableHasBeenPaid: React.FC = () => {
         <Table
           columns={columns}
           dataSource={dataTable}
+          scroll={{x: 1350}}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
           summary={(pageData) => {
             return (
               <>

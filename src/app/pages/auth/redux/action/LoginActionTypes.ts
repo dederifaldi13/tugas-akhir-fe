@@ -31,6 +31,7 @@ export type LoginActionType = {
     socialNetworks?: UserSocialNetworksType
 }
 export type FeedbackLoginType = {
+    user_name: any
     access_token: string
     level: string
     refresh_token: string

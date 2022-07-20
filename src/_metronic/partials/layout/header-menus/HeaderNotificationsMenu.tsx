@@ -83,61 +83,63 @@ const HeaderNotificationsMenu: FC = () => {
       <div className='tab-content'>
         <div className='tab-pane fade show active' id='kt_topbar_notifications_1' role='tabpanel'>
           <div className='scroll-y mh-325px my-5 px-8'>
-            {dataCustomer.map((val: any) => (
-              <div key={val._id} className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-35px me-4'>
-                    <span
-                      className={clsx(
-                        'symbol-label',
-                        `bg-${
-                          val.status === 'OPEN'
-                            ? 'light-warning'
-                            : val.status === 'PAID'
-                            ? 'light-success'
-                            : val.status === 'CLOSE'
-                            ? 'danger'
-                            : 'light-danger'
-                        }`
-                      )}
-                    >
-                      {' '}
-                      <KTSVG
-                        path={
-                          val.status === 'OPEN'
-                            ? `/media/icons/duotune/maps/map001.svg`
-                            : val.status === 'PAID'
-                            ? `/media/icons/duotune/general/gen048.svg`
-                            : val.status === 'CLOSE'
-                            ? `/media/icons/duotune/general/gen040.svg`
-                            : `/media/icons/duotune/general/gen044.svg`
-                        }
-                        className={`svg-icon-2 svg-icon-${
-                          val.status === 'OPEN'
-                            ? 'warning'
-                            : val.status === 'PAID'
-                            ? 'success'
-                            : val.status === 'CLOSE'
-                            ? 'white'
-                            : 'danger'
-                        }`}
-                      />
-                    </span>
+            {dataCustomer.map((val: any) => {
+              return (
+                <div key={val._id} className='d-flex flex-stack py-4'>
+                  <div className='d-flex align-items-center'>
+                    <div className='symbol symbol-35px me-4'>
+                      <span
+                        className={clsx(
+                          'symbol-label',
+                          `bg-${
+                            val.status === 'OPEN'
+                              ? 'light-warning'
+                              : val.status === 'PAID'
+                              ? 'light-success'
+                              : val.status === 'CLOSE'
+                              ? 'danger'
+                              : 'light-danger'
+                          }`
+                        )}
+                      >
+                        {' '}
+                        <KTSVG
+                          path={
+                            val.status === 'OPEN'
+                              ? `/media/icons/duotune/maps/map001.svg`
+                              : val.status === 'PAID'
+                              ? `/media/icons/duotune/general/gen048.svg`
+                              : val.status === 'CLOSE'
+                              ? `/media/icons/duotune/general/gen040.svg`
+                              : `/media/icons/duotune/general/gen044.svg`
+                          }
+                          className={`svg-icon-2 svg-icon-${
+                            val.status === 'OPEN'
+                              ? 'warning'
+                              : val.status === 'PAID'
+                              ? 'success'
+                              : val.status === 'CLOSE'
+                              ? 'white'
+                              : 'danger'
+                          }`}
+                        />
+                      </span>
+                    </div>
+
+                    <div className='mb-0 me-2'>
+                      <a href='#' className='fs-6 text-gray-800 text-hover-primary fw-bolder'>
+                        {val.toko}
+                      </a>
+                      <div className='text-gray-400 fs-7'>{val.product}</div>
+                    </div>
                   </div>
 
-                  <div className='mb-0 me-2'>
-                    <a href='#' className='fs-6 text-gray-800 text-hover-primary fw-bolder'>
-                      {val.toko}
-                    </a>
-                    <div className='text-gray-400 fs-7'>{val.product}</div>
-                  </div>
+                  <span className='badge badge-light fs-8'>
+                    {moment(val.tgl_jatuh_tempo).diff(tglNow, 'months') || 0} Month Left
+                  </span>
                 </div>
-
-                <span className='badge badge-light fs-8'>
-                  {moment(val.tgl_jatuh_tempo).diff(tglNow, 'months')} Month Left
-                </span>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           {/* <div className='py-3 text-center border-top'>

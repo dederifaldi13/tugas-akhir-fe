@@ -2,9 +2,11 @@
 import {Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import Swal from 'sweetalert2'
 import {RootState} from '../../../../setup'
+import animationlist from '../../../../_metronic/assets/animation'
 import {KTSVG} from '../../../../_metronic/helpers'
 import {PostActivateData, PostDeactivateData} from '../redux/action/ServiceAdjustmentAction'
 
@@ -132,9 +134,6 @@ const TableDeactivate: React.FC = () => {
       dataIndex: 'qty',
       key: 'qty',
       align: 'right',
-      render: (_, {qty}) => {
-        return qty.toLocaleString()
-      },
     },
     {
       title: 'Harga',
@@ -268,6 +267,23 @@ const TableDeactivate: React.FC = () => {
     return <Table columns={columns} dataSource={data} pagination={false} />
   }
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+      filterSize: {
+        width: '10%',
+        height: '10%',
+        x: '-50%',
+        y: '-50%',
+      },
+    },
+  }
+
+  const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
+
   return (
     <>
       <div className='row justify-content-end mt-2 mb-2'>
@@ -278,6 +294,11 @@ const TableDeactivate: React.FC = () => {
           columns={columns}
           dataSource={dataTable}
           expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
+          locale={{
+            emptyText() {
+              return <>{imagenotfound}Data Not Found</>
+            },
+          }}
           summary={(pageData) => {
             return (
               <>
@@ -288,19 +309,24 @@ const TableDeactivate: React.FC = () => {
                       Total
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={3} align='right'>
-                      {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
+                      {dataTable
+                        .reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)
+                        .toLocaleString()}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={4} align='right'>
                       {'Rp. ' +
                         dataTable
-                          .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
+                          .reduce((a: any, b: {harga: any}) => a + parseInt(b.harga || 0), 0)
                           .toLocaleString()}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={5}></Table.Summary.Cell>
                     <Table.Summary.Cell index={6} align='right'>
                       {'Rp. ' +
                         dataTable
-                          .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
+                          .reduce(
+                            (a: any, b: {total_harga: any}) => a + parseInt(b.total_harga || 0),
+                            0
+                          )
                           .toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

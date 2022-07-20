@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { EDIT_PRODUCT_SUCCESS, GetProductType, GET_PRODUCT_SUCCESS } from "./action/ProductActionTypes";
+import { EDIT_PRODUCT_SUCCESS, GetProductType, GET_PRODUCT_SUCCESS, HIDE_MODAL, SHOW_MODAL } from "./action/ProductActionTypes";
 
 export interface ActionWithPayload<T> extends Action {
     payload?: T
@@ -7,12 +7,14 @@ export interface ActionWithPayload<T> extends Action {
 
 export interface DefaultStateI {
     feedback?: Array<GetProductType>;
-    feedbackID?: GetProductType
+    feedbackID?: GetProductType;
+    modal: boolean
 }
 
 const defaultState: DefaultStateI = {
     feedback: [],
-    feedbackID: undefined
+    feedbackID: undefined,
+    modal: false
 };
 
 const masterProductReducer = (
@@ -26,6 +28,10 @@ const masterProductReducer = (
         case EDIT_PRODUCT_SUCCESS:
             const data_id = action.payload?.feedbackID
             return { ...state, feedbackID: data_id }
+        case SHOW_MODAL:
+            return { ...state, modal: true }
+        case HIDE_MODAL:
+            return { ...state, modal: false }
         default:
             return state;
     }

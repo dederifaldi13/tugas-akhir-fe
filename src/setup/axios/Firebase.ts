@@ -35,6 +35,23 @@ export function postPDF(file: any, name: string) {
     });
 }
 
+export function postKwitansiPDF(file: any, name: string) {
+    return new Promise((resolve, reject) => {
+        const storage = firebase.storage();
+        let storageRef = storage.ref("NSIPIC/KwitansiPDF/" + name + ".pdf");
+        storageRef
+            .put(file)
+            .then((res: any) => {
+                storageRef.getDownloadURL().then(function (url: any) {
+                    resolve(url);
+                });
+            })
+            .catch((err: string) => {
+                reject(JSON.parse(err));
+            });
+    });
+}
+
 export function deleteImage(name: string) {
     return new Promise((resolve, reject) => {
         let storage = firebase.storage();

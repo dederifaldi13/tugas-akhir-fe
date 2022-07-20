@@ -9,13 +9,13 @@ import { GET_HISTORY_PAYMENT_SUCCESS, HIDE_MODAL_BUKTI_BAYAR_SUCCESS, SET_NO_BAY
 
 export const REPORT_HISTORY_PAYMENT_API = `payment/report?`
 
-export const GetHistoryPaymentReport = (data: { kode_toko: { value: string, label: string }, product: { value: string, label: string }, tgl_akhir: string, tgl_awal: string }) => {
+export const GetHistoryPaymentReport = (data: { kode_toko: any, product: { value: string, label: string }, tgl_akhir: string, tgl_awal: string }) => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
         let newarrdata: TableHistoryPaymentReportType[] = []
         dispatch(setLoading())
         const tgl_awal = moment(data.tgl_awal).format('YYYY-MM-DD')
         const tgl_akhir = moment(data.tgl_akhir).format('YYYY-MM-DD')
-        const kode_toko = data.kode_toko.value
+        const kode_toko = data.kode_toko.value !== undefined ? data.kode_toko.value : data.kode_toko
         const prod = data.product.value
         AxiosGet(`${REPORT_HISTORY_PAYMENT_API}startDate=${tgl_awal}&endDate=${tgl_akhir}&kode_toko=${kode_toko}&product=${prod}`).then(async (res: any) => {
             if (res.data.length === 0) {
