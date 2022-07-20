@@ -79,6 +79,13 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
     {value: 'PAID', label: 'PAID'},
     {value: 'CLOSE', label: 'CLOSE'},
   ]
+  const dataStatusCustomer = [
+    {value: 'ALL', label: 'SEMUA'},
+    {value: 'OPEN', label: 'BELUM BAYAR'},
+    {value: 'OVER DUE', label: 'JATUH TEMPO'},
+    {value: 'PAID', label: 'SUDAH BAYAR'},
+    {value: 'CLOSE', label: 'TIDAK AKTIF'},
+  ]
   const [kodeToko, setKodeToko] = useState({value: 'ALL', label: 'SEMUA'})
   const [Product, setProduct] = useState({value: 'ALL', label: 'SEMUA'})
   const [Status, setStatus] = useState({value: 'ALL', label: 'SEMUA'})
@@ -159,7 +166,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             <Field
               name='status'
               component={ReanderSelect2}
-              options={dataStatus}
+              options={user.level === 'CUSTOMER' ? dataStatusCustomer : dataStatus}
               label='Status'
               placeholder='Pilih Status'
               onChange={(e: any) => {
