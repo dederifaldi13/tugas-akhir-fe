@@ -1,9 +1,10 @@
 import { Dispatch } from "redux";
-import { AxiosGet, AxiosPost, getImage, PopUpAlert, postPDF } from "../../../../../setup";
+import { AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
 import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/function";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
 import InvoicePDF from "../../pdf/InvoicePDF";
+import KwitansiPDF from "../../pdf/KwitansiPDF";
 import {
   CabangType,
   COUNT_TOTAL_HARGA,
@@ -308,9 +309,9 @@ export const CreateAndSendPDFWithLoop = () => {
         newarrdata.push(obj)
       }
       newarrdata.forEach((element) => {
-        const pdf64 = InvoicePDF(element)
+        const pdf64 = KwitansiPDF(element, '-')
         const file = dataURLtoPDFFile(pdf64, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`)
-        postPDF(file, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`).then((res: any) => {
+        postKwitansiPDF(file, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`).then((res: any) => {
           console.log(res);
         }).finally(() => {
           dispatch(stopLoading())

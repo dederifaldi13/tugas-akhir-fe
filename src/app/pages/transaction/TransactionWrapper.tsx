@@ -1,14 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Result} from 'antd'
 import React, {FC, useEffect} from 'react'
+import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import {useParams} from 'react-router-dom'
 import {RootState} from '../../../setup'
+import animationlist from '../../../_metronic/assets/animation'
 import {PageTitle} from '../../../_metronic/layout/core'
 import FormTransaction from './component/FormTransaction'
 import {ConfirmPaymentAction, GetTransactionFilter} from './redux/action/TransactionAction'
 
 const TransactionWrapper: FC = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationlist.notfound404,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
   const params: {
     kode_toko: string
     product: string
@@ -49,19 +59,20 @@ const TransactionWrapper: FC = () => {
                 <div className='card-body py-3'>
                   {dataTrx === undefined ? (
                     <Result
-                      status='404'
-                      title='404'
-                      subTitle='Sorry, the page you visited does not exist.'
+                      icon={<Lottie options={defaultOptions} height={400} width={400} />}
+                      title='Oops! Page Not Found'
                       extra={
-                        <button
-                          className='btn btn-primary'
-                          onClick={() => {
-                            window.open('', '_self', '')
-                            window.close()
-                          }}
-                        >
-                          <span className='indicator-label'>Ok</span>
-                        </button>
+                        <>
+                          <button
+                            className='btn btn-primary'
+                            onClick={() => {
+                              window.open('', '_self', '')
+                              window.close()
+                            }}
+                          >
+                            <span className='indicator-label'>Ok</span>
+                          </button>
+                        </>
                       }
                     />
                   ) : dataTrx?.status === 'PAID' ? (

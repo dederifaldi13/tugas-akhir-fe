@@ -17,52 +17,52 @@ const KwitansiPDF = (data, no) => {
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
   var imgData = toAbsoluteUrl('/media/patterns/TemplateKwitansi.jpg')
-  doc.addImage(imgData, 'JPEG', 15, 17, 180, 220)
-  doc.text(no, 94, 61)
-  doc.text(data.toko.toUpperCase(), 80, 78)
+  doc.addImage(imgData, 'JPEG', 15, 17, 180, 240)
+  doc.text(no, 94, 65)
+  doc.text(data.toko.toUpperCase(), 80, 83)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Regular.ttf'), 'Lora', 'normal')
   doc.setFont('Lora', 'normal')
   //   doc.text(data.alamat, 80, 83)
   let jml_alamat = data.alamat.length
   if (jml_alamat > 20) {
-    doc.text(data.alamat.slice(0, 37), 80, 83)
+    doc.text(data.alamat.slice(0, 37), 80, 89)
   }
   if (jml_alamat > 50) {
-    doc.text(data.alamat.slice(37, 100), 80, 88)
+    doc.text(data.alamat.slice(37, 100), 80, 94)
   }
   if (jml_alamat < 20) {
-    doc.text(data.alamat, 80, 83)
+    doc.text(data.alamat, 80, 89)
   }
 
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
-  doc.text('#' + data.total_harga.toLocaleString() + '#', 83, 97)
-  doc.text('Layanan berlangganan Nagatech Sistem Integrator, ', 80, 106)
+  doc.text('#' + data.total_harga.toLocaleString() + '#', 83, 104)
+  doc.text('Layanan berlangganan Nagatech Sistem Integrator, ', 80, 114)
   const desk = `Total nilai Rp. ${data.total_harga.toLocaleString()} (${angkaTerbilang(
     data.total_harga
   )})`
   const jml_desk = desk.length
   if (jml_desk > 20) {
-    doc.text(desk.slice(0, 53), 80, 111)
+    doc.text(desk.slice(0, 53), 80, 119)
   }
   if (jml_desk > 53) {
-    doc.text(desk.slice(53, 100), 80, 116)
+    doc.text(desk.slice(53, 100), 80, 124)
   }
   if (jml_desk < 20) {
-    doc.text(desk, 80, 111)
+    doc.text(desk, 80, 119)
   }
   //   doc.text(desk, 80, 110)
-  doc.text('#' + angkaTerbilang(data.total_harga) + '#', 83, 125)
+  doc.text('#' + angkaTerbilang(data.total_harga) + '#', 83, 135)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Regular.ttf'), 'Lora', 'normal')
   doc.setFont('Lora', 'normal')
-  doc.text('Bandung, ' + today, 135, 154)
+  doc.text('Bandung, ' + today, 135, 167)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
   const jml_toko = data.toko.length
   if (jml_toko < 12) {
-    doc.text(data.toko, 157, 200)
+    doc.text(data.toko, 157, 216)
   } else {
-    doc.text(data.toko, 147, 200)
+    doc.text(data.toko, 147, 216)
   }
 
   const pages = doc.internal.getNumberOfPages()

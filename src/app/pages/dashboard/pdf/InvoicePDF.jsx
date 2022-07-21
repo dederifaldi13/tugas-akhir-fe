@@ -17,41 +17,41 @@ const InvoicePDF = (data) => {
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
   var imgData = toAbsoluteUrl('/media/patterns/FakturNew.jpg')
-  doc.addImage(imgData, 'JPEG', 15, 15, 180, 220)
-  doc.text(`-`, 57, 64)
-  doc.text(today, 57, 68)
-  doc.text(data.tgl_jatuh_tempo, 57, 72)
-  doc.text(data.toko, 142, 64)
+  doc.addImage(imgData, 'JPEG', 15, 15, 180, 240)
+  doc.text(`-`, 57, 68)
+  doc.text(today, 57, 73)
+  doc.text(data.tgl_jatuh_tempo, 57, 77)
+  doc.text(data.toko, 142, 68)
   let jml_alamat = data.alamat.length
 
   if (jml_alamat > 20) {
-    doc.text(data.alamat.slice(0, 37), 142, 68)
+    doc.text(data.alamat.slice(0, 37), 142, 73)
   }
   if (jml_alamat > 50) {
-    doc.text(data.alamat.slice(37, 75), 142, 72)
+    doc.text(data.alamat.slice(37, 75), 142, 77)
   }
   if (jml_alamat > 70) {
-    doc.text(data.alamat.slice(75, 100), 142, 75)
+    doc.text(data.alamat.slice(75, 100), 142, 80)
   }
   if (jml_alamat < 20) {
-    doc.text(data.alamat, 142, 68)
+    doc.text(data.alamat, 142, 73)
   }
   // if (jml_alamat > 80) {
   //   doc.text(data.alamat.slice(78, 100), 142, 74)
   // }
   // doc.text(data.alamat, 142, 68)
   // doc.text(data.alamat.slice(0, 25), 142, 68)
-  doc.text(data.telepon, 142, 78)
+  doc.text(data.telepon, 142, 83)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Regular.ttf'), 'Lora', 'normal')
   doc.setFont('Lora', 'normal')
-  doc.text(data.product, 30, 108)
-  doc.text(data.qty.toString(), 110, 108)
-  doc.text(data.harga.toLocaleString(), 133, 108)
-  doc.text(data.total_harga.toLocaleString(), 165, 108)
+  doc.text(data.product, 30, 114)
+  doc.text(data.qty.toString(), 110, 114)
+  doc.text('Rp. ' + data.harga.toLocaleString(), 133, 114)
+  doc.text('Rp. ' + data.total_harga.toLocaleString(), 165, 114)
   doc.setTextColor(255, 255, 255)
-  doc.text(data.total_harga.toLocaleString(), 155, 175)
+  doc.text('Rp. ' + data.total_harga.toLocaleString(), 155, 189)
   doc.setTextColor(0, 0, 0)
-  doc.text('#' + angkaTerbilang(data.total_harga) + '#', 130, 187)
+  doc.text('#' + angkaTerbilang(data.total_harga) + '#', 130, 204)
   // doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-BoldItalic.ttf'), 'Lora', 'bold-italic')
   // doc.setFont('Lora', 'bold-italic')
   // doc.text(data.toko.toLocaleString(), 152, 211)

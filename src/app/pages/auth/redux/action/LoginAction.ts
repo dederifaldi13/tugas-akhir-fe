@@ -37,10 +37,22 @@ export const doLogin = (data: FormLoginType) => {
             })
         }).catch((error: any) => {
             console.log(error);
-            dispatch(stopLoading())
-            PopUpAlert.default.AlertError(error.response.data.message)
-            localStorage.clear()
-            dispatch({ type: LOGOUT_SUCCESS })
+            if (error.message === 'Network Error') {
+                Swal.fire({
+                    position: 'center',
+                    imageUrl: toAbsoluteUrl('/media/illustrations/new/noconnection.gif'),
+                    title: 'Looks like you lost your internet connection !',
+                    imageWidth: 250,
+                    imageHeight: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                })
+            } else {
+                dispatch(stopLoading())
+                PopUpAlert.default.AlertError(error.response.data.message)
+                localStorage.clear()
+                dispatch({ type: LOGOUT_SUCCESS })
+            }
         })
     }
 }
