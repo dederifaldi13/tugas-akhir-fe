@@ -7,6 +7,14 @@ import {ReanderField, ReanderSelect2} from '../../../../modules/redux-form/Basic
 
 interface Props {}
 
+const mapState = (state: RootState) => {
+  return {
+    initialValues: {
+      tipe_program: {value: 'ONLINE', label: 'ONLINE'},
+    },
+  }
+}
+
 const FormAddNewProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {handleSubmit, pristine, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
@@ -71,4 +79,4 @@ const form = reduxForm<{}, Props>({
   enableReinitialize: true,
   validate: FormAddNewProductValidate,
 })(FormAddNewProduct)
-export default connect()(form)
+export default connect(mapState, null)(form)
