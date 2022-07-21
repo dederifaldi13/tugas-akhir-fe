@@ -69,7 +69,7 @@ const FormEditUser: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
               placeholder='Masukan User ID'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2 d-none'>
+          <div className='col-lg-6 mb-2 mt-2'>
             <Field
               name='user_name'
               type='text'

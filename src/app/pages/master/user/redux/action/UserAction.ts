@@ -68,7 +68,8 @@ export const PutUser = (data: EditUserType) => {
         dispatch(setLoading());
         const sendData = {
             user_id: data.user_id,
-            level: data.level.value
+            level: data.level.value,
+            user_name: data.user_name
         }
         AxiosPut(`${MASTER_USER_URL}/` + data.id, sendData).then(() => {
             PopUpAlert.default.AlertSuccessEdit()

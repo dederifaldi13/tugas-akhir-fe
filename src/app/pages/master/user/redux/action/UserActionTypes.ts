@@ -14,6 +14,7 @@ export type EditUserType = {
     id: String;
     user_id: String;
     level: { value: String, label: String };
+    user_name: String;
 };
 
 export type DeleteUserType = {
