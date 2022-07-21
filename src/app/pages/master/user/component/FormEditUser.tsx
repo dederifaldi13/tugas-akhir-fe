@@ -13,6 +13,7 @@ const mapState = (state: RootState) => {
       initialValues: {
         user_id: state.masteruser.feedbackID.user_id,
         id: state.masteruser.feedbackID._id,
+        level: {value: state.masteruser.feedbackID.level, label: state.masteruser.feedbackID.level},
         user_name: state.masteruser.feedbackID.user_name,
       },
     }
