@@ -16,7 +16,7 @@ const KwitansiPDF = (data, no) => {
   })
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
-  var imgData = toAbsoluteUrl('/media/patterns/TemplateKwitansi.jpg')
+  var imgData = toAbsoluteUrl('/media/patterns/TemplateKuitansi.jpg')
   doc.addImage(imgData, 'JPEG', 15, 17, 180, 240)
   doc.text(no, 94, 65)
   doc.text(data.toko.toUpperCase(), 80, 83)

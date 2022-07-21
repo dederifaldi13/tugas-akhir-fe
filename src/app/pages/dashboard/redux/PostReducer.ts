@@ -12,6 +12,7 @@ import {
   POST_SUCCESS,
   SET_CABANG,
   SET_CABANG_BY_ID,
+  SET_ID_FOR_DELETE,
   SET_PRODUCT,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS
 } from "./actions/PostActionTypes";
@@ -34,6 +35,7 @@ export interface DefaultStateI {
   tipe_program?: String;
   cabangToko?: Array<CabangType>;
   cabangTokoByID?: CabangType
+  ID?: String;
 }
 
 const defaultState: DefaultStateI = {
@@ -44,12 +46,13 @@ const defaultState: DefaultStateI = {
   image: '-',
   dataTokoByKode: undefined,
   totalHarga: 0,
-  qty: 0,
+  qty: 6,
   harga: 0,
   product: '',
   tipe_program: 'ONLINE',
   cabangToko: [],
-  cabangTokoByID: undefined
+  cabangTokoByID: undefined,
+  ID: '-'
 
 };
 
@@ -78,6 +81,8 @@ const postReducer = (
       return { ...state, cabangToko: action.payload?.cabangToko }
     case SET_CABANG_BY_ID:
       return { ...state, cabangTokoByID: action.payload?.cabangTokoByID }
+    case SET_ID_FOR_DELETE:
+      return { ...state, ID: action.payload?.ID }
     default:
       return state;
   }

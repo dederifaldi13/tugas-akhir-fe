@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
+import { AxiosDelete, AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
 import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/function";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
@@ -18,6 +18,7 @@ import {
   RequestValidationType,
   SET_CABANG,
   SET_CABANG_BY_ID,
+  SET_ID_FOR_DELETE,
   SET_PRODUCT,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
   TableDataType,
@@ -150,7 +151,7 @@ export const CountTotalHargaQty = (value: number) => {
 
 export const CountTotalHarga = (value: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    const qty = getState().form.FormAddNewTransaction.values?.qty || 0
+    const qty = getState().form.FormAddNewTransaction.values?.bulan || 0
     const harga = parseInt(NumberOnly(value) || 0)
     const totalharga = qty * harga
     dispatch({ type: COUNT_TOTAL_HARGA, payload: { totalHarga: totalharga, harga: harga } })
@@ -200,7 +201,7 @@ export const PostCustomer = (data: FormPostType) => {
         tipe_program: data.tipe_program,
         qty: parseInt(data.qty.toString()),
         harga: parseInt(data.harga.toString()),
-        bulan: data.bulan,
+        bulan: data.bulan.toString(),
         total_harga: parseInt(data.total_harga.toString()),
         tgl_jatuh_tempo: data.tgl_jatuh_tempo
       }
@@ -277,6 +278,34 @@ export const SendEmailAndWhatsApp = () => {
       PopUpAlert.default.AlertError('Gagal Mengirim Email dan WhatsApp')
     }).finally(() => {
       dispatch(stopLoading())
+    })
+  };
+};
+
+
+export const SetIDForDelete = (id: String) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({ type: SET_ID_FOR_DELETE, payload: { ID: id } })
+  };
+};
+
+export const deleteTransaction = (data: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(setLoading())
+    AxiosGet(`user/authorize/delete?user_id=${data.user_id}&password=${data.password}`).then(() => {
+      const id = getState().dashboard.ID
+      AxiosDelete('customer/' + id).then(() => {
+        dispatch(stopLoading())
+        PopUpAlert.default.AlertSuccessDelete()
+      }).catch((error: any) => {
+        console.log(error);
+        dispatch(stopLoading())
+        PopUpAlert.default.AlertError('Gagal Menghapus Data !')
+      })
+    }).catch((error: any) => {
+      console.log(error);
+      dispatch(stopLoading())
+      PopUpAlert.default.AlertError(error.response.data.message || 'User / Password Salah !')
     })
   };
 };

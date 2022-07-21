@@ -29,6 +29,7 @@ export const ConfirmPaymentAction = (data: FormPayType, params: ParamsGetTransac
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
         dispatch(setLoading());
         const sendData: PostPayType = {
+            kode_cabang: params.kode_cabang,
             kode_toko: data.kode_toko,
             toko: data.toko,
             product: data.product,

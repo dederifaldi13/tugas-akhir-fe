@@ -42,10 +42,10 @@ const mapState = (state: RootState) => {
             label: state.dashboard.product,
           },
           tipe_program: state.dashboard.tipe_program,
-          qty: state.dashboard.qty,
+          qty: 1,
           harga: state.dashboard.harga,
           total_harga: state.dashboard.totalHarga,
-          bulan: '6',
+          bulan: state.dashboard.qty,
         },
       }
     } else {
@@ -67,10 +67,10 @@ const mapState = (state: RootState) => {
             label: state.dashboard.product,
           },
           tipe_program: state.dashboard.tipe_program,
-          qty: state.dashboard.qty,
+          qty: 1,
           harga: state.dashboard.harga,
           total_harga: state.dashboard.totalHarga,
-          bulan: '6',
+          bulan: state.dashboard.qty,
         },
       }
     }
@@ -90,10 +90,10 @@ const mapState = (state: RootState) => {
           label: '',
         },
         tipe_program: state.dashboard.tipe_program,
-        qty: state.dashboard.qty,
+        qty: 1,
         harga: state.dashboard.harga,
         total_harga: state.dashboard.totalHarga,
-        bulan: '6',
+        bulan: state.dashboard.qty,
       },
     }
   }
@@ -218,17 +218,16 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               placeholder='Masukan Tipe'
             />
           </div>
-          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
+          <div className={`col-lg-6 mb-2 mt-2 d-none`}>
             <Field
+              readOnly
+              customeCss='form-control-solid'
               name='qty'
               type='number'
               component={ReanderField}
               nouperCase={true}
               label='Qty'
               placeholder='Masukan Qty'
-              onChange={(e: any) => {
-                dispatch(CountTotalHargaQty(e.target.value))
-              }}
             />
           </div>
           <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
@@ -255,6 +254,9 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               nouperCase={true}
               label='Bulan'
               placeholder='Masukan Bulan'
+              onChange={(e: any) => {
+                dispatch(CountTotalHargaQty(e.target.value))
+              }}
             />
           </div>
           <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>

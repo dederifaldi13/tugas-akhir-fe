@@ -23,7 +23,7 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
         dispatch(setLoading())
         const baseUrl = process.env.REACT_APP_API_URL
-        const url = baseUrl + "payment/ipay/" + data.kode_toko.replaceAll(' ', '%20') + "/" + data.toko.replaceAll(' ', '%20') + "/" + data.product.replaceAll(' ', '%20') + "/" + data.qty + "/" + data.harga + "/" + data.bulan + "/" + data.total_harga + "/iPaymu"
+        const url = baseUrl + "payment/ipay/" + data.kode_toko.replaceAll(' ', '%20') + "/" + data.toko.replaceAll(' ', '%20') + "/" + data.product.replaceAll(' ', '%20') + "/" + params.kode_cabang.replaceAll(' ', '%20') + "/" + data.qty + "/" + data.harga + "/" + data.bulan + "/" + data.total_harga + "/iPaymu"
         const dataKirim: IPaymuType = {
             product: [data.product],
             qty: [data.qty.toString()],

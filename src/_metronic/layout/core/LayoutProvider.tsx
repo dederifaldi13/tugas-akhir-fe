@@ -59,7 +59,7 @@ const LayoutProvider: React.FC = ({children}) => {
     setCSSVariables(LayoutSetup.cssVariables)
     setTimeout(() => {
       disableSplashScreen()
-    }, 500)
+    }, 1000)
   }
   const value: LayoutContextModel = {
     config,

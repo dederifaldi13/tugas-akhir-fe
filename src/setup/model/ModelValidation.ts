@@ -48,4 +48,9 @@ export type IFormStoreType = {
     toko: String;
 };
 
+export type IOtorisasiForm = {
+    user_id: String;
+    password: String;
+};
+
 

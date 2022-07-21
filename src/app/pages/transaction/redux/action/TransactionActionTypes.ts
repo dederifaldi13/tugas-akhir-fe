@@ -22,6 +22,7 @@ export type GetTransactionType = {
 }
 
 export type PostPayType = {
+    kode_cabang: string
     kode_toko: string
     toko: string
     product: string
