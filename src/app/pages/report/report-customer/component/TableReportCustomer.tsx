@@ -90,14 +90,14 @@ const TableReportCustomer: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Kode Toko / Customer',
+      title: 'Toko / Customer',
       dataIndex: 'kode_toko',
       key: 'kode_toko',
     },
     {
-      title: 'Nama Toko / Customer',
-      dataIndex: 'toko',
-      key: 'toko',
+      title: 'Alamat',
+      dataIndex: 'alamat',
+      key: 'alamat',
     },
     {
       title: 'Product',
@@ -236,7 +236,6 @@ const TableReportCustomer: React.FC = () => {
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
-      {title: 'Alamat', dataIndex: 'alamat', key: 'alamat'},
       {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
       {title: 'Email', dataIndex: 'email', key: 'email'},
     ]

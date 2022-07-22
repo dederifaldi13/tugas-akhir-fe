@@ -45,7 +45,7 @@ const ReportCustomerPDF = (data, head) => {
     const row = [
       {content: no++},
       {content: element.toko},
-      {content: element.kode_toko},
+      {content: element.alamat},
       {content: element.product},
       {content: element.tipe_program},
       {content: element.qty, styles: {halign: 'right'}},
