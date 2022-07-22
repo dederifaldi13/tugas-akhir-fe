@@ -208,7 +208,7 @@ export const PostCustomer = (data: FormPostType) => {
     }
 
     AxiosPost('customer', senddata).then((res: any) => {
-      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((resget: any) => {
+      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(/\+/g, '_')}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((resget: any) => {
         const dataInvoice = resget.data[0]
         const pdf64 = InvoicePDF(dataInvoice)
         const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
@@ -246,7 +246,7 @@ export const ValidationPayment = (kode: string, product: string, nobyr: string) 
       product: product,
     }
     AxiosPost('payment/validation', senddata).then((res: any) => {
-      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((res: any) => {
+      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(/\+/g, '_')}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((res: any) => {
         const dataInvoice = res.data[0]
         const pdf64 = InvoicePDF(dataInvoice)
         const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)

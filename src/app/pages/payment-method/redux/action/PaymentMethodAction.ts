@@ -10,7 +10,7 @@ export const TRANSACTION_URL_FILTER = `customer`
 
 export const GetTransactionFilter = (params: ParamsGetTransactionType) => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-        AxiosGet(TRANSACTION_URL_FILTER + '/filter?kode_toko=' + params.kode_toko + '&product=' + params.product + '&kode_cabang=' + params.kode_cabang + '&tipe_program=' + params.tipe_program).then((res: any) => {
+        AxiosGet(TRANSACTION_URL_FILTER + '/filter?kode_toko=' + params.kode_toko + '&product=' + params.product.replaceAll(/\+/g, '_') + '&kode_cabang=' + params.kode_cabang + '&tipe_program=' + params.tipe_program).then((res: any) => {
             dispatch({ type: GET_TRANSACTION_SUCCESS, payload: { feedback: res.data[0] } });
         }).catch((error: any) => {
             console.log(error);
@@ -24,6 +24,7 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
         dispatch(setLoading())
         const baseUrl = process.env.REACT_APP_API_URL
         const url = baseUrl + "payment/ipay/" + data.kode_toko.replaceAll(' ', '%20') + "/" + data.toko.replaceAll(' ', '%20') + "/" + data.product.replaceAll(' ', '%20') + "/" + params.kode_cabang.replaceAll(' ', '%20') + "/" + data.qty + "/" + data.harga + "/" + data.bulan + "/" + data.total_harga + "/iPaymu"
+
         const dataKirim: IPaymuType = {
             product: [data.product],
             qty: [data.qty.toString()],
@@ -38,8 +39,9 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
             buyerPhone: data.telepon,
             paymentMethod: "banktransfer",
         }
+        
         AxiosPostiPayMu('payment', dataKirim).then((res: any) => {
-            AxiosGet(`customer/filter?kode_toko=${params.kode_toko}&product=${params.product}&kode_cabang=${params.kode_cabang}&tipe_program=${params.tipe_program}`).then((response: any) => {
+            AxiosGet(`customer/filter?kode_toko=${params.kode_toko}&product=${params.product.replaceAll(/\+/g, '_')}&kode_cabang=${params.kode_cabang}&tipe_program=${params.tipe_program}`).then((response: any) => {
                 const dataInvoice = response.data[0]
                 const pdfkwitansi64 = KwitansiPDF(dataInvoice, '-')
                 const filekwitansi = dataURLtoPDFFile(pdfkwitansi64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)

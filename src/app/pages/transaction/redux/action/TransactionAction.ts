@@ -10,7 +10,7 @@ export const TRANSACTION_URL_FILTER = `customer`
 
 export const GetTransactionFilter = (params: ParamsGetTransactionType) => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-        AxiosGet(TRANSACTION_URL_FILTER + '/filter?kode_toko=' + params.kode_toko + '&product=' + params.product + '&kode_cabang=' + params.kode_cabang + '&tipe_program=' + params.tipe_program).then((res: any) => {
+        AxiosGet(TRANSACTION_URL_FILTER + '/filter?kode_toko=' + params.kode_toko + '&product=' + params.product.replaceAll(/\+/g, '_') + '&kode_cabang=' + params.kode_cabang + '&tipe_program=' + params.tipe_program).then((res: any) => {
             dispatch({ type: GET_TRANSACTION_SUCCESS, payload: { feedback: res.data[0] } });
         }).catch((error: any) => {
             console.log(error);
@@ -41,7 +41,7 @@ export const ConfirmPaymentAction = (data: FormPayType, params: ParamsGetTransac
         AxiosPost('payment/pay', sendData).then((res: any) => {
             const file = dataURLtoFile(data.foto)
             postImage(file, res.no_bayar).finally(() => {
-                AxiosGet(`customer/filter?kode_toko=${params.kode_toko}&product=${params.product}&kode_cabang=${params.kode_cabang}&tipe_program=${params.tipe_program}`).then((response: any) => {
+                AxiosGet(`customer/filter?kode_toko=${params.kode_toko}&product=${params.product.replaceAll(/\+/g, '_')}&kode_cabang=${params.kode_cabang}&tipe_program=${params.tipe_program}`).then((response: any) => {
                     const dataInvoice = response.data[0]
                     const pdfkwitansi64 = KwitansiPDF(dataInvoice, res.no_bayar)
                     const filekwitansi = dataURLtoPDFFile(pdfkwitansi64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
