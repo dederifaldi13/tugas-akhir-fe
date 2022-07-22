@@ -260,8 +260,8 @@ export const ValidationPayment = (kode: string, product: string, nobyr: string) 
         dispatch(stopLoadingApprove());
       })
     }).catch((error: any) => {
-      console.log(error);
-      PopUpAlert.default.AlertError('Gagal Melakukan Validasi Data')
+      // console.log(error.response.data.message);
+      PopUpAlert.default.AlertError(error.response.data.message || 'Gagal Melakukan Validasi Data')
       dispatch(stopLoadingApprove());
     })
   };

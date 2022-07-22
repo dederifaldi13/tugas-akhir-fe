@@ -56,6 +56,7 @@ const TableDashboard: React.FC = () => {
         const filteredData = newarrdata.filter(
           (entry: DataType) =>
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.kode_cabang.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.tipe_program.toUpperCase().includes(currValue.toUpperCase()) ||
