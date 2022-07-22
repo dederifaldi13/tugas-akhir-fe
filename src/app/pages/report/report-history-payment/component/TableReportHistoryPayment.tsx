@@ -9,17 +9,21 @@ import animationlist from '../../../../../_metronic/assets/animation'
 import {CloseModalBuktiBayar, GetGambarByNoBayar} from '../redux/action/ReportHistoryPaymentAction'
 
 interface DataType {
-  _id: string
-  no_bayar: string
-  tanggal_bayar: string
+  bulan: string
+  created_at: string
+  harga: number
+  kode_cabang: string
   kode_toko: string
-  toko: string
+  no_bayar: string
   product: string
   qty: number
-  harga: number
-  bulan: string
+  status: string
+  tanggal_bayar: string
+  tipe_pembayaran: string
+  toko: string
   total_harga: number
   __v: number
+  _id: string
 }
 
 const TableReportHistoryPayment: React.FC = () => {
@@ -56,6 +60,7 @@ const TableReportHistoryPayment: React.FC = () => {
         const filteredData = newarrdata.filter(
           (entry: DataType) =>
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
+            entry.tipe_pembayaran.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.no_bayar.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.harga.toString().includes(currValue.toUpperCase()) ||
@@ -106,24 +111,30 @@ const TableReportHistoryPayment: React.FC = () => {
       title: 'Bukti Pembayaran',
       key: 'action',
       align: 'center',
-      render: (_, record) => (
-        <Space size='middle'>
-          <button
-            className='btn btn-light-primary btn-sm me-1'
-            onClick={() => handleShow(record.no_bayar)}
-            disabled={(loadapprove as boolean) && noBayar === record.no_bayar}
-          >
-            {loadapprove && noBayar === record.no_bayar ? (
-              <span className='indicator-progress' style={{display: 'block'}}>
-                Please wait...
-                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-              </span>
-            ) : (
-              <span className='indicator-label'>Lihat Bukti</span>
-            )}
-          </button>
-        </Space>
-      ),
+      render: (_, record) => {
+        if (record.tipe_pembayaran === 'iPaymu') {
+          return '-'
+        } else {
+          return (
+            <Space size='middle'>
+              <button
+                className='btn btn-light-primary btn-sm me-1'
+                onClick={() => handleShow(record.no_bayar)}
+                disabled={(loadapprove as boolean) && noBayar === record.no_bayar}
+              >
+                {loadapprove && noBayar === record.no_bayar ? (
+                  <span className='indicator-progress' style={{display: 'block'}}>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                ) : (
+                  <span className='indicator-label'>Lihat Bukti</span>
+                )}
+              </button>
+            </Space>
+          )
+        }
+      },
     },
     {
       title: 'Tgl Bayar',
@@ -160,6 +171,11 @@ const TableReportHistoryPayment: React.FC = () => {
       key: 'total_harga',
       align: 'right',
       render: (_, {total_harga}) => <>{'Rp. ' + total_harga.toLocaleString()}</>,
+    },
+    {
+      title: 'Tipe Pembayaran',
+      dataIndex: 'tipe_pembayaran',
+      key: 'tipe_pembayaran',
     },
   ]
 

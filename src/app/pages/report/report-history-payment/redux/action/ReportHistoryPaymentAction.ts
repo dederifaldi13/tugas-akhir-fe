@@ -36,7 +36,11 @@ export const GetHistoryPaymentReport = (data: { kode_toko: any, product: { value
                         __v: res.data[index].__v,
                         _id: res.data[index]._id,
                         no_bayar: res.data[index].no_bayar,
-                        tanggal_bayar: res.data[index].tanggal_bayar
+                        tanggal_bayar: res.data[index].tanggal_bayar,
+                        created_at: res.data[index].created_at,
+                        kode_cabang: res.data[index].kode_cabang,
+                        status: res.data[index].status,
+                        tipe_pembayaran: res.data[index].tipe_pembayaran
                     }
                     newarrdata.push(obj)
                 }

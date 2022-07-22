@@ -4,31 +4,39 @@ export const HIDE_MODAL_BUKTI_BAYAR_SUCCESS = "HIDE_MODAL_BUKTI_BAYAR_SUCCESS";
 export const SET_NO_BAYAR = "SET_NO_BAYAR";
 
 export type GetHistoryPaymentReportType = {
-    _id: String;
-    no_bayar: String;
-    tanggal_bayar: String;
+    bulan: String;
+    created_at: String;
+    harga: Number;
+    kode_cabang: String;
     kode_toko: String;
-    toko: String;
+    no_bayar: String;
     product: String;
     qty: Number;
-    harga: Number;
-    bulan: String;
+    status: String;
+    tanggal_bayar: String;
+    tipe_pembayaran: String;
+    toko: String;
     total_harga: Number;
     __v: Number;
+    _id: String;
 }
 
 
 export type TableHistoryPaymentReportType = {
-    key: number
-    _id: String;
-    no_bayar: String;
-    tanggal_bayar: String;
+    key: Number;
+    bulan: String;
+    created_at: String;
+    harga: Number;
+    kode_cabang: String;
     kode_toko: String;
-    toko: String;
+    no_bayar: String;
     product: String;
     qty: Number;
-    harga: Number;
-    bulan: String;
+    status: String;
+    tanggal_bayar: String;
+    tipe_pembayaran: String;
+    toko: String;
     total_harga: Number;
     __v: Number;
+    _id: String;
 }
