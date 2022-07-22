@@ -10,13 +10,15 @@
     <link rel="stylesheet" id="layout-styles-anchor" href="%PUBLIC_URL%/splash-screen.css" />
     <title>Nagatech Sistem Integrator</title>
     <link rel="shortcut icon" href="%PUBLIC_URL%/media/logos/favicon.ico" />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </head>
   <!-- TIP: add dark-mode class to enable dark mode -->
   <body id="kt_body" class="page-loading dark-mode">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" class="d-flex flex-column flex-root"></div>
     <div id="splash-screen" class="splash-screen">
-      <img src="%PUBLIC_URL%/media/illustrations/new/loader.gif" alt="Nagatech logo" width="10%"/>
+      <lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_ci2erz14.json"  background="transparent"  speed="1"  style="width: 200px; height: 200px;"  loop  autoplay></lottie-player>
+      <!-- <img src="%PUBLIC_URL%/media/illustrations/new/loader.gif" alt="Nagatech logo" width="10%"/> -->
       <span>Loading ...</span>
     </div>
     <div id="root-modals"></div>

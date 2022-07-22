@@ -147,7 +147,7 @@ export const GetDataCustomer = (toko: string) => {
 export const GetPayment = (toko: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     let newarrdata: TablePaymentDataType[] = []
-    AxiosGet('payment/active').then((res: any) => {
+    AxiosGet('payment/by-kode-toko/' + toko).then((res: any) => {
       for (let index = 0; index < res.data.length; index++) {
         const obj: TablePaymentDataType = {
           key: index,

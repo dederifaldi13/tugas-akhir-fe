@@ -125,7 +125,7 @@ const TableDashboard: React.FC = () => {
       title: 'Status',
       key: 'status',
       align: 'center',
-      fixed: 'right',
+      // fixed: 'right',
       render: (_, record) => {
         if (record.tipe_program === 'OFFLINE') {
           return (
