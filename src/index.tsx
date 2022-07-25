@@ -6,7 +6,7 @@ import {PersistGate} from 'redux-persist/integration/react'
 import {Provider} from 'react-redux'
 import * as _redux from './setup'
 import store, {persistor} from './setup/redux/Store'
-import register from './serviceWorkerRegistration.js'
+import {register} from './serviceWorkerRegistration.js'
 // Axios
 import axios from 'axios'
 import {Chart, registerables} from 'chart.js'
