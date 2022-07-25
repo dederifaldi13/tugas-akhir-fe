@@ -1,8 +1,9 @@
 import { Dispatch } from "redux";
-import { AxiosGet, AxiosPost, PopUpAlert } from "../../../../../setup";
+import { AxiosDelete, AxiosGet, AxiosPost, AxiosPut, PopUpAlert } from "../../../../../setup";
+import { NumberOnly } from "../../../../../setup/helper/function";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
-import { GET_ACTIVE_CUSTOMER, TableActivateCustomerType } from "./ServiceAdjustmentActionTypes";
+import { COUNT_TOTAL_HARGA_EDIT, COUNT_TOTAL_QTY_EDIT, EditFormCustomer, GET_ACTIVE_CUSTOMER, GET_ACTIVE_CUSTOMER_BY_ID, SET_ID_FOR_DELETE, SET_PRODUCT_EDIT, SET_TOTAL_HARGA, SHOW_MODAL_EDIT, TableActivateCustomerType } from "./ServiceAdjustmentActionTypes";
 
 export const ACTIVE_CUSTOMER_API = `customer`
 
@@ -25,7 +26,9 @@ export const GetActiveCustomerAction = () => {
                     telepon: res.data[index].telepon,
                     tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
                     total_harga: res.data[index].total_harga,
-                    __v: res.data[index].__v,
+                    created_at: res.data[index].created_at,
+                    kode_cabang: res.data[index].kode_cabang,
+                    tipe_program: res.data[index].tipe_program,
                     _id: res.data[index]._id
                 }
                 newarrdata.push(obj)
@@ -75,3 +78,108 @@ export const PostActivateData = (kode: string, namaproduct: string) => {
     };
 };
 
+
+export const deleteTransaction = (data: any) => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        dispatch(setLoading())
+        AxiosGet(`user/authorize/delete?user_id=${data.user_id}&password=${data.password}`).then(() => {
+            const id = getState().serviceAdjustment.ID
+            AxiosDelete('customer/' + id).then(() => {
+                dispatch(stopLoading())
+                PopUpAlert.default.AlertSuccessDelete()
+            }).catch((error: any) => {
+                console.log(error);
+                dispatch(stopLoading())
+                PopUpAlert.default.AlertError('Gagal Menghapus Data !')
+            })
+        }).catch((error: any) => {
+            console.log(error);
+            dispatch(stopLoading())
+            PopUpAlert.default.AlertError(error.response.data.message || 'User / Password Salah !')
+        })
+    };
+};
+
+
+export const getDataByIDTrx = (id: String) => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        AxiosGet(ACTIVE_CUSTOMER_API + '/by-id/' + id).then((res: any) => {
+            dispatch({ type: GET_ACTIVE_CUSTOMER_BY_ID, payload: { feedbackID: res.data[0] } })
+            dispatch({ type: SET_TOTAL_HARGA, payload: { feedbackID: res.data[0].total_harga } })
+            dispatch({ type: SET_PRODUCT_EDIT, payload: { product: res.data[0].product, tipe_program: res.data[0].tipe_program } })
+            dispatch({ type: COUNT_TOTAL_QTY_EDIT, payload: { totalHarga: res.data[0].total_harga, qty: res.data[0].bulan } })
+            dispatch({ type: COUNT_TOTAL_HARGA_EDIT, payload: { totalHarga: res.data[0].total_harga, harga: res.data[0].harga } })
+            dispatch({ type: SHOW_MODAL_EDIT, payload: { isShow: true } })
+        })
+    };
+};
+
+export const SetIDForDelete = (id: String) => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        dispatch({ type: SET_ID_FOR_DELETE, payload: { ID: id } })
+    };
+};
+
+export const CountTotalHargaQty = (value: number) => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        const harga = getState().form.FormEditTransaction.values?.harga || 0
+        const totalharga = value * harga
+        dispatch({ type: COUNT_TOTAL_QTY_EDIT, payload: { totalHarga: totalharga, qty: value } })
+    };
+};
+
+export const CountTotalHarga = (value: any) => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        const qty = getState().form.FormEditTransaction.values?.bulan || 0
+        const harga = parseInt(NumberOnly(value) || 0)
+        const totalharga = qty * harga
+        dispatch({ type: COUNT_TOTAL_HARGA_EDIT, payload: { totalHarga: totalharga, harga: harga } })
+    };
+};
+
+
+export const SetProduct = (data: { value: string, label: string }) => {
+    return async (dispatch: Dispatch<any>) => {
+        if (data.label.includes('OFFLINE')) {
+            dispatch({ type: SET_PRODUCT_EDIT, payload: { product: data.value, tipe_program: 'OFFLINE' } })
+        } else {
+            dispatch({ type: SET_PRODUCT_EDIT, payload: { product: data.value, tipe_program: 'ONLINE' } })
+        }
+    };
+};
+
+export const setShowAction = (value: boolean) => {
+    return async (dispatch: Dispatch<any>) => {
+        dispatch({ type: SHOW_MODAL_EDIT, payload: { isShow: value } })
+    };
+};
+
+
+export const editTransaction = (data: any) => {
+    return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+        dispatch(setLoading())
+        const dataKirim: EditFormCustomer = {
+            toko: data.toko,
+            bulan: data.bulan,
+            email: data.email,
+            harga: data.harga,
+            kode_cabang: data.kode_cabang,
+            kode_toko: data.kode_toko,
+            product: data.product.value,
+            qty: data.qty,
+            status: data.status,
+            telepon: data.telepon,
+            tgl_jatuh_tempo: data.tgl_jatuh_tempo,
+            tipe_program: data.tipe_program,
+            total_harga: data.total_harga
+        }
+        AxiosPut(`customer/${data.id}`, dataKirim).then(() => {
+            PopUpAlert.default.AlertSuccessEdit()
+            dispatch(stopLoading())
+        }).catch((error: any) => {
+            console.log(error);
+            dispatch(stopLoading())
+            PopUpAlert.default.AlertError(error.response.data.message)
+        })
+    };
+};

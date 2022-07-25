@@ -1,16 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {Input, Space, Table} from 'antd'
+import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
-import {Modal} from 'react-bootstrap-v5'
 import Lottie from 'react-lottie'
-import {useDispatch, useSelector} from 'react-redux'
-import Swal from 'sweetalert2'
+import {useSelector} from 'react-redux'
 import {RootState} from '../../../setup'
 import animationlist from '../../../_metronic/assets/animation'
 import {KTSVG} from '../../../_metronic/helpers'
-import FormOtorisasi from './FormOtorisasi'
-import {deleteTransaction, SetIDForDelete} from './redux/actions/PostActions'
 
 interface DataType {
   key: number
@@ -41,7 +37,6 @@ interface ExpandedDataType {
 }
 
 const TableDashboard: React.FC = () => {
-  const dispatch = useDispatch()
   const newarrdata: any = useSelector<RootState>(({dashboard}) => dashboard.post) || []
   const [dataSource, setDataSource] = useState(newarrdata)
   const [value, setValue] = useState('')
@@ -182,23 +177,6 @@ const TableDashboard: React.FC = () => {
         }
       },
     },
-    {
-      title: 'Action',
-      key: 'action',
-      align: 'center',
-      render: (_, record) => (
-        <Space size='middle'>
-          <button
-            className='btn btn-light-danger btn-sm me-1'
-            onClick={() => handleDelete(record._id)}
-          >
-            <span className='indicator-label'>
-              Delete <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-            </span>
-          </button>
-        </Space>
-      ),
-    },
   ]
 
   const expandedRowRenderTable = (id: string) => {
@@ -270,51 +248,8 @@ const TableDashboard: React.FC = () => {
 
   const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
 
-  const [show, setShow] = useState(false)
-
-  const handleClose = () => setShow(false)
-  const handleShow = (id: String) => {
-    dispatch(SetIDForDelete(id))
-    setShow(true)
-  }
-
-  const handleSubmit = (data: any) => {
-    dispatch(deleteTransaction(data))
-  }
-
-  const handleDelete = (id: String) => {
-    Swal.fire({
-      title: 'Apakah Anda Yakin?',
-      text: 'Menghapus Transaksi Ini',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yakin',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleShow(id)
-      }
-    })
-  }
-
   return (
     <>
-      <Modal show={show} onHide={handleClose} centered size='lg'>
-        <Modal.Header>
-          <Modal.Title>Otorisasi User</Modal.Title>
-          <button className='btn btn-icon btn-danger' onClick={handleClose}>
-            <KTSVG
-              path='/media/icons/duotune/general/gen042.svg'
-              className='svg-icon-2x svg-icon-light'
-            />
-          </button>
-        </Modal.Header>
-        <Modal.Body>
-          <FormOtorisasi onSubmit={(data: any) => handleSubmit(data)} />
-        </Modal.Body>
-        <Modal.Footer></Modal.Footer>
-      </Modal>
       <div className='row justify-content-end mt-2 mb-2'>
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>

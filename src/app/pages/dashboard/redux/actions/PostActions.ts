@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { AxiosDelete, AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
+import { AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
 import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/function";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
@@ -18,7 +18,6 @@ import {
   RequestValidationType,
   SET_CABANG,
   SET_CABANG_BY_ID,
-  SET_ID_FOR_DELETE,
   SET_PRODUCT,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
   TableDataType,
@@ -278,33 +277,6 @@ export const SendEmailAndWhatsApp = () => {
   };
 };
 
-
-export const SetIDForDelete = (id: String) => {
-  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch({ type: SET_ID_FOR_DELETE, payload: { ID: id } })
-  };
-};
-
-export const deleteTransaction = (data: any) => {
-  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch(setLoading())
-    AxiosGet(`user/authorize/delete?user_id=${data.user_id}&password=${data.password}`).then(() => {
-      const id = getState().dashboard.ID
-      AxiosDelete('customer/' + id).then(() => {
-        dispatch(stopLoading())
-        PopUpAlert.default.AlertSuccessDelete()
-      }).catch((error: any) => {
-        console.log(error);
-        dispatch(stopLoading())
-        PopUpAlert.default.AlertError('Gagal Menghapus Data !')
-      })
-    }).catch((error: any) => {
-      console.log(error);
-      dispatch(stopLoading())
-      PopUpAlert.default.AlertError(error.response.data.message || 'User / Password Salah !')
-    })
-  };
-};
 
 export const CreateAndSendPDFWithLoop = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {

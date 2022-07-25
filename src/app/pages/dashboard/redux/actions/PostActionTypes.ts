@@ -9,7 +9,6 @@ export const COUNT_TOTAL_HARGA = "COUNT_TOTAL_HARGA"
 export const SET_PRODUCT = "SET_PRODUCT"
 export const SET_CABANG = "SET_CABANG"
 export const SET_CABANG_BY_ID = "SET_CABANG_BY_ID"
-export const SET_ID_FOR_DELETE = "SET_ID_FOR_DELETE"
 
 export type PostType = {
   kode_toko: String;

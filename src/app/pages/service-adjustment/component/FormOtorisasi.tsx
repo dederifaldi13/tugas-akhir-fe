@@ -1,9 +1,9 @@
 import React from 'react'
 import {connect, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
-import {RootState} from '../../../setup'
-import FormOtorisasiValidation from '../../../setup/validate/FormOtorisasiValidate'
-import {ReanderField} from '../../modules/redux-form/BasicInput'
+import {RootState} from '../../../../setup'
+import FormOtorisasiValidation from '../../../../setup/validate/FormOtorisasiValidate'
+import {ReanderField} from '../../../modules/redux-form/BasicInput'
 interface Props {}
 
 const mapState = (state: RootState) => {

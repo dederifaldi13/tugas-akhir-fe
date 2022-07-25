@@ -2,6 +2,7 @@
 import React, {FC, useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 import {PageTitle} from '../../../_metronic/layout/core'
+import {GetMasterProduct} from '../master/product/redux/action/ProductAction'
 import TableDeactivate from './component/TableDeactivate'
 import {GetActiveCustomerAction} from './redux/action/ServiceAdjustmentAction'
 
@@ -9,6 +10,7 @@ const ServiceAdjustmentPage: FC = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(GetActiveCustomerAction())
+    dispatch(GetMasterProduct())
   }, [dispatch])
 
   return (
