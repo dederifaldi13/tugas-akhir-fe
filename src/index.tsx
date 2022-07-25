@@ -6,6 +6,7 @@ import {PersistGate} from 'redux-persist/integration/react'
 import {Provider} from 'react-redux'
 import * as _redux from './setup'
 import store, {persistor} from './setup/redux/Store'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 // Axios
 import axios from 'axios'
 import {Chart, registerables} from 'chart.js'
@@ -57,3 +58,19 @@ ReactDOM.render(
   </MetronicI18nProvider>,
   document.getElementById('root')
 )
+
+serviceWorkerRegistration.register({
+  onUpdate: (registration: any) => {
+    const waitingServiceWorker = registration.waiting
+    if (waitingServiceWorker) {
+      waitingServiceWorker.postMessage({type: 'SKIP_WAITING'})
+      waitingServiceWorker.addEventListener('statechange', (event: any) => {
+        if (event.target.state === 'activated') {
+          console.log(event)
+        }
+        console.log(event)
+      })
+      waitingServiceWorker.postMessage({type: 'SKIP_WAITING'})
+    }
+  },
+})
