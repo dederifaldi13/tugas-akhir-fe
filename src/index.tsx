@@ -25,6 +25,7 @@ import {MetronicI18nProvider} from './_metronic/i18n/Metronici18n'
  **/
 import './_metronic/assets/sass/style.scss'
 import './_metronic/assets/sass/style.react.scss'
+import reportWebVitals from './reportWebVitals'
 /**
  * Base URL of the website.
  *
@@ -46,6 +47,7 @@ const {PUBLIC_URL} = process.env
 _redux.setupAxios(axios, store)
 
 Chart.register(...registerables)
+register()
 
 ReactDOM.render(
   <MetronicI18nProvider>
@@ -59,4 +61,4 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-register()
+reportWebVitals()
