@@ -212,21 +212,17 @@ export const PostCustomer = (data: FormPostType) => {
         const dataInvoice = resget.data[0]
         const pdf64 = InvoicePDF(dataInvoice)
         const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
-        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).then((res: any) => {
-          console.log(res);
-        }).catch((error: any) => {
-          console.log(error);
-        })
-      }).finally(() => {
-        const userData = {
-          user_name: senddata.kode_toko,
-          user_id: data.telepon,
-          password: '12345678',
-          level: 'CUSTOMER'
-        }
-        AxiosPost('auth/register', userData).finally(() => {
-          PopUpAlert.default.AlertSuccessAdd()
-          dispatch(stopLoading())
+        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).finally(() => {
+          const userData = {
+            user_name: senddata.kode_toko,
+            user_id: data.telepon,
+            password: '12345678',
+            level: 'CUSTOMER'
+          }
+          AxiosPost('auth/register', userData).finally(() => {
+            PopUpAlert.default.AlertSuccessAdd()
+            dispatch(stopLoading())
+          })
         })
       })
     }).catch((error: any) => {
