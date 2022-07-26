@@ -1,8 +1,9 @@
 import { Dispatch } from "redux";
-import { AxiosDelete, AxiosGet, AxiosPost, AxiosPut, PopUpAlert } from "../../../../../setup";
-import { NumberOnly } from "../../../../../setup/helper/function";
+import { AxiosDelete, AxiosGet, AxiosPost, AxiosPut, PopUpAlert, postPDF } from "../../../../../setup";
+import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/function";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
+import InvoicePDF from "../../../dashboard/pdf/InvoicePDF";
 import { COUNT_TOTAL_HARGA_EDIT, COUNT_TOTAL_QTY_EDIT, EditFormCustomer, GET_ACTIVE_CUSTOMER, GET_ACTIVE_CUSTOMER_BY_ID, SET_ID_FOR_DELETE, SET_PRODUCT_EDIT, SET_TOTAL_HARGA, SHOW_MODAL_EDIT, TableActivateCustomerType } from "./ServiceAdjustmentActionTypes";
 
 export const ACTIVE_CUSTOMER_API = `customer`
@@ -174,8 +175,16 @@ export const editTransaction = (data: any) => {
             total_harga: data.total_harga
         }
         AxiosPut(`customer/${data.id}`, dataKirim).then(() => {
-            PopUpAlert.default.AlertSuccessEdit()
-            dispatch(stopLoading())
+            AxiosGet(`customer/filter?kode_toko=${dataKirim.kode_toko}&product=${dataKirim.product.replaceAll(/\+/g, '_')}&kode_cabang=${dataKirim.kode_cabang}&tipe_program=${dataKirim.tipe_program}`).then((resGet: any) => {
+                const dataInvoice = resGet.data[0]
+                const pdf64 = InvoicePDF(dataInvoice)
+                const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
+                postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).finally(() => {
+
+                    PopUpAlert.default.AlertSuccessEdit()
+                    dispatch(stopLoading())
+                })
+            })
         }).catch((error: any) => {
             console.log(error);
             dispatch(stopLoading())

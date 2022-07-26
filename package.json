@@ -84,7 +84,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-dev": "set REACT_APP_API_URL=http://103.119.55.28:1993/api/&& react-scripts start",
-    "start-dev-local": "set REACT_APP_API_URL=http://192.168.3.11:5555/api/&& react-scripts start",
+    "start-dev-local": "set REACT_APP_API_URL=http://192.168.1.5:5555/api/&& react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
