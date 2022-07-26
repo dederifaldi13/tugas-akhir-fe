@@ -431,11 +431,6 @@ const TableDeactivate: React.FC = () => {
                     <Table.Summary.Cell index={1} colSpan={3} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} align='right'>
-                      {dataTable
-                        .reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)
-                        .toLocaleString()}
-                    </Table.Summary.Cell>
                     <Table.Summary.Cell index={4} align='right'>
                       {'Rp. ' +
                         dataTable
