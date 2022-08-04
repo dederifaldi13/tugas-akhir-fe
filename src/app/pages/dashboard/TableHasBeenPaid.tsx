@@ -4,11 +4,13 @@ import type {ColumnsType} from 'antd/lib/table'
 import React, {useState} from 'react'
 import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
+import Swal from 'sweetalert2'
 import {RootState} from '../../../setup'
 import animationlist from '../../../_metronic/assets/animation'
 import {KTSVG} from '../../../_metronic/helpers'
 import {
   CloseModalBuktiBayar,
+  deleteValidationPayment,
   GetGambarByNoBayar,
   ValidationPayment,
 } from './redux/actions/PostActions'
@@ -57,6 +59,24 @@ const TableHasBeenPaid: React.FC = () => {
     setNoBayar(nobyr)
     dispatch(ValidationPayment(kode, product, nobyr))
   }
+
+  const handleDelete = (id: string, nobyr: string) => {
+    Swal.fire({
+      title: 'Apakah Anda Yakin?',
+      text: 'Menolak Pembayaran Ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yakin',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setNoBayar(nobyr)
+        dispatch(deleteValidationPayment(id, nobyr))
+      }
+    })
+  }
+
   const SearchBar = (
     <Input
       placeholder='Search Data Table'
@@ -86,7 +106,7 @@ const TableHasBeenPaid: React.FC = () => {
       key: 'kode_toko',
     },
     {
-      title: 'Nama Toko / Customer',
+      title: 'Toko / Customer',
       dataIndex: 'toko',
       key: 'toko',
     },
@@ -186,6 +206,25 @@ const TableHasBeenPaid: React.FC = () => {
                 <span className='indicator-label'>
                   Approve
                   <KTSVG path='/media/icons/duotune/general/gen026.svg' className='svg-icon-3' />
+                </span>
+              )}
+            </span>
+          </button>
+          <button
+            className='btn btn-light-danger btn-sm me-1'
+            onClick={() => handleDelete(record._id, record.no_bayar)}
+            disabled={isSendingApprove && noBayar === record.no_bayar}
+          >
+            <span className='indicator-label'>
+              {loadapprove && noBayar === record.no_bayar ? (
+                <span className='indicator-progress' style={{display: 'block'}}>
+                  Please wait...
+                  <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                </span>
+              ) : (
+                <span className='indicator-label'>
+                  Reject
+                  <KTSVG path='/media/icons/duotune/general/gen040.svg' className='svg-icon-3' />
                 </span>
               )}
             </span>

@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
+import { AxiosDelete, AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
 import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/function";
 import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
 import { IAppState } from "../../../../../setup/redux/Store";
@@ -261,6 +261,20 @@ export const ValidationPayment = (kode: string, product: string, nobyr: string) 
     })
   };
 };
+
+export const deleteValidationPayment = (id: string, nobyr: string) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(setLoadingApprove());
+    AxiosDelete('payment/' + id).then(() => {
+      PopUpAlert.default.AlertSuccess('Berhasil Melakukan Penolakan')
+      dispatch(stopLoadingApprove());
+    }).catch(() => {
+      PopUpAlert.default.AlertError('Gagal Melakukan Penolakan')
+      dispatch(stopLoadingApprove());
+    })
+  };
+};
+
 
 
 export const SendEmailAndWhatsApp = () => {

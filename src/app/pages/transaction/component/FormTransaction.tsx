@@ -238,7 +238,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                           marginBottom: -30,
                         }}
                       >
-                        {data !== undefined ? data.qty.toLocaleString() : 0}
+                        {data !== undefined ? data.bulan.toLocaleString() : 0}
                       </p>
                     </td>
                   </tr>

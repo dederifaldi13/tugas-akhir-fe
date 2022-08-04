@@ -180,10 +180,13 @@ export const editTransaction = (data: any) => {
                 const pdf64 = InvoicePDF(dataInvoice)
                 const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
                 postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).finally(() => {
-
                     PopUpAlert.default.AlertSuccessEdit()
                     dispatch(stopLoading())
                 })
+            }).catch((error: any) => {
+                console.log(error);
+                PopUpAlert.default.AlertSuccessEdit()
+                dispatch(stopLoading())
             })
         }).catch((error: any) => {
             console.log(error);

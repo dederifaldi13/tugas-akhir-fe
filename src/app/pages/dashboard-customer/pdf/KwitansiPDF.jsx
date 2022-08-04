@@ -16,7 +16,7 @@ const KwitansiPDF = (data, no) => {
   })
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
-  var imgData = toAbsoluteUrl('/media/patterns/TemplateKuitansi.jpg')
+  var imgData = toAbsoluteUrl('/media/patterns/kuitansittd.png')
   doc.addImage(imgData, 'JPEG', 15, 17, 180, 240)
   doc.text(no, 94, 65)
   doc.text(data.toko.toUpperCase(), 80, 83)
@@ -55,7 +55,7 @@ const KwitansiPDF = (data, no) => {
   doc.text('#' + angkaTerbilang(data.total_harga) + '#', 83, 135)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Regular.ttf'), 'Lora', 'normal')
   doc.setFont('Lora', 'normal')
-  doc.text('Bandung, ' + today, 135, 167)
+  doc.text('Bandung, ' + today, 133, 167)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
   const jml_toko = data.toko.length
