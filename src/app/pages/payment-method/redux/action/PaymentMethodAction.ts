@@ -27,7 +27,7 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
 
         const dataKirim: IPaymuType = {
             product: [data.product],
-            qty: [data.qty.toString()],
+            qty: [data.bulan.toString()],
             price: [(data.harga).toString()],
             description: [`Pembayaran`],
             returnUrl: "https://nagatech-vps.netlify.app/success-payment",
@@ -50,7 +50,7 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
                     window.open(res.Data.Url, '_self', '')
                 })
             })
-        }).finally(() => dispatch(stopLoading()))
+        })
     };
 };
 
