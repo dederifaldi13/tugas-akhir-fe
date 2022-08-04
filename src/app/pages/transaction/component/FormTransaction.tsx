@@ -150,10 +150,15 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             <div className='row'>
               <div className='col-lg-4'>
                 <img
-                  src={image === '-' ? toAbsoluteUrl('/media/illustrations/new/clip-add-image.png') : image}
+                  src={
+                    image === '-'
+                      ? toAbsoluteUrl('/media/illustrations/new/clip-add-image.png')
+                      : image
+                  }
                   alt='img'
                   height='265px'
                   width='325px'
+                  style={{objectFit: 'contain'}}
                 />
               </div>
             </div>
