@@ -48,9 +48,7 @@ function AlertSuccessAdd() {
     title: 'Success',
     text: 'Berhasil Menambahkan Data',
   }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.reload()
-    }
+    window.location.reload()
   })
 }
 

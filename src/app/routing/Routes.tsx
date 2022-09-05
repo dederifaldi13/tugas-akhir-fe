@@ -19,6 +19,7 @@ import TransactionWrapper from '../pages/transaction/TransactionWrapper'
 import SuccessPaymentPage from '../pages/transaction/SuccesPaymentPage'
 import PaymentMethodWrapper from '../pages/payment-method/PaymentMethodWrapper'
 import ReturnPage from '../pages/transaction/ReturnPage'
+import VerifikasiCustomerWrapper from '../pages/verifikasi-customer/VerifikasiCustomerWrapper'
 
 const Routes: FC = () => {
   const location = useLocation()
@@ -31,7 +32,8 @@ const Routes: FC = () => {
         !location.pathname.includes('payment-confirmation') &&
         !location.pathname.includes('success-payment') &&
         !location.pathname.includes('return-payment') &&
-        !location.pathname.includes('payment-method') ? (
+        !location.pathname.includes('payment-method') &&
+        !location.pathname.includes('verification-phone') ? (
           /*Render auth page when user at `/auth` and not authorized.*/
           <Route>
             <LoginPage />
@@ -53,6 +55,13 @@ const Routes: FC = () => {
             from='/auth'
             to='/return-payment/:kode_toko/:product/:tipe_program/:kode_cabang'
           />
+        ) : location.pathname.includes('verification-phone') ? (
+          <MasterLayout>
+            <Route
+              path='/verification-phone/:kode_toko/:product/:tipe_program/:kode_cabang/:kode_verif'
+              component={VerifikasiCustomerWrapper}
+            />
+          </MasterLayout>
         ) : (
           /*Otherwise redirect to root page (`/`)*/
           <Redirect from='/auth' to='/' />
@@ -65,7 +74,8 @@ const Routes: FC = () => {
         !location.pathname.includes('payment-confirmation') &&
         !location.pathname.includes('success-payment') &&
         !location.pathname.includes('return-payment') &&
-        !location.pathname.includes('payment-method') ? (
+        !location.pathname.includes('payment-method') &&
+        !location.pathname.includes('verification-phone') ? (
           /*Redirect to `/auth` when user is not authorized*/
           <Redirect to='/auth/login' />
         ) : location.pathname.includes('payment-confirmation') ? (
@@ -91,6 +101,13 @@ const Routes: FC = () => {
             <Route
               path='/return-payment/:kode_toko/:product/:tipe_program/:kode_cabang'
               component={ReturnPage}
+            />
+          </MasterLayout>
+        ) : location.pathname.includes('verification-phone') ? (
+          <MasterLayout>
+            <Route
+              path='/verification-phone/:kode_toko/:product/:tipe_program/:kode_cabang/:kode_verif'
+              component={VerifikasiCustomerWrapper}
             />
           </MasterLayout>
         ) : (

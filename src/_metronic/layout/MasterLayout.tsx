@@ -41,7 +41,8 @@ const MasterLayout: React.FC = ({children}) => {
           {location.pathname.includes('payment-confirmation') ||
           location.pathname.includes('success-payment') ||
           location.pathname.includes('return-payment') ||
-          location.pathname.includes('payment-method') ? (
+          location.pathname.includes('payment-method') ||
+          location.pathname.includes('verification-phone') ? (
             ''
           ) : (
             <HeaderWrapper />

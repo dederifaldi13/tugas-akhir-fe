@@ -8,6 +8,19 @@ import {PostLocalCabangEdit} from '../redux/action/StoreAction'
 
 interface Props {}
 
+const mapState = (state: RootState) => {
+  if (state.masterstore.feedbackCabangDetail !== undefined) {
+    return {
+      initialValues: {
+        id: state.masterstore.feedbackCabangDetail.key,
+        alamat: state.masterstore.feedbackCabangDetail.alamat,
+        email: state.masterstore.feedbackCabangDetail.email,
+        telepon: state.masterstore.feedbackCabangDetail.telepon,
+      },
+    }
+  }
+}
+
 const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {pristine, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
@@ -19,6 +32,16 @@ const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any
     <>
       <form className='ant-form ant-form-vertical'>
         <div className='row'>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              name='id'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Id'
+              placeholder='Masukan Id'
+            />
+          </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               name='alamat'
@@ -83,4 +106,4 @@ const form = reduxForm<{}, Props>({
   touchOnChange: true,
   validate: FormAddNewStoreCabangValidate,
 })(FormAddNewCabangEdit)
-export default connect()(form)
+export default connect(mapState, null)(form)

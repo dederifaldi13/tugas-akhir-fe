@@ -36,6 +36,7 @@ interface DataType {
   total_harga: number
   tgl_jatuh_tempo: string
   status: string
+  tipe_program: string
 }
 
 interface ExpandedDataType {
@@ -346,7 +347,7 @@ const TableDeactivate: React.FC = () => {
             <button
               className='btn btn-light-danger btn-sm me-1'
               onClick={() => handleDeactivate(record.kode_toko, record.product)}
-              disabled={isSending}
+              disabled={isSending || record.tipe_program === "OFFLINE"}
             >
               <span className='indicator-label'>
                 {!load && (

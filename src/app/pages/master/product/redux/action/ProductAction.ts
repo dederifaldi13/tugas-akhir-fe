@@ -8,7 +8,7 @@ export const MASTER_PRODUCT_URL = `product`
 
 export const GetMasterProduct = () => {
     return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-        AxiosGet(MASTER_PRODUCT_URL).then((res: any) => {
+        AxiosGet(MASTER_PRODUCT_URL + "/open").then((res: any) => {
             let newarrdata: GetProductType[] = []
             for (let index = 0; index < res.data.length; index++) {
                 const obj: TableProductType = {

@@ -13,6 +13,7 @@ import {
   DeleteCabangLocalEdit,
   HideAddModalCabangEdit,
   ShowAddModalCabangEdit,
+  ShowModalCabangDetailAtEdit,
 } from '../redux/action/StoreAction'
 import {TableCabangStoreType} from '../redux/action/StoreActionTypes'
 import FormAddNewCabangAlamatEdit from './FormAddNewCabangAlamatEdit'
@@ -53,6 +54,11 @@ const TableAlamatEdit: React.FC = () => {
     event.preventDefault()
     dispatch(ShowAddModalCabangEdit())
   }
+  const handleEditCabang = (event: any, id: any) => {
+    // dispatch(GetMasterStoreByID(id))
+    event.preventDefault()
+    dispatch(ShowModalCabangDetailAtEdit(id))
+  }
 
   const columns: ColumnsType<TableCabangStoreType> = [
     {
@@ -76,6 +82,14 @@ const TableAlamatEdit: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <Space size='middle'>
+          <button
+            className='btn btn-light-warning btn-sm me-1'
+            onClick={(e) => handleEditCabang(e, record.key)}
+          >
+            <span className='indicator-label'>
+              Edit <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+            </span>
+          </button>
           <button
             className='btn btn-light-danger btn-sm me-1'
             onClick={(e) => handleDelete(e, record.key)}
@@ -124,11 +138,20 @@ const TableAlamatEdit: React.FC = () => {
     },
   }
 
+  const shownewcabangedit = useSelector<RootState>(
+    ({masterstore}) => masterstore.modalCabangEditDetail
+  )
+
   const imagenotfound = <Lottie options={defaultOptions} height={400} width={400} />
 
   return (
     <>
-      <Modal show={shownewcabang} onHide={handleCloseCabang} centered size='lg'>
+      <Modal
+        show={shownewcabang || shownewcabangedit}
+        onHide={handleCloseCabang}
+        centered
+        size='lg'
+      >
         <Modal.Header>
           <Modal.Title>Add Cabang / Alamat</Modal.Title>
           <button className='btn btn-icon btn-danger' onClick={handleCloseCabang}>

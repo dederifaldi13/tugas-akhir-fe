@@ -9,7 +9,12 @@ import Swal from 'sweetalert2'
 import {RootState} from '../../../../../setup'
 import animationlist from '../../../../../_metronic/assets/animation'
 import {KTSVG} from '../../../../../_metronic/helpers'
-import {DeleteCabangLocal, HideModalCabang, ShowModalCabang} from '../redux/action/StoreAction'
+import {
+  DeleteCabangLocal,
+  HideModalCabang,
+  ShowModalCabang,
+  ShowModalCabangDetailEdit,
+} from '../redux/action/StoreAction'
 import {TableCabangStoreType} from '../redux/action/StoreActionTypes'
 import FormAddNewCabangAlamat from './FormAddNewCabangAlamat'
 
@@ -39,11 +44,19 @@ const TableAlamat: React.FC = () => {
   const [search, setSearch] = useState(false)
 
   const shownewcabang = useSelector<RootState>(({masterstore}) => masterstore.modal)
+  const shownewcabangedit = useSelector<RootState>(
+    ({masterstore}) => masterstore.modalCabangEditDetail
+  )
   const handleCloseCabang = () => dispatch(HideModalCabang())
   const handleShowCabang = (event: any) => {
     // dispatch(GetMasterStoreByID(id))
     event.preventDefault()
     dispatch(ShowModalCabang())
+  }
+  const handleEditCabang = (event: any, id: any) => {
+    // dispatch(GetMasterStoreByID(id))
+    event.preventDefault()
+    dispatch(ShowModalCabangDetailEdit(id))
   }
 
   const columns: ColumnsType<TableCabangStoreType> = [
@@ -68,6 +81,14 @@ const TableAlamat: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <Space size='middle'>
+          <button
+            className='btn btn-light-warning btn-sm me-1'
+            onClick={(e) => handleEditCabang(e, record.key)}
+          >
+            <span className='indicator-label'>
+              Edit <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+            </span>
+          </button>
           <button
             className='btn btn-light-danger btn-sm me-1'
             onClick={(e) => handleDelete(e, record.key)}
@@ -120,7 +141,12 @@ const TableAlamat: React.FC = () => {
 
   return (
     <>
-      <Modal show={shownewcabang} onHide={handleCloseCabang} centered size='lg'>
+      <Modal
+        show={shownewcabang || shownewcabangedit}
+        onHide={handleCloseCabang}
+        centered
+        size='lg'
+      >
         <Modal.Header>
           <Modal.Title>Add Cabang / Alamat</Modal.Title>
           <button className='btn btn-icon btn-danger' onClick={handleCloseCabang}>

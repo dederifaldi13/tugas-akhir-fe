@@ -14,6 +14,7 @@ import PaymentMethodReducer from "../../../app/pages/payment-method/redux/Paymen
 import IPaymuReducer from "../../../app/pages/iPaymuTransactionPage/redux/iPaymuReducer";
 import reportHistoryPaymentiPaymuReducer from "../../../app/pages/report/report-history-payment-ipaymu/redux/ReportHistoryPaymentiPaymuReducer";
 import dashboardcustomerreducer from "../../../app/pages/dashboard-customer/redux/DashboardCustomerReducer";
+import verifikasicustomerreducer from "../../../app/pages/verifikasi-customer/redux/VarifikasiCustomerReducer";
 
 const RootReducer = combineReducers({
   auth: loginReducer,
@@ -30,6 +31,7 @@ const RootReducer = combineReducers({
   reportCustomer: reportCustomerReducer,
   reportHistoryPayment: reportHistoryPaymentReducer,
   reportHistoryPaymentiPaymu: reportHistoryPaymentiPaymuReducer,
+  verifikasicustomerreducer: verifikasicustomerreducer,
   form: reducerForm,
 });
 
