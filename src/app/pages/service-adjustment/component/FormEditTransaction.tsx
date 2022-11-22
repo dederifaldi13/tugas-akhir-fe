@@ -255,7 +255,7 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
           <div className='col-lg-2 d-grid'>
             <button
               className='btn btn-primary'
-              disabled={tipe_program === 'ONLINE' ? submitting || isSending || pristine : false}
+              disabled={submitting || isSending || pristine}
             >
               {!isSending && <span className='indicator-label'>Simpan</span>}
               {isSending && (
