@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Image, Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
+import moment from 'moment'
 import React, {useState} from 'react'
 import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
@@ -140,6 +141,9 @@ const TableReportHistoryPayment: React.FC = () => {
       title: 'Tgl Bayar',
       dataIndex: 'tanggal_bayar',
       key: 'tanggal_bayar',
+      render: (_, {tanggal_bayar}) => {
+        return moment(tanggal_bayar).format('DD-MM-YYYY')
+      },
     },
     {
       title: 'Product',

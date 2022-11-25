@@ -12,6 +12,7 @@ export type PostProductType = {
 
 export type EditProductType = {
     id: String;
+    old_product: String;
     product: String;
     tipe_program: { value: String, label: String };
 };

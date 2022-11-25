@@ -1,6 +1,7 @@
 import {jsPDF} from 'jspdf'
 import 'jspdf-autotable'
 import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
+import moment from 'moment'
 
 const ReportHistoryPaymentPDF = (data, head) => {
   const doc = new jsPDF('l', 'mm', 'a4')
@@ -58,9 +59,9 @@ const ReportHistoryPaymentPDF = (data, head) => {
       {content: element.ReferenceId},
       {content: element.TypeDesc},
       {content: element.PaymentChannel},
-      {content: element.CreatedDate},
-      {content: element.SuccessDate},
-      {content: element.ExpiredDate},
+      {content: moment(element.CreatedDate).format('DD-MM-YYYY')},
+      {content: moment(element.SuccessDate).format('DD-MM-YYYY')},
+      {content: moment(element.ExpiredDate).format('DD-MM-YYYY')},
       {content: element.StatusDesc},
     ]
     tableRows.push(row)

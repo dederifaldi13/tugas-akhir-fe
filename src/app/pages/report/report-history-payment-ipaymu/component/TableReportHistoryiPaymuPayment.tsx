@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
+import moment from 'moment'
 import React, {useState} from 'react'
 import Lottie from 'react-lottie'
 import {useSelector} from 'react-redux'
@@ -88,16 +89,25 @@ const TableReportHistoryPaymentiPaymu: React.FC = () => {
       title: 'Tgl Transaksi',
       dataIndex: 'CreatedDate',
       key: 'CreatedDate',
+      render: (_, {CreatedDate}) => {
+        return moment(CreatedDate.toString()).format('DD-MM-YYYY')
+      },
     },
     {
       title: 'Tgl Terbayar',
       dataIndex: 'SuccessDate',
       key: 'SuccessDate',
+      render: (_, {SuccessDate}) => {
+        return moment(SuccessDate.toString()).format('DD-MM-YYYY')
+      },
     },
     {
       title: 'Tgl Expired',
       dataIndex: 'ExpiredDate',
       key: 'ExpiredDate',
+      render: (_, {ExpiredDate}) => {
+        return moment(ExpiredDate.toString()).format('DD-MM-YYYY')
+      },
     },
     {
       title: 'Status',

@@ -33,7 +33,7 @@ const mapState = (state: RootState) => {
           toko: state.dashboard.dataTokoByKode.toko,
           kode_cabang: {
             value: state.dashboard.cabangTokoByID._id,
-            label: state.dashboard.cabangTokoByID.alamat,
+            label: state.dashboard.cabangTokoByID.kode_cabang,
           },
           telepon: state.dashboard.cabangTokoByID.telepon,
           email: state.dashboard.cabangTokoByID.email,
@@ -58,7 +58,7 @@ const mapState = (state: RootState) => {
           toko: state.dashboard.dataTokoByKode.toko,
           kode_cabang: {
             value: state.dashboard.dataTokoByKode.cabang[0]._id,
-            label: state.dashboard.dataTokoByKode.cabang[0].alamat,
+            label: state.dashboard.dataTokoByKode.cabang[0].kode_cabang,
           },
           telepon: '',
           email: '',
@@ -151,18 +151,18 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               options={dataCabang.map((list: any) => {
                 let data = {
                   value: list._id,
-                  label: list.alamat,
+                  label: list.kode_cabang,
                 }
                 return data
               })}
-              label='Alamat'
+              label='Cabang'
               onChange={(e: any) => {
                 dispatch(SetCabangByID(e.value))
               }}
-              placeholder='Pilih Alamat'
+              placeholder='Pilih Cabang'
               defaultValue={{
-                value: CabangID !== undefined ? CabangID._id : 'Pilih Alamat',
-                label: CabangID !== undefined ? CabangID.alamat : 'Pilih Alamat',
+                value: CabangID !== undefined ? CabangID._id : 'Pilih Kode Cabang',
+                label: CabangID !== undefined ? CabangID.kode_cabang : 'Pilih Kode Cabang',
               }}
             />
           </div>

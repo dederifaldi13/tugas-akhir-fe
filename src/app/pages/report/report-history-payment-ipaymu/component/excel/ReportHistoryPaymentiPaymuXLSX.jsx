@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ReactHTMLTableToExcel from 'react-html-table-to-excel'
+import moment from 'moment'
 
 class ExcelReport extends Component {
   constructor(props) {
@@ -97,9 +98,9 @@ class ExcelReport extends Component {
                   <td style={bodyStyle}>{row.ReferenceId}</td>
                   <td style={bodyStyle}>{row.TypeDesc}</td>
                   <td style={bodyStyle}>{row.PaymentChannel}</td>
-                  <td style={bodyStyle}>{row.CreatedDate}</td>
-                  <td style={bodyStyle}>{row.SuccessDate}</td>
-                  <td style={bodyStyle}>{row.ExpiredDate}</td>
+                  <td style={bodyStyle}>{moment(row.CreatedDate).format('DD-MM-YYYY')}</td>
+                  <td style={bodyStyle}>{moment(row.SuccessDate).format('DD-MM-YYYY')}</td>
+                  <td style={bodyStyle}>{moment(row.ExpiredDate).format('DD-MM-YYYY')}</td>
                   <td style={bodyStyle}>{row.StatusDesc}</td>
                 </tr>
               )

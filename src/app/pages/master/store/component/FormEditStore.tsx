@@ -15,6 +15,7 @@ const mapState = (state: RootState) => {
         id: state.masterstore.feedbackID._id,
         kode_toko: state.masterstore.feedbackID.kode_toko,
         toko: state.masterstore.feedbackID.toko,
+        toko_prev: state.masterstore.feedbackID.toko,
       },
     }
   }
@@ -38,6 +39,16 @@ const FormEditStore: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
               nouperCase={true}
               label='ID'
               placeholder='Masukan ID'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              name='toko_prev'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Toko'
+              placeholder='Masukan Toko'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>

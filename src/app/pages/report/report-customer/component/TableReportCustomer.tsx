@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
+import moment from 'moment'
 import React, {useState} from 'react'
 import Lottie from 'react-lottie'
 import {shallowEqual, useSelector} from 'react-redux'
@@ -170,6 +171,9 @@ const TableReportCustomer: React.FC = () => {
       title: 'Tgl Jatuh Tempo',
       dataIndex: 'tgl_jatuh_tempo',
       key: 'tgl_jatuh_tempo',
+      render: (_, {tgl_jatuh_tempo}) => {
+        return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+      },
     },
     {
       title: 'Status',

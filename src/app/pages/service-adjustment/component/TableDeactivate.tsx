@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
+import moment from 'moment'
 import React, {useState} from 'react'
 import {Modal} from 'react-bootstrap-v5'
 import Lottie from 'react-lottie'
@@ -175,6 +176,7 @@ const TableDeactivate: React.FC = () => {
           }
         },
       },
+      {title: 'Kode Cabang', dataIndex: 'kode_cabang', key: 'kode_cabang'},
       {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
       {title: 'Email', dataIndex: 'email', key: 'email'},
       {title: 'Qty', dataIndex: 'qty', key: 'qty'},
@@ -185,6 +187,7 @@ const TableDeactivate: React.FC = () => {
       if (dataTable[i]._id === id) {
         data.push({
           key: i,
+          kode_cabang: dataTable[i].kode_cabang,
           tipe_program: dataTable[i].tipe_program,
           qty: dataTable[i].qty,
           telepon: dataTable[i].telepon,
@@ -242,11 +245,6 @@ const TableDeactivate: React.FC = () => {
       key: 'kode_toko',
     },
     {
-      title: 'Alamat',
-      dataIndex: 'alamat',
-      key: 'alamat',
-    },
-    {
       title: 'Product',
       dataIndex: 'product',
       key: 'product',
@@ -278,6 +276,13 @@ const TableDeactivate: React.FC = () => {
       title: 'Tgl Jatuh Tempo',
       dataIndex: 'tgl_jatuh_tempo',
       key: 'tgl_jatuh_tempo',
+      render: (_, {tgl_jatuh_tempo}) => {
+        if (tgl_jatuh_tempo === '-') {
+          return tgl_jatuh_tempo
+        } else {
+          return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+        }
+      },
     },
     {
       title: 'Status',
@@ -347,7 +352,7 @@ const TableDeactivate: React.FC = () => {
             <button
               className='btn btn-light-danger btn-sm me-1'
               onClick={() => handleDeactivate(record.kode_toko, record.product)}
-              disabled={isSending || record.tipe_program === "OFFLINE"}
+              disabled={isSending || record.tipe_program === 'OFFLINE'}
             >
               <span className='indicator-label'>
                 {!load && (

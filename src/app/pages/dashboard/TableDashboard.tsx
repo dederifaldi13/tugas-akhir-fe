@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux'
 import {RootState} from '../../../setup'
 import animationlist from '../../../_metronic/assets/animation'
 import {KTSVG} from '../../../_metronic/helpers'
+import moment from 'moment'
 
 interface DataType {
   key: number
@@ -79,6 +80,11 @@ const TableDashboard: React.FC = () => {
       key: 'kode_toko',
     },
     {
+      title: 'Cabang',
+      dataIndex: 'kode_cabang',
+      key: 'kode_cabang',
+    },
+    {
       title: 'Alamat',
       dataIndex: 'alamat',
       key: 'alamat',
@@ -115,6 +121,13 @@ const TableDashboard: React.FC = () => {
       title: 'Tgl Jatuh Tempo',
       dataIndex: 'tgl_jatuh_tempo',
       key: 'tgl_jatuh_tempo',
+      render: (_, {tgl_jatuh_tempo}) => {
+        if (tgl_jatuh_tempo !== '-') {
+          return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+        } else {
+          return tgl_jatuh_tempo
+        }
+      },
     },
     {
       title: 'Status',

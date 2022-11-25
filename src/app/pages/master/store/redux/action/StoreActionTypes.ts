@@ -28,6 +28,7 @@ export type EditStoreType = {
   id: String
   kode_toko: String
   toko: String
+  toko_prev: String
   alamat: String
   telepon: String
   email: String
@@ -57,6 +58,7 @@ export type TableStoreType = {
 }
 
 export type CabangStoreType = {
+  kode_cabang: any
   _id: String
   alamat: String
   telepon: String
@@ -67,6 +69,7 @@ export type TableCabangStoreType = {
   key?: Number
   _id: String
   alamat: String
+  kode_cabang: String
   telepon: String
   email: String
 }

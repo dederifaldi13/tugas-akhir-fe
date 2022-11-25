@@ -42,7 +42,7 @@ const mapState = (state: RootState) => {
 }
 
 const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
-  const {handleSubmit, pristine, submitting} = props
+  const {handleSubmit, submitting} = props
   const dispatch = useDispatch()
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
@@ -253,10 +253,7 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
         </div>
         <div className='row justify-content-end mt-2 mr-2'>
           <div className='col-lg-2 d-grid'>
-            <button
-              className='btn btn-primary'
-              disabled={submitting || isSending || pristine}
-            >
+            <button className='btn btn-primary' disabled={submitting || isSending}>
               {!isSending && <span className='indicator-label'>Simpan</span>}
               {isSending && (
                 <span className='indicator-progress' style={{display: 'block'}}>

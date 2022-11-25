@@ -12,10 +12,22 @@ const mapState = (state: RootState) => {
     return {
       initialValues: {
         id: state.masterproduct.feedbackID._id,
+        old_product: state.masterproduct.feedbackID.product,
         product: state.masterproduct.feedbackID.product,
         tipe_program: {
           value: state.masterproduct.feedbackID.tipe_program,
           label: state.masterproduct.feedbackID.tipe_program,
+        },
+      },
+    }
+  } else {
+    return {
+      initialValues: {
+        id: '',
+        product: '',
+        tipe_program: {
+          value: '',
+          label: '',
         },
       },
     }
@@ -48,6 +60,16 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
               nouperCase={true}
               label='ID'
               placeholder='Masukan ID'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              name='old_product'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Product'
+              placeholder='Masukan Product'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>

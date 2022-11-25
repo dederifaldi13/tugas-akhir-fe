@@ -21,6 +21,7 @@ import FormEditStore from './FormEditStore'
 interface ExpandedDataType {
   key: React.Key
   _id: string
+  kode_cabang: string
   alamat: string
   telepon: string
   email: string
@@ -129,6 +130,7 @@ const TableStore: React.FC = () => {
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
   const expandedRowRenderTable = (id: any) => {
     const columns: ColumnsType<ExpandedDataType> = [
+      {title: 'Kode Cabang', dataIndex: 'kode_cabang', key: 'kode_cabang'},
       {title: 'Alamat', dataIndex: 'alamat', key: 'alamat'},
       {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
       {title: 'Email', dataIndex: 'email', key: 'email'},
@@ -144,6 +146,7 @@ const TableStore: React.FC = () => {
             alamat: dataTable[i].cabang[index].alamat,
             telepon: dataTable[i].cabang[index].telepon,
             email: dataTable[i].cabang[index].email,
+            kode_cabang: dataTable[i].cabang[index].kode_cabang,
           })
         }
       }

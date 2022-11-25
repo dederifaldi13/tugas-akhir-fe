@@ -1,6 +1,7 @@
 import {jsPDF} from 'jspdf'
 import 'jspdf-autotable'
 import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
+import moment from 'moment'
 
 const ReportCustomerPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4')
@@ -21,7 +22,13 @@ const ReportCustomerPDF = (data, head) => {
   if (head.tgl_awal === 'all' && head.tgl_akhir === 'all') {
     doc.text(`Tgl Jatuh Tempo : Semua`, 14, 25)
   } else {
-    doc.text(`Tgl Jatuh Tempo : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
+    doc.text(
+      `Tgl Jatuh Tempo : ${moment(head.tgl_awal).format('DD-MM-YYYY')} s/d ${moment(
+        head.tgl_akhir
+      ).format('DD-MM-YYYY')}`,
+      14,
+      25
+    )
   }
 
   tableColumn = [
@@ -58,7 +65,7 @@ const ReportCustomerPDF = (data, head) => {
         content: 'Rp. ' + element.total_harga.toLocaleString(),
         styles: {halign: 'right'},
       },
-      {content: element.tgl_jatuh_tempo},
+      {content: moment(element.tgl_jatuh_tempo).format('DD-MM-YYYY')},
       {content: element.status},
     ]
     tableRows.push(row)

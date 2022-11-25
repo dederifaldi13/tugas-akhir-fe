@@ -16,6 +16,7 @@ const mapState = (state: RootState) => {
         alamat: state.masterstore.feedbackCabangDetail.alamat,
         email: state.masterstore.feedbackCabangDetail.email,
         telepon: state.masterstore.feedbackCabangDetail.telepon,
+        kode_cabang: state.masterstore.feedbackCabangDetail.kode_cabang,
       },
     }
   }
@@ -40,6 +41,17 @@ const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any
               nouperCase={true}
               label='Id'
               placeholder='Masukan Id'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              name='kode_cabang'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Cabang'
+              placeholder='Masukan Cabang'
+              disabled
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>

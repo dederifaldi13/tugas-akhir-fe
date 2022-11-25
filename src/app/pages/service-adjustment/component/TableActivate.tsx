@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Input, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
+import moment from 'moment'
 import React, {useState} from 'react'
 import {useSelector} from 'react-redux'
 import {RootState} from '../../../../setup'
@@ -25,7 +26,7 @@ interface DataType {
 
 interface ExpandedDataType {
   key: React.Key
-  alamat: string
+  kode_cabang: string
   telepon: string
   email: string
 }
@@ -82,6 +83,13 @@ const columns: ColumnsType<DataType> = [
     title: 'Tgl Jatuh Tempo',
     dataIndex: 'tgl_jatuh_tempo',
     key: 'tgl_jatuh_tempo',
+    render: (_, {tgl_jatuh_tempo}) => {
+      if (tgl_jatuh_tempo === '-') {
+        return tgl_jatuh_tempo
+      } else {
+        return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+      }
+    },
   },
   {
     title: 'Status',
@@ -161,7 +169,7 @@ const TableActivate: React.FC = () => {
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
-      {title: 'Alamat', dataIndex: 'alamat', key: 'alamat'},
+      {title: 'Kode Cabang', dataIndex: 'kode_cabang', key: 'kode_cabang'},
       {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
       {title: 'Email', dataIndex: 'email', key: 'email'},
     ]
@@ -171,7 +179,7 @@ const TableActivate: React.FC = () => {
       if (dataTable[i]._id === id) {
         data.push({
           key: i,
-          alamat: dataTable[i].alamat,
+          kode_cabang: dataTable[i].kode_cabang,
           telepon: dataTable[i].telepon,
           email: dataTable[i].email,
         })

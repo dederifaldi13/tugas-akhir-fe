@@ -132,6 +132,7 @@ export type RequestValidationType = {
 }
 
 export type CabangType = {
+  kode_cabang: any;
   _id: string
   alamat: string
   email: string

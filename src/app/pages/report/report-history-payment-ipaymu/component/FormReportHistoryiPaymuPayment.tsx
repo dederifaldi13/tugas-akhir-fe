@@ -13,16 +13,16 @@ const mapState = (state: RootState) => {
   if (state.auth.user?.level === 'CUSTOMER') {
     return {
       initialValues: {
-        tgl_awal: moment().format('YYYY-MM-DD'),
-        tgl_akhir: moment().format('YYYY-MM-DD'),
+        tgl_awal: moment().format('DD-MM-YYYY'),
+        tgl_akhir: moment().format('DD-MM-YYYY'),
         kode_toko: state.reportHistoryPaymentiPaymu.dataToko?.toko,
       },
     }
   } else {
     return {
       initialValues: {
-        tgl_awal: moment().format('YYYY-MM-DD'),
-        tgl_akhir: moment().format('YYYY-MM-DD'),
+        tgl_awal: moment().format('DD-MM-YYYY'),
+        tgl_akhir: moment().format('DD-MM-YYYY'),
         kode_toko: {value: 'ALL', label: 'SEMUA'},
       },
     }

@@ -61,6 +61,11 @@ const TableAlamat: React.FC = () => {
 
   const columns: ColumnsType<TableCabangStoreType> = [
     {
+      title: 'Cabang',
+      dataIndex: 'kode_cabang',
+      key: 'kode_cabang',
+    },
+    {
       title: 'Alamat',
       dataIndex: 'alamat',
       key: 'alamat',

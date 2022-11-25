@@ -1,10 +1,24 @@
-import { Dispatch } from "redux";
-import { AxiosDelete, AxiosGet, AxiosPost, getImage, PopUpAlert, postKwitansiPDF, postPDF } from "../../../../../setup";
-import { dataURLtoPDFFile, NumberOnly } from "../../../../../setup/helper/function";
-import { setLoading, setLoadingApprove, stopLoading, stopLoadingApprove } from "../../../../../setup/redux/reducers/redux-loading/action/redux-loading";
-import { IAppState } from "../../../../../setup/redux/Store";
-import InvoicePDF from "../../pdf/InvoicePDF";
-import KwitansiPDF from "../../pdf/KwitansiPDF";
+import {Dispatch} from 'redux'
+import {
+  AxiosDelete,
+  AxiosGet,
+  AxiosPost,
+  getImage,
+  PopUpAlert,
+  postKwitansiPDF,
+  postPDF,
+} from '../../../../../setup'
+import {doDecrypt} from '../../../../../setup/helper/encrypt'
+import {dataURLtoPDFFile, NumberOnly} from '../../../../../setup/helper/function'
+import {
+  setLoading,
+  setLoadingApprove,
+  stopLoading,
+  stopLoadingApprove,
+} from '../../../../../setup/redux/reducers/redux-loading/action/redux-loading'
+import {IAppState} from '../../../../../setup/redux/Store'
+import InvoicePDF from '../../pdf/InvoicePDF'
+import KwitansiPDF from '../../pdf/KwitansiPDF'
 import {
   CabangType,
   COUNT_TOTAL_HARGA,
@@ -21,8 +35,8 @@ import {
   SET_PRODUCT,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
   TableDataType,
-  TablePaymentDataType
-} from "./PostActionTypes";
+  TablePaymentDataType,
+} from './PostActionTypes'
 
 export const GetPost = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -46,16 +60,33 @@ export const GetPost = () => {
           created_at: res.data[index].created_at,
           kode_cabang: res.data[index].kode_cabang,
           tipe_program: res.data[index].tipe_program,
-          _id: res.data[index]._id
+          _id: res.data[index]._id,
         }
         newarrdata.push(obj)
       }
+      const decryptData = doDecrypt(newarrdata, [
+        '_id',
+        '__v',
+        'created_at',
+        'key',
+        'kode_toko',
+        'product',
+        'bulan',
+        'status',
+        'tgl_jatuh_tempo',
+        'harga',
+        'qty',
+        'total_harga',
+        'kode_cabang',
+        'tipe_program',
+      ])
       dispatch({
-        type: POST_SUCCESS, payload: { post: newarrdata },
-      });
+        type: POST_SUCCESS,
+        payload: {post: decryptData},
+      })
     })
-  };
-};
+  }
+}
 
 export const GetPayment = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -77,85 +108,100 @@ export const GetPayment = () => {
           tanggal_bayar: res.data[index].tanggal_bayar,
           status: res.data[index].status,
           tipe_pembayaran: res.data[index].tipe_pembayaran,
-          created_at: res.data[index].created_at
+          created_at: res.data[index].created_at,
         }
         newarrdata.push(obj)
       }
       dispatch({
-        type: PAYMENT_DATA_SUCCESS, payload: { paymentData: newarrdata },
-      });
+        type: PAYMENT_DATA_SUCCESS,
+        payload: {paymentData: newarrdata},
+      })
     })
-  };
-};
+  }
+}
 
-export const SetProduct = (data: { value: string, label: string }) => {
+export const SetProduct = (data: {value: string; label: string}) => {
   return async (dispatch: Dispatch<any>) => {
     if (data.label.includes('OFFLINE')) {
-      dispatch({ type: SET_PRODUCT, payload: { product: data.value, tipe_program: 'OFFLINE' } })
+      dispatch({type: SET_PRODUCT, payload: {product: data.value, tipe_program: 'OFFLINE'}})
     } else {
-      dispatch({ type: SET_PRODUCT, payload: { product: data.value, tipe_program: 'ONLINE' } })
+      dispatch({type: SET_PRODUCT, payload: {product: data.value, tipe_program: 'ONLINE'}})
     }
-  };
-};
-
+  }
+}
 
 export const GetGambarByNoBayar = (no_bayar: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
-    getImage(no_bayar).then((res: any) => {
-      dispatch({ type: SHOW_MODAL_BUKTI_BAYAR_SUCCESS, payload: { noBayar: no_bayar, image: res } })
-      dispatch(stopLoading())
-    }).catch((error: any) => {
-      dispatch({ type: SHOW_MODAL_BUKTI_BAYAR_SUCCESS, payload: { noBayar: no_bayar, image: '/media/notfound/image-not-found.png' } })
-      dispatch(stopLoading())
-    })
-  };
-};
+    getImage(no_bayar)
+      .then((res: any) => {
+        dispatch({type: SHOW_MODAL_BUKTI_BAYAR_SUCCESS, payload: {noBayar: no_bayar, image: res}})
+        dispatch(stopLoading())
+      })
+      .catch((error: any) => {
+        dispatch({
+          type: SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
+          payload: {noBayar: no_bayar, image: '/media/notfound/image-not-found.png'},
+        })
+        dispatch(stopLoading())
+      })
+  }
+}
 
 export const CloseModalBuktiBayar = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch({ type: HIDE_MODAL_BUKTI_BAYAR_SUCCESS })
-  };
-};
+    dispatch({type: HIDE_MODAL_BUKTI_BAYAR_SUCCESS})
+  }
+}
 
 export const GetMasterStoreByKodeToko = (kode: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch({ type: SET_CABANG_BY_ID, payload: { cabangTokoByID: undefined } });
-    dispatch({ type: SET_CABANG, payload: { cabangToko: [] } });
-    dispatch({ type: GET_TOKO_BY_KODE, payload: { dataTokoByKode: undefined } });
-    AxiosGet('store/by-kode/' + kode).then((res: any) => {
-      dispatch({ type: GET_TOKO_BY_KODE, payload: { dataTokoByKode: res.data[0] } });
-      dispatch({ type: SET_CABANG, payload: { cabangToko: res.data[0].cabang } });
-    }).catch((error: any) => {
-      console.log(error);
-    })
-  };
-};
+    dispatch({type: SET_CABANG_BY_ID, payload: {cabangTokoByID: undefined}})
+    dispatch({type: SET_CABANG, payload: {cabangToko: []}})
+    dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: undefined}})
+    AxiosGet('store/by-kode/' + kode)
+      .then((res: any) => {
+        const decryptData = doDecrypt(res.data[0], [
+          '_id',
+          '__v',
+          'created_at',
+          'key',
+          'kode_toko',
+          'kode_cabang',
+        ])
+        dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: decryptData}})
+        dispatch({type: SET_CABANG, payload: {cabangToko: decryptData.cabang}})
+      })
+      .catch((error: any) => {
+        console.log(error)
+      })
+  }
+}
 
 export const SetCabangByID = (id: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const dataCabang = getState().dashboard.cabangToko
     const dataCabangfillter = dataCabang?.find((item: CabangType) => item._id === id)
-    dispatch({ type: SET_CABANG_BY_ID, payload: { cabangTokoByID: dataCabangfillter } });
-  };
-};
+    dispatch({type: SET_CABANG_BY_ID, payload: {cabangTokoByID: dataCabangfillter}})
+  }
+}
 
 export const CountTotalHargaQty = (value: number) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const harga = getState().form.FormAddNewTransaction.values?.harga || 0
     const totalharga = value * harga
-    dispatch({ type: COUNT_TOTAL_QTY, payload: { totalHarga: totalharga, qty: value } })
-  };
-};
+    dispatch({type: COUNT_TOTAL_QTY, payload: {totalHarga: totalharga, qty: value}})
+  }
+}
 
 export const CountTotalHarga = (value: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const qty = getState().form.FormAddNewTransaction.values?.bulan || 0
     const harga = parseInt(NumberOnly(value) || 0)
     const totalharga = qty * harga
-    dispatch({ type: COUNT_TOTAL_HARGA, payload: { totalHarga: totalharga, harga: harga } })
-  };
-};
+    dispatch({type: COUNT_TOTAL_HARGA, payload: {totalHarga: totalharga, harga: harga}})
+  }
+}
 
 export const PostCustomer = (data: FormPostType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -171,14 +217,14 @@ export const PostCustomer = (data: FormPostType) => {
       total_harga: 0,
       tgl_jatuh_tempo: '',
       kode_cabang: '',
-      tipe_program: ''
+      tipe_program: '',
     }
-    dispatch(setLoading());
+    dispatch(setLoading())
     if (data.tipe_program === 'OFFLINE') {
       senddata = {
         kode_toko: data.kode_toko.value,
         toko: data.toko,
-        kode_cabang: data.kode_cabang.value,
+        kode_cabang: data.kode_cabang.label,
         product: data.product.value,
         email: data.email,
         telepon: data.telepon,
@@ -187,13 +233,13 @@ export const PostCustomer = (data: FormPostType) => {
         harga: 0,
         bulan: '-',
         total_harga: 0,
-        tgl_jatuh_tempo: '-'
+        tgl_jatuh_tempo: '-',
       }
     } else {
       senddata = {
         kode_toko: data.kode_toko.value,
         toko: data.toko,
-        kode_cabang: data.kode_cabang.value,
+        kode_cabang: data.kode_cabang.label,
         product: data.product.value,
         email: data.email,
         telepon: data.telepon,
@@ -202,95 +248,125 @@ export const PostCustomer = (data: FormPostType) => {
         harga: parseInt(data.harga.toString()),
         bulan: data.bulan.toString(),
         total_harga: parseInt(data.total_harga.toString()),
-        tgl_jatuh_tempo: data.tgl_jatuh_tempo
+        tgl_jatuh_tempo: data.tgl_jatuh_tempo,
       }
     }
 
-    AxiosPost('customer', senddata).then((res: any) => {
-      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(/\+/g, '_')}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((resget: any) => {
-        const dataInvoice = resget.data[0]
-        const pdf64 = InvoicePDF(dataInvoice)
-        const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
-        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).finally(() => {
-          const userData = {
-            user_name: senddata.kode_toko,
-            user_id: data.telepon,
-            password: '12345678',
-            level: 'CUSTOMER'
-          }
-          AxiosPost('auth/register', userData).finally(() => {
-            PopUpAlert.default.AlertSuccessAdd()
-            dispatch(stopLoading())
+    AxiosPost('customer', senddata)
+      .then((res: any) => {
+        AxiosGet(
+          `customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(
+            /\+/g,
+            '_'
+          )}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`
+        ).then((resget: any) => {
+          const dataInvoice = resget.data[0]
+          const pdf64 = InvoicePDF(dataInvoice)
+          const file = dataURLtoPDFFile(
+            pdf64,
+            `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+          )
+          postPDF(
+            file,
+            `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+          ).finally(() => {
+            const userData = {
+              user_name: senddata.kode_toko,
+              user_id: data.telepon,
+              password: '12345678',
+              level: 'CUSTOMER',
+            }
+            AxiosPost('auth/register', userData).finally(() => {
+              PopUpAlert.default.AlertSuccessAdd()
+              dispatch(stopLoading())
+            })
           })
         })
       })
-    }).catch((error: any) => {
-      console.log(error);
-      dispatch(stopLoading())
-      PopUpAlert.default.AlertError(error.response.data.message)
-    })
-  };
-};
-
+      .catch((error: any) => {
+        console.log(error)
+        dispatch(stopLoading())
+        PopUpAlert.default.AlertError(error.response.data.message)
+      })
+  }
+}
 
 export const ValidationPayment = (kode: string, product: string, nobyr: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch(setLoadingApprove());
+    dispatch(setLoadingApprove())
     const senddata: RequestValidationType = {
       kode_toko: kode,
       product: product,
     }
-    AxiosPost('payment/validation', senddata).then((res: any) => {
-      AxiosGet(`customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(/\+/g, '_')}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`).then((res: any) => {
-        const dataInvoice = res.data[0]
-        const pdf64 = InvoicePDF(dataInvoice)
-        const file = dataURLtoPDFFile(pdf64, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`)
-        postPDF(file, `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`).finally(() => {
-          PopUpAlert.default.AlertSuccess('Berhasil Melakukan Validasi')
-          dispatch(stopLoadingApprove());
-
-        })
-      }).catch((error: any) => {
-        console.log(error);
-        dispatch(stopLoadingApprove());
+    AxiosPost('payment/validation', senddata)
+      .then((res: any) => {
+        AxiosGet(
+          `customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(
+            /\+/g,
+            '_'
+          )}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`
+        )
+          .then((res: any) => {
+            const dataInvoice = res.data[0]
+            const pdf64 = InvoicePDF(dataInvoice)
+            const file = dataURLtoPDFFile(
+              pdf64,
+              `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+            )
+            postPDF(
+              file,
+              `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+            ).finally(() => {
+              PopUpAlert.default.AlertSuccess('Berhasil Melakukan Validasi')
+              dispatch(stopLoadingApprove())
+            })
+          })
+          .catch((error: any) => {
+            console.log(error)
+            dispatch(stopLoadingApprove())
+          })
       })
-    }).catch((error: any) => {
-      // console.log(error.response.data.message);
-      PopUpAlert.default.AlertError(error.response.data.message || 'Gagal Melakukan Validasi Data')
-      dispatch(stopLoadingApprove());
-    })
-  };
-};
+      .catch((error: any) => {
+        // console.log(error.response.data.message);
+        PopUpAlert.default.AlertError(
+          error.response.data.message || 'Gagal Melakukan Validasi Data'
+        )
+        dispatch(stopLoadingApprove())
+      })
+  }
+}
 
 export const deleteValidationPayment = (id: string, nobyr: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch(setLoadingApprove());
-    AxiosDelete('payment/' + id).then(() => {
-      PopUpAlert.default.AlertSuccess('Berhasil Melakukan Penolakan')
-      dispatch(stopLoadingApprove());
-    }).catch(() => {
-      PopUpAlert.default.AlertError('Gagal Melakukan Penolakan')
-      dispatch(stopLoadingApprove());
-    })
-  };
-};
-
-
+    dispatch(setLoadingApprove())
+    AxiosDelete('payment/' + id)
+      .then(() => {
+        PopUpAlert.default.AlertSuccess('Berhasil Melakukan Penolakan')
+        dispatch(stopLoadingApprove())
+      })
+      .catch(() => {
+        PopUpAlert.default.AlertError('Gagal Melakukan Penolakan')
+        dispatch(stopLoadingApprove())
+      })
+  }
+}
 
 export const SendEmailAndWhatsApp = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
-    AxiosGet('customer/check-due').then(() => {
-      PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Mengirim Email dan WhatsApp')
-    }).catch((error: any) => {
-      console.log(error);
-      PopUpAlert.default.AlertError('Gagal Mengirim Email dan WhatsApp')
-    }).finally(() => {
-      dispatch(stopLoading())
-    })
-  };
-};
-
+    AxiosGet('customer/check-due')
+      .then(() => {
+        PopUpAlert.default.AlertSuccessWithoutReload('Berhasil Mengirim Email dan WhatsApp')
+      })
+      .catch((error: any) => {
+        console.log(error)
+        PopUpAlert.default.AlertError('Gagal Mengirim Email dan WhatsApp')
+      })
+      .finally(() => {
+        dispatch(stopLoading())
+      })
+  }
+}
 
 export const CreateAndSendPDFWithLoop = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -315,19 +391,27 @@ export const CreateAndSendPDFWithLoop = () => {
           created_at: res.data[index].created_at,
           kode_cabang: res.data[index].kode_cabang,
           tipe_program: res.data[index].tipe_program,
-          _id: res.data[index]._id
+          _id: res.data[index]._id,
         }
         newarrdata.push(obj)
       }
       newarrdata.forEach((element) => {
         const pdf64 = KwitansiPDF(element, '-')
-        const file = dataURLtoPDFFile(pdf64, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`)
-        postKwitansiPDF(file, `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`).then((res: any) => {
-          console.log(res);
-        }).finally(() => {
-          dispatch(stopLoading())
-        })
+        const file = dataURLtoPDFFile(
+          pdf64,
+          `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`
+        )
+        postKwitansiPDF(
+          file,
+          `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`
+        )
+          .then((res: any) => {
+            console.log(res)
+          })
+          .finally(() => {
+            dispatch(stopLoading())
+          })
       })
     })
-  };
-};
+  }
+}

@@ -1,6 +1,7 @@
 import {jsPDF} from 'jspdf'
 import 'jspdf-autotable'
 import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
+import moment from 'moment'
 
 const ReportHistoryPaymentPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4')
@@ -18,7 +19,13 @@ const ReportHistoryPaymentPDF = (data, head) => {
     title: 'History Payment',
   })
   doc.setFontSize(9)
-  doc.text(`Periode : ${head.tgl_awal} s/d ${head.tgl_akhir}`, 14, 25)
+  doc.text(
+    `Periode : ${moment(head.tgl_awal).format('DD-MM-YYYY')}) s/d ${moment(head.tgl_akhir).format(
+      'DD-MM-YYYY'
+    )}`,
+    14,
+    25
+  )
 
   tableColumn = [
     [
@@ -42,7 +49,7 @@ const ReportHistoryPaymentPDF = (data, head) => {
       {content: element.kode_toko},
       {content: element.toko},
       {content: element.no_bayar},
-      {content: element.tanggal_bayar},
+      {content: moment(element.tanggal_bayar).format('DD-MM-YYYY')},
       {content: element.product},
       {content: element.qty, styles: {halign: 'right'}},
       {
