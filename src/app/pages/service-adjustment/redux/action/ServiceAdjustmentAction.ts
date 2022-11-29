@@ -34,7 +34,7 @@ export const GetActiveCustomerAction = () => {
           const obj: TableActivateCustomerType = {
             key: index,
             kode_toko: res.data[index].kode_toko,
-            toko: res.data[index].toko,
+            toko: doDecrypt(res.data[index].toko, []),
             qty: res.data[index].qty,
             alamat: res.data[index].alamat,
             status: res.data[index].status,
@@ -128,21 +128,26 @@ export const deleteTransaction = (data: any) => {
 export const getDataByIDTrx = (id: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     AxiosGet(ACTIVE_CUSTOMER_API + '/by-id/' + id).then((res: any) => {
-      dispatch({type: GET_ACTIVE_CUSTOMER_BY_ID, payload: {feedbackID: res.data[0]}})
-      dispatch({type: SET_TOTAL_HARGA, payload: {feedbackID: res.data[0].total_harga}})
-      dispatch({
-        type: SET_PRODUCT_EDIT,
-        payload: {product: res.data[0].product, tipe_program: res.data[0].tipe_program},
-      })
-      dispatch({
-        type: COUNT_TOTAL_QTY_EDIT,
-        payload: {totalHarga: res.data[0].total_harga, qty: res.data[0].bulan},
-      })
-      dispatch({
-        type: COUNT_TOTAL_HARGA_EDIT,
-        payload: {totalHarga: res.data[0].total_harga, harga: res.data[0].harga},
-      })
-      dispatch({type: SHOW_MODAL_EDIT, payload: {isShow: true}})
+      if (res.data.length !== 0) {
+        const dataDec = doDecrypt(res.data, ['product','harga','bulan','total_harga','status','tipe_program','kode_toko'])
+        dispatch({type: GET_ACTIVE_CUSTOMER_BY_ID, payload: {feedbackID: dataDec}})
+        dispatch({type: SET_TOTAL_HARGA, payload: {feedbackID: dataDec.total_harga}})
+        dispatch({
+          type: SET_PRODUCT_EDIT,
+          payload: {product: dataDec.product, tipe_program: dataDec.tipe_program},
+        })
+        dispatch({
+          type: COUNT_TOTAL_QTY_EDIT,
+          payload: {totalHarga: dataDec.total_harga, qty: dataDec.bulan},
+        })
+        dispatch({
+          type: COUNT_TOTAL_HARGA_EDIT,
+          payload: {totalHarga: dataDec.total_harga, harga: dataDec.harga},
+        })
+        dispatch({type: SHOW_MODAL_EDIT, payload: {isShow: true}})
+      } else {
+        PopUpAlert.default.AlertError('Data Tidak Ditemukan !')
+      }
     })
   }
 }

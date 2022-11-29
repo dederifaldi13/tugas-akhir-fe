@@ -62,14 +62,24 @@ const TableAlamatEdit: React.FC = () => {
 
   const columns: ColumnsType<TableCabangStoreType> = [
     {
-      title: 'Cabang',
+      title: 'Kode Cabang',
       dataIndex: 'kode_cabang',
       key: 'kode_cabang',
+    },
+    {
+      title: 'Nama Cabang',
+      dataIndex: 'nama_cabang',
+      key: 'nama_cabang',
     },
     {
       title: 'Alamat',
       dataIndex: 'alamat',
       key: 'alamat',
+    },
+    {
+      title: 'Alamat Korespondensi',
+      dataIndex: 'alamat_korespondensi',
+      key: 'alamat_korespondensi',
     },
     {
       title: 'Telepon',
@@ -97,7 +107,7 @@ const TableAlamatEdit: React.FC = () => {
           </button>
           <button
             className='btn btn-light-danger btn-sm me-1'
-            onClick={(e) => handleDelete(e, record.key)}
+            onClick={(e) => handleDelete(e, record._id)}
           >
             <span className='indicator-label'>
               Delete <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />

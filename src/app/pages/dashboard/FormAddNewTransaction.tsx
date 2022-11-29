@@ -32,9 +32,11 @@ const mapState = (state: RootState) => {
           },
           toko: state.dashboard.dataTokoByKode.toko,
           kode_cabang: {
-            value: state.dashboard.cabangTokoByID._id,
-            label: state.dashboard.cabangTokoByID.kode_cabang,
+            value: state.dashboard.cabangTokoByID.kode_cabang,
+            label: state.dashboard.cabangTokoByID.nama_cabang,
           },
+          alamat: state.dashboard.cabangTokoByID.alamat_cabang,
+          alamat_korespondensi: state.dashboard.cabangTokoByID.alamat_korespondensi,
           telepon: state.dashboard.cabangTokoByID.telepon,
           email: state.dashboard.cabangTokoByID.email,
           product: {
@@ -57,9 +59,17 @@ const mapState = (state: RootState) => {
           },
           toko: state.dashboard.dataTokoByKode.toko,
           kode_cabang: {
-            value: state.dashboard.dataTokoByKode.cabang[0]._id,
-            label: state.dashboard.dataTokoByKode.cabang[0].kode_cabang,
+            value:
+              state.dashboard.cabangToko?.length !== 0
+                ? state.dashboard.cabangToko[0].kode_cabang
+                : '',
+            label:
+              state.dashboard.cabangToko?.length !== 0
+                ? state.dashboard.cabangToko[0].nama_cabang
+                : '',
           },
+          alamat: '',
+          alamat_korespondensi: '',
           telepon: '',
           email: '',
           product: {
@@ -85,6 +95,8 @@ const mapState = (state: RootState) => {
         },
         telepon: '',
         email: '',
+        alamat: '',
+        alamat_korespondensi: '',
         product: {
           value: '',
           label: '',
@@ -105,8 +117,8 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataToko: any = useSelector<RootState>(({masterstore}) => masterstore.feedback) || []
   const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
-  const data: any = useSelector<RootState>(({dashboard}) => dashboard.dataTokoByKode) || []
-  const dataCabang = data.cabang || []
+  // const data: any = useSelector<RootState>(({dashboard}) => dashboard.dataTokoByKode) || []
+  const dataCabang: any = useSelector<RootState>(({dashboard}) => dashboard.cabangToko) || []
   const CabangID: any = useSelector<RootState>(({dashboard}) => dashboard.cabangTokoByID)
   const tipe_program: any = useSelector<RootState>(({dashboard}) => dashboard.tipe_program)
 
@@ -150,8 +162,8 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               component={ReanderSelect2}
               options={dataCabang.map((list: any) => {
                 let data = {
-                  value: list._id,
-                  label: list.kode_cabang,
+                  value: list.kode_cabang,
+                  label: list.nama_cabang,
                 }
                 return data
               })}
@@ -161,9 +173,33 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               }}
               placeholder='Pilih Cabang'
               defaultValue={{
-                value: CabangID !== undefined ? CabangID._id : 'Pilih Kode Cabang',
-                label: CabangID !== undefined ? CabangID.kode_cabang : 'Pilih Kode Cabang',
+                value: CabangID !== undefined ? CabangID.kode_cabang : 'Pilih Kode Cabang',
+                label: CabangID !== undefined ? CabangID.nama_cabang : 'Pilih Kode Cabang',
               }}
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              readOnly
+              customeCss='form-control-solid'
+              name='alamat'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Alamat'
+              placeholder='Masukan Alamat'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              readOnly
+              customeCss='form-control-solid'
+              name='alamat_korespondensi'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Alamat Korespondensi'
+              placeholder='Masukan Alamat Korespondensi'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>

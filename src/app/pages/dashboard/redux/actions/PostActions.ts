@@ -20,7 +20,7 @@ import {IAppState} from '../../../../../setup/redux/Store'
 import InvoicePDF from '../../pdf/InvoicePDF'
 import KwitansiPDF from '../../pdf/KwitansiPDF'
 import {
-  CabangType,
+  // CabangType,
   COUNT_TOTAL_HARGA,
   COUNT_TOTAL_QTY,
   FormPostType,
@@ -165,24 +165,60 @@ export const GetMasterStoreByKodeToko = (kode: String) => {
           '_id',
           '__v',
           'created_at',
-          'key',
+          'input_data',
+          'status',
           'kode_toko',
           'kode_cabang',
         ])
-        dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: decryptData}})
-        dispatch({type: SET_CABANG, payload: {cabangToko: decryptData.cabang}})
+
+        AxiosGet('cabang/by-kode-toko/' + decryptData.kode_toko)
+          .then((rescabang) => {
+            const decryptDataCabang =
+              doDecrypt(rescabang.data, [
+                '_id',
+                '__v',
+                'created_at',
+                'kode_toko',
+                'kode_cabang',
+                'status',
+                'input_date',
+              ]) || []
+
+            dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: decryptData}})
+            dispatch({type: SET_CABANG, payload: {cabangToko: decryptDataCabang}})
+          })
+          .catch((err) => {
+            dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: decryptData}})
+            dispatch({type: SET_CABANG, payload: {cabangToko: []}})
+          })
       })
       .catch((error: any) => {
         console.log(error)
+        dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: undefined}})
+        dispatch({type: SET_CABANG, payload: {cabangToko: []}})
       })
   }
 }
 
 export const SetCabangByID = (id: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    const dataCabang = getState().dashboard.cabangToko
-    const dataCabangfillter = dataCabang?.find((item: CabangType) => item._id === id)
-    dispatch({type: SET_CABANG_BY_ID, payload: {cabangTokoByID: dataCabangfillter}})
+    // const dataCabang = getState().dashboard.cabangToko
+    AxiosGet('cabang/by-kode-cabang/' + id)
+      .then((res: any) => {
+        const dataCabangfillter = doDecrypt(res.data[0], [
+          '_id',
+          '__v',
+          'created_at',
+          'kode_toko',
+          'kode_cabang',
+          'status',
+          'input_date',
+        ])
+        dispatch({type: SET_CABANG_BY_ID, payload: {cabangTokoByID: dataCabangfillter}})
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 }
 
@@ -239,7 +275,7 @@ export const PostCustomer = (data: FormPostType) => {
       senddata = {
         kode_toko: data.kode_toko.value,
         toko: data.toko,
-        kode_cabang: data.kode_cabang.label,
+        kode_cabang: data.kode_cabang.value,
         product: data.product.value,
         email: data.email,
         telepon: data.telepon,

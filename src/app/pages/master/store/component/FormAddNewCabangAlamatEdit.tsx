@@ -13,10 +13,14 @@ const mapState = (state: RootState) => {
     return {
       initialValues: {
         id: state.masterstore.feedbackCabangDetail.key,
+        id_cabang: state.masterstore.feedbackCabangDetail._id,
         alamat: state.masterstore.feedbackCabangDetail.alamat,
+        alamat_korespondensi: state.masterstore.feedbackCabangDetail.alamat_korespondensi,
         email: state.masterstore.feedbackCabangDetail.email,
         telepon: state.masterstore.feedbackCabangDetail.telepon,
         kode_cabang: state.masterstore.feedbackCabangDetail.kode_cabang,
+        nama_cabang: state.masterstore.feedbackCabangDetail.nama_cabang,
+        kode_toko: state.form.FormEditStore.values?.kode_toko,
       },
     }
   }
@@ -43,15 +47,47 @@ const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any
               placeholder='Masukan Id'
             />
           </div>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              name='id_cabang'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Id Cabang'
+              placeholder='Masukan Id Cabang'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              name='kode_toko'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Kode Toko'
+              placeholder='Masukan Kode Toko'
+              readOnly
+            />
+          </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
+              readOnly
+              customeCss='form-control-solid'
               name='kode_cabang'
               type='text'
               component={ReanderField}
               nouperCase={true}
-              label='Cabang'
-              placeholder='Masukan Cabang'
-              disabled
+              label='Kode Cabang'
+              placeholder='Masukan Kode Cabang'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              name='nama_cabang'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Nama Cabang'
+              placeholder='Masukan Nama Cabang'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
@@ -62,6 +98,16 @@ const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any
               nouperCase={true}
               label='Alamat'
               placeholder='Masukan Alamat'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              name='alamat_korespondensi'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Alamat Korespondensi'
+              placeholder='Masukan Alamat Korespondensi'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>

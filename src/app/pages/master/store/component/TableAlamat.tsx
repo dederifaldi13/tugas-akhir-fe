@@ -19,6 +19,7 @@ import {TableCabangStoreType} from '../redux/action/StoreActionTypes'
 import FormAddNewCabangAlamat from './FormAddNewCabangAlamat'
 
 const TableAlamat: React.FC = () => {
+  const dataKodeToko = useSelector<RootState>(({form}) => form.FormAddNewStore.values?.kode_toko)
   const dispatch = useDispatch()
   const handleDelete = (e: any, id: any) => {
     e.preventDefault()
@@ -61,14 +62,24 @@ const TableAlamat: React.FC = () => {
 
   const columns: ColumnsType<TableCabangStoreType> = [
     {
-      title: 'Cabang',
+      title: 'Kode Cabang',
       dataIndex: 'kode_cabang',
       key: 'kode_cabang',
+    },
+    {
+      title: 'Nama Cabang',
+      dataIndex: 'nama_cabang',
+      key: 'nama_cabang',
     },
     {
       title: 'Alamat',
       dataIndex: 'alamat',
       key: 'alamat',
+    },
+    {
+      title: 'Alamat Korespondensi',
+      dataIndex: 'alamat_korespondensi',
+      key: 'alamat_korespondensi',
     },
     {
       title: 'Telepon',
@@ -171,6 +182,7 @@ const TableAlamat: React.FC = () => {
         onClick={(event) => {
           handleShowCabang(event)
         }}
+        disabled={dataKodeToko === undefined ? true : false}
       >
         <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
         New Cabang / Alamat

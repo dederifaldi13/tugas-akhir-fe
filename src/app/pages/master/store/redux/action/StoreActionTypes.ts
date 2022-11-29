@@ -15,13 +15,6 @@ export const HIDE_MODAL_CABANG_DETAIL = 'HIDE_MODAL_CABANG_DETAIL'
 export type PostStoreType = {
   kode_toko: String
   toko: String
-  detail_cabang: [
-    {
-      alamat: String
-      telepon: String
-      email: String
-    }
-  ]
 }
 
 export type EditStoreType = {
@@ -69,7 +62,9 @@ export type TableCabangStoreType = {
   key?: Number
   _id: String
   alamat: String
+  alamat_korespondensi: String
   kode_cabang: String
+  nama_cabang: String
   telepon: String
   email: String
 }

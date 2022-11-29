@@ -283,7 +283,7 @@ const TableDashboard: React.FC = () => {
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={2} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={3} align='right'>
                       Total
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={3} align='right'>

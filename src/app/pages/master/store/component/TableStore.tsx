@@ -131,7 +131,13 @@ const TableStore: React.FC = () => {
   const expandedRowRenderTable = (id: any) => {
     const columns: ColumnsType<ExpandedDataType> = [
       {title: 'Kode Cabang', dataIndex: 'kode_cabang', key: 'kode_cabang'},
+      {title: 'Nama Cabang', dataIndex: 'nama_cabang', key: 'nama_cabang'},
       {title: 'Alamat', dataIndex: 'alamat', key: 'alamat'},
+      {
+        title: 'Alamat Korespondensi',
+        dataIndex: 'alamat_korespondensi',
+        key: 'alamat_korespondensi',
+      },
       {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
       {title: 'Email', dataIndex: 'email', key: 'email'},
     ]
@@ -143,10 +149,12 @@ const TableStore: React.FC = () => {
           data.push({
             key: i,
             _id: dataTable[i].cabang[index]._id,
-            alamat: dataTable[i].cabang[index].alamat,
+            alamat: dataTable[i].cabang[index].alamat_cabang,
+            alamat_korespondensi: dataTable[i].cabang[index].alamat_korespondensi,
             telepon: dataTable[i].cabang[index].telepon,
             email: dataTable[i].cabang[index].email,
             kode_cabang: dataTable[i].cabang[index].kode_cabang,
+            nama_cabang: dataTable[i].cabang[index].nama_cabang,
           })
         }
       }

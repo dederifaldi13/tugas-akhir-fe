@@ -29,35 +29,53 @@ import {
 } from './StoreActionTypes'
 
 export const MASTER_STORE_URL = `store`
+export const MASTER_CABANG_URL = `cabang`
 
 export const GetMasterStore = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     AxiosGet(MASTER_STORE_URL + '/open')
       .then((res: any) => {
-        let newarrdata: GetStoreType[] = []
-        for (let index = 0; index < res.data.length; index++) {
-          const obj: TableStoreType = {
-            key: index.toString(),
-            _id: res.data[index]._id,
-            __v: res.data[index].__v,
-            created_at: res.data[index].created_at,
-            kode_toko: res.data[index].kode_toko,
-            toko: res.data[index].toko,
-            cabang: res.data[index].cabang,
-          }
-          newarrdata.push(obj)
-        }
-        const decryptData = doDecrypt(newarrdata, [
+        const decryptDataToko = doDecrypt(res.data, [
           '_id',
           '__v',
           'created_at',
           'key',
           'kode_toko',
-          'kode_cabang',
         ])
+        let newarrdata: GetStoreType[] = []
+        for (let index = 0; index < decryptDataToko.length; index++) {
+          const obj: TableStoreType = {
+            key: index.toString(),
+            _id: decryptDataToko[index]._id,
+            __v: decryptDataToko[index].__v,
+            created_at: decryptDataToko[index].created_at,
+            kode_toko: decryptDataToko[index].kode_toko,
+            toko: decryptDataToko[index].toko,
+            cabang: [],
+          }
+
+          AxiosGet(MASTER_CABANG_URL + `/by-kode-toko/${decryptDataToko[index].kode_toko}`)
+            .then((resCabang: any) => {
+              const decryptDataCabang = doDecrypt(resCabang.data, [
+                '_id',
+                '__v',
+                'created_at',
+                'kode_toko',
+                'kode_cabang',
+                'status',
+                'input_date',
+              ])
+              obj.cabang = decryptDataCabang
+            })
+            .catch((error: any) => {
+              console.log(error)
+            })
+          newarrdata.push(obj)
+        }
+
         dispatch({
           type: GET_STORE_SUCCESS,
-          payload: {feedback: decryptData},
+          payload: {feedback: newarrdata},
         })
       })
       .catch((error: any) => {
@@ -84,30 +102,42 @@ export const PostStore = (data: PostStoreType) => {
   return async (dispatch: Dispatch<any>) => {
     dispatch(setLoading())
     getLocal('cabangAlamat').then((res) => {
-      let newarr: any = []
+      let newarrcabang: any = {cabang_detail: []}
       res.forEach((element: any) => {
-        newarr.push({
+        newarrcabang.cabang_detail.push({
+          kode_toko: data.kode_toko,
           kode_cabang: element.kode_cabang,
-          alamat: element.alamat,
+          nama_cabang: element.nama_cabang,
+          alamat_cabang: element.alamat,
+          alamat_korespondensi: element.alamat_korespondensi,
           email: element.email,
           telepon: element.telepon,
         })
       })
+
       const sendData: PostStoreType = {
         kode_toko: data.kode_toko,
         toko: data.toko,
-        detail_cabang: newarr,
       }
       AxiosPost(MASTER_STORE_URL, sendData)
         .then(() => {
-          PopUpAlert.default.AlertSuccessAdd()
-          localStorage.removeItem('cabangAlamat')
-          dispatch(stopLoading())
+          AxiosPost(MASTER_CABANG_URL, newarrcabang)
+            .then((res) => {
+              PopUpAlert.default.AlertSuccessAdd()
+              localStorage.removeItem('cabangAlamat')
+              dispatch(stopLoading())
+            })
+            .catch((error) => {
+              console.log(error)
+              dispatch(stopLoading())
+              localStorage.removeItem('cabangAlamat')
+              PopUpAlert.default.AlertError(error.response.data.message || 'Gagal Menambahkan Data')
+            })
         })
         .catch((error) => {
           console.log(error)
           dispatch(stopLoading())
-          PopUpAlert.default.AlertError('Gagal Menambahkan Data')
+          PopUpAlert.default.AlertError(error.response.data.message || 'Gagal Menambahkan Data')
         })
     })
   }
@@ -179,38 +209,62 @@ export const GetMasterStoreByID = (id: String) => {
           'created_at',
           'key',
           'kode_toko',
-          'kode_cabang',
+          'input_date',
+          'status',
         ])
-        dispatch({type: EDIT_STORE_SUCCESS, payload: {feedbackID: decryptData}})
-        let newarr = []
-        for (let index = 0; index < decryptData.cabang.length; index++) {
-          newarr.push({
-            key: index,
-            _id: decryptData.cabang[index]._id,
-            kode_cabang: decryptData.cabang[index].kode_cabang,
-            alamat: decryptData.cabang[index].alamat,
-            email: decryptData.cabang[index].email,
-            telepon: decryptData.cabang[index].telepon,
+
+        AxiosGet(MASTER_CABANG_URL + `/by-kode-toko/${decryptData.kode_toko}`)
+          .then((resCabang: any) => {
+            const decryptDataCabang = doDecrypt(resCabang.data, [
+              '_id',
+              '__v',
+              'created_at',
+              'kode_toko',
+              'kode_cabang',
+              'status',
+              'input_date',
+            ])
+            decryptData.cabang = decryptDataCabang
+            dispatch({type: EDIT_STORE_SUCCESS, payload: {feedbackID: decryptData}})
+
+            let newarr = []
+            for (let index = 0; index < decryptData.cabang.length; index++) {
+              newarr.push({
+                key: index,
+                _id: decryptData.cabang[index]._id,
+                kode_cabang: decryptData.cabang[index].kode_cabang,
+                nama_cabang: decryptData.cabang[index].nama_cabang,
+                alamat: decryptData.cabang[index].alamat_cabang,
+                alamat_korespondensi: decryptData.cabang[index].alamat_korespondensi,
+                email: decryptData.cabang[index].email,
+                telepon: decryptData.cabang[index].telepon,
+              })
+            }
+            saveLocal('cabangAlamatEdit', newarr).then(() => {
+              dispatch(GetDataCabangEditLocal())
+            })
+            let newarrPrev = []
+            for (let index = 0; index < decryptData.cabang.length; index++) {
+              newarrPrev.push({
+                key: index,
+                _id: decryptData.cabang[index]._id,
+                kode_cabang: decryptData.cabang[index].kode_cabang,
+                nama_cabang: decryptData.cabang[index].nama_cabang,
+                alamat: decryptData.cabang[index].alamat_cabang,
+                alamat_korespondensi: decryptData.cabang[index].alamat_korespondensi,
+                email: decryptData.cabang[index].email,
+                telepon: decryptData.cabang[index].telepon,
+              })
+            }
+            saveLocal('cabangAlamatEditPrev', newarrPrev)
           })
-        }
-        saveLocal('cabangAlamatEdit', newarr).then(() => {
-          dispatch(GetDataCabangEditLocal())
-        })
-        let newarrPrev = []
-        for (let index = 0; index < decryptData.cabang.length; index++) {
-          newarrPrev.push({
-            key: index,
-            _id: decryptData.cabang[index]._id,
-            kode_cabang: decryptData.cabang[index].kode_cabang,
-            alamat: decryptData.cabang[index].alamat,
-            email: decryptData.cabang[index].email,
-            telepon: decryptData.cabang[index].telepon,
+          .catch((error) => {
+            console.log(error)
           })
-        }
-        saveLocal('cabangAlamatEditPrev', newarrPrev)
       })
       .catch((error: any) => {
         console.log(error)
+        dispatch(stopLoading())
       })
   }
 }
@@ -227,7 +281,9 @@ export const PostLocalCabang = () => {
           key: key,
           _id: data?._id,
           alamat: data?.alamat,
+          alamat_korespondensi: data?.alamat_korespondensi,
           kode_cabang: data?.kode_cabang.toUpperCase(),
+          nama_cabang: data?.nama_cabang,
           email: data?.email,
           telepon: data?.telepon,
         })
@@ -281,8 +337,10 @@ export const PostLocalCabang = () => {
               newarr.push({
                 key: dataDetail.length + 1,
                 _id: data?._id,
-                kode_cabang: data?.kode_cabang.toUpperCase(),
                 alamat: data?.alamat,
+                alamat_korespondensi: data?.alamat_korespondensi,
+                kode_cabang: data?.kode_cabang.toUpperCase(),
+                nama_cabang: data?.nama_cabang,
                 email: data?.email,
                 telepon: data?.telepon,
               })
@@ -301,8 +359,10 @@ export const PostLocalCabang = () => {
               newarr.push({
                 key: dataDetail.length,
                 _id: data?._id,
-                kode_cabang: data?.kode_cabang.toUpperCase(),
                 alamat: data?.alamat,
+                alamat_korespondensi: data?.alamat_korespondensi,
+                kode_cabang: data?.kode_cabang.toUpperCase(),
+                nama_cabang: data?.nama_cabang,
                 email: data?.email,
                 telepon: data?.telepon,
               })
@@ -327,57 +387,25 @@ export const PostLocalCabang = () => {
 
 export const PostLocalCabangEdit = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    // console.log(getState().form.FormAddNewCabang.values);
     dispatch(setLoading())
     const data = getState().form.FormAddNewCabangEdit.values
-    getLocal('cabangAlamatEdit').then((dataDetail) => {
-      const cek = dataDetail.find((val: any) => val.key === data?.id)
-      if (cek) {
-        let newarrfill = dataDetail.filter((val: any) => val.key !== data?.id)
-        newarrfill.push({
-          key: data?.id,
-          _id: data?._id,
-          kode_cabang: data?.kode_cabang,
-          alamat: data?.alamat,
-          email: data?.email,
-          telepon: data?.telepon,
-        })
-        saveLocal('cabangAlamatEdit', newarrfill).then(() => {
-          dispatch(stopLoading())
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Berhasil Menambahkan Data Cabang / Alamat',
-          }).then(() => {
-            dispatch(GetDataCabangEditLocalWithoutModal())
-            dispatch(HideAddModalCabangEdit())
-          })
-        })
-      } else {
-        let newarr: Array<TableCabangStoreType> = dataDetail
-        newarr.push({
-          key: dataDetail.length,
-          _id: data?._id,
-          kode_cabang: data?.kode_cabang,
-          alamat: data?.alamat,
-          email: data?.email,
-          telepon: data?.telepon,
-        })
-        saveLocal('cabangAlamatEdit', newarr).then(() => {
-          dispatch(stopLoading())
-          console.log('success')
+    const editData = {
+      kode_cabang: data?.kode_cabang,
+      nama_cabang: data?.nama_cabang,
+      kode_toko: data?.kode_toko,
+      email: data?.email,
+      telepon: data?.telepon,
+      alamat_cabang: data?.alamat,
+      alamat_korespondensi: data?.alamat_korespondensi,
+    }
 
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Berhasil Menambahkan Data Cabang / Alamat',
-          }).then(() => {
-            dispatch(GetDataCabangEditLocalWithoutModal())
-            dispatch(HideAddModalCabangEdit())
-          })
-        })
-      }
-    })
+    AxiosPut(MASTER_CABANG_URL + '/' + data?.id_cabang, editData)
+      .then((res: any) => {
+        PopUpAlert.default.AlertSuccess(res.message || 'Berhasil Merubah Data Cabang / Alamat')
+      })
+      .catch((err) => {
+        PopUpAlert.default.AlertError(err.response.data.message)
+      })
   }
 }
 
@@ -498,18 +526,13 @@ export const DeleteCabangLocal = (id: any) => {
 
 export const DeleteCabangLocalEdit = (id: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    getLocal('cabangAlamatEdit').then((res) => {
-      const datafilter = res.filter((item: TableCabangStoreType) => item.key !== id)
-      saveLocal('cabangAlamatEdit', datafilter).then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Berhasil Menghapus Data Cabang / Alamat',
-        }).then(() => {
-          dispatch(GetDataCabangEditLocalWithoutModal())
-        })
+    AxiosDelete(MASTER_CABANG_URL + `/${id}`)
+      .then((res: any) => {
+        PopUpAlert.default.AlertSuccess(res.message || 'Berhasil Menghapus Data !')
       })
-    })
+      .catch((err) => {
+        PopUpAlert.default.AlertError(err.response.data.message || 'Gagal Menghapus Data !')
+      })
   }
 }
 
