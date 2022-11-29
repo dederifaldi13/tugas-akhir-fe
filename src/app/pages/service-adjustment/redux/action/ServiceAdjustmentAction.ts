@@ -129,7 +129,20 @@ export const getDataByIDTrx = (id: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     AxiosGet(ACTIVE_CUSTOMER_API + '/by-id/' + id).then((res: any) => {
       if (res.data.length !== 0) {
-        const dataDec = doDecrypt(res.data, ['product','harga','bulan','total_harga','status','tipe_program','kode_toko'])
+        const dataDec = doDecrypt(res.data[0], [
+          'product',
+          'harga',
+          'bulan',
+          'total_harga',
+          'status',
+          'tipe_program',
+          'kode_toko',
+          '_id',
+          'created_at',
+          'tgl_jatuh_tempo',
+          'kode_cabang',
+          'input_date',
+        ])
         dispatch({type: GET_ACTIVE_CUSTOMER_BY_ID, payload: {feedbackID: dataDec}})
         dispatch({type: SET_TOTAL_HARGA, payload: {feedbackID: dataDec.total_harga}})
         dispatch({
