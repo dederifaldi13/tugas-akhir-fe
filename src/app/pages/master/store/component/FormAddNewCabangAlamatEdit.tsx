@@ -4,7 +4,7 @@ import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormAddNewStoreCabangValidate from '../../../../../setup/validate/FormAddNewStoreCabangValidate'
 import {ReanderField} from '../../../../modules/redux-form/BasicInput'
-import {PostLocalCabangEdit} from '../redux/action/StoreAction'
+import {PostLocalCabangAdd, PostLocalCabangEdit} from '../redux/action/StoreAction'
 
 interface Props {}
 
@@ -23,14 +23,25 @@ const mapState = (state: RootState) => {
         kode_toko: state.form.FormEditStore.values?.kode_toko,
       },
     }
+  } else {
+    return {
+      initialValues: {
+        kode_toko: state.form.FormEditStore.values?.kode_toko,
+      },
+    }
   }
 }
 
 const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {pristine, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
+  const dataDetail = useSelector<RootState>(({masterstore}) => masterstore.feedbackCabangDetail)
   const handleClick = () => {
-    props.dispatch(PostLocalCabangEdit())
+    if (dataDetail !== undefined) {
+      props.dispatch(PostLocalCabangEdit())
+    } else {
+      props.dispatch(PostLocalCabangAdd())
+    }
   }
 
   return (
@@ -68,18 +79,32 @@ const FormAddNewCabangEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any
               readOnly
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='kode_cabang'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Kode Cabang'
-              placeholder='Masukan Kode Cabang'
-            />
-          </div>
+          {dataDetail !== undefined ? (
+            <div className='col-lg-6 mb-2 mt-2'>
+              <Field
+                readOnly
+                customeCss='form-control-solid'
+                name='kode_cabang'
+                type='text'
+                component={ReanderField}
+                nouperCase={true}
+                label='Kode Cabang'
+                placeholder='Masukan Kode Cabang'
+              />
+            </div>
+          ) : (
+            <div className='col-lg-6 mb-2 mt-2'>
+              <Field
+                name='kode_cabang'
+                type='text'
+                component={ReanderField}
+                nouperCase={true}
+                label='Kode Cabang'
+                placeholder='Masukan Kode Cabang'
+              />
+            </div>
+          )}
+
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               name='nama_cabang'

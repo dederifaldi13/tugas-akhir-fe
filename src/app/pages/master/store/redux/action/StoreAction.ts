@@ -409,6 +409,34 @@ export const PostLocalCabangEdit = () => {
   }
 }
 
+export const PostLocalCabangAdd = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(setLoading())
+    const data = getState().form.FormAddNewCabangEdit.values
+    const newArrData: any = {cabang_detail: []}
+    const addData = {
+      kode_cabang: data?.kode_cabang,
+      nama_cabang: data?.nama_cabang,
+      kode_toko: data?.kode_toko,
+      email: data?.email,
+      telepon: data?.telepon,
+      alamat_cabang: data?.alamat,
+      alamat_korespondensi: data?.alamat_korespondensi,
+    }
+    newArrData.cabang_detail.push(addData)
+
+    AxiosPost(MASTER_CABANG_URL, newArrData)
+      .then((res: any) => {
+        PopUpAlert.default.AlertSuccess(res.message || 'Berhasil Menambahkan Data Cabang / Alamat')
+        dispatch(stopLoading())
+      })
+      .catch((err) => {
+        dispatch(stopLoading())
+        PopUpAlert.default.AlertError(err.response.data.message)
+      })
+  }
+}
+
 export const ShowModalCabang = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch({type: SHOW_MODAL_CABANG})
