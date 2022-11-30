@@ -127,14 +127,14 @@ const TableHasBeenPaidCustomer: React.FC = () => {
       dataIndex: 'qty',
       key: 'qty',
       align: 'right',
-      render: (_, {qty}) => <>{qty.toLocaleString()}</>,
+      render: (_, {qty}) => <>{qty?.toLocaleString()}</>,
     },
     {
       title: 'Harga',
       dataIndex: 'harga',
       key: 'harga',
       align: 'right',
-      render: (_, {harga}) => <>{'Rp. ' + harga.toLocaleString()}</>,
+      render: (_, {harga}) => <>{'Rp. ' + harga?.toLocaleString()}</>,
     },
     {
       title: 'Bulan',
@@ -146,7 +146,7 @@ const TableHasBeenPaidCustomer: React.FC = () => {
       dataIndex: 'total_harga',
       key: 'total_harga',
       align: 'right',
-      render: (_, {total_harga}) => <>{'Rp. ' + total_harga.toLocaleString()}</>,
+      render: (_, {total_harga}) => <>{'Rp. ' + total_harga?.toLocaleString()}</>,
     },
     {
       title: 'Status',
@@ -229,18 +229,20 @@ const TableHasBeenPaidCustomer: React.FC = () => {
                       Total
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={3} align='right'>
-                      {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
+                      {dataTable
+                        .reduce((a: any, b: {qty: any}) => a + b.qty || 0, 0)
+                        ?.toLocaleString()}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={4} align='right'>
                       {dataTable
-                        .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
-                        .toLocaleString()}
+                        .reduce((a: any, b: {harga: any}) => a + b.harga || 0, 0)
+                        ?.toLocaleString()}
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={5}></Table.Summary.Cell>
                     <Table.Summary.Cell index={6} align='right'>
                       {dataTable
-                        .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
-                        .toLocaleString()}
+                        .reduce((a: any, b: {total_harga: any}) => a + b.total_harga || 0, 0)
+                        ?.toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
                 </Table.Summary>

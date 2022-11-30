@@ -94,6 +94,7 @@ export type TablePaymentDataType = {
   no_bayar: string
   tanggal_bayar: string
   kode_toko: string
+  kode_cabang: string
   toko: string
   product: string
   qty: number

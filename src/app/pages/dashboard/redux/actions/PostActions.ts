@@ -96,6 +96,7 @@ export const GetPayment = () => {
         const obj: TablePaymentDataType = {
           key: index,
           kode_toko: res.data[index].kode_toko,
+          kode_cabang: res.data[index].kode_cabang,
           toko: res.data[index].toko,
           qty: res.data[index].qty,
           bulan: res.data[index].bulan,
@@ -112,9 +113,25 @@ export const GetPayment = () => {
         }
         newarrdata.push(obj)
       }
+      const decryptData = doDecrypt(newarrdata, [
+        'key',
+        'kode_toko',
+        'kode_cabang',
+        'qty',
+        'bulan',
+        'harga',
+        'product',
+        'total_harga',
+        '__v',
+        '_id',
+        'no_bayar',
+        'tanggal_bayar',
+        'status',
+        'created_at',
+      ])
       dispatch({
         type: PAYMENT_DATA_SUCCESS,
-        payload: {paymentData: newarrdata},
+        payload: {paymentData: decryptData},
       })
     })
   }
