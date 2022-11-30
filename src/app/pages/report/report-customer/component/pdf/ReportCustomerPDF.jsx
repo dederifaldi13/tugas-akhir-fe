@@ -4,7 +4,7 @@ import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
 import moment from 'moment'
 
 const ReportCustomerPDF = (data, head) => {
-  const doc = new jsPDF('p', 'mm', 'a4')
+  const doc = new jsPDF('l', 'mm', 'a4')
   let tableRows = []
   let tableColumn = []
 
@@ -34,7 +34,9 @@ const ReportCustomerPDF = (data, head) => {
   tableColumn = [
     [
       {content: `No`},
-      {content: `Toko / Customer`},
+      {content: `Kode Toko`},
+      {content: `Nama Toko`},
+      {content: `Kode Cabang`},
       {content: `Alamat`},
       {content: `Product`},
       {content: `Tipe`},
@@ -51,7 +53,9 @@ const ReportCustomerPDF = (data, head) => {
   data.forEach((element) => {
     const row = [
       {content: no++},
+      {content: element.kode_toko},
       {content: element.toko},
+      {content: element.kode_cabang},
       {content: element.alamat},
       {content: element.product},
       {content: element.tipe_program},
@@ -72,7 +76,7 @@ const ReportCustomerPDF = (data, head) => {
   })
 
   const footer = [
-    {content: 'Total : ', colSpan: 5, styles: {halign: 'right'}},
+    {content: 'Total : ', colSpan: 7, styles: {halign: 'right'}},
     {content: data.reduce((a, b) => a + parseInt(b.qty || 0), 0), styles: {halign: 'right'}},
     {
       content: 'Rp. ' + data.reduce((a, b) => a + parseInt(b.harga || 0), 0).toLocaleString(),

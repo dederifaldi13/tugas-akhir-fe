@@ -2,6 +2,7 @@ import moment from 'moment'
 import {Dispatch} from 'redux'
 import {AxiosGet, PopUpAlert} from '../../../../../../setup'
 import {saveLocal} from '../../../../../../setup/encrypt'
+import {doDecrypt} from '../../../../../../setup/helper/encrypt'
 import {
   setLoading,
   stopLoading,
@@ -25,6 +26,7 @@ export const GetCustomerReportAction = (data: {
 }) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     let newarrdata: TableCustomerReportType[] = []
+    dispatch({type: GET_DATA_CUSTOMER_REPORT_SUCCESS, payload: {feedback: []}})
     dispatch(setLoading())
     if (data.all) {
       const tgl_awal = 'all'
@@ -35,13 +37,28 @@ export const GetCustomerReportAction = (data: {
         }&product=${data.product.value}&status=${data.status.value}`
       )
         .then(async (res: any) => {
-          if (res.data.length === 0) {
+          const decryptData = doDecrypt(res.data, [
+            'bulan',
+            'created_at',
+            'harga',
+            'kode_cabang',
+            'kode_toko',
+            'product',
+            'qty',
+            'status',
+            'tgl_jatuh_tempo',
+            'tipe_program',
+            'total_harga',
+            '__v',
+            '_id',
+          ])
+          if (decryptData.length === 0) {
             PopUpAlert.default.AlertError('Data Laporan Kosong !')
             dispatch({type: GET_DATA_CUSTOMER_REPORT_SUCCESS, payload: {feedback: []}})
             dispatch(stopLoading())
           } else {
             if (getState().auth.user?.level === 'CUSTOMER') {
-              for (let index = 0; index < res.data.length; index++) {
+              for (let index = 0; index < decryptData.length; index++) {
                 let obj: TableCustomerReportType = {
                   key: 0,
                   _id: '',
@@ -62,114 +79,114 @@ export const GetCustomerReportAction = (data: {
                   tipe_program: '',
                   __v: 0,
                 }
-                if (res.data[index].status === 'OPEN') {
+                if (decryptData[index].status === 'OPEN') {
                   obj = {
                     key: index,
-                    kode_toko: res.data[index].kode_toko,
-                    toko: res.data[index].toko,
-                    qty: res.data[index].qty,
-                    alamat: res.data[index].alamat,
+                    kode_toko: decryptData[index].kode_toko,
+                    toko: decryptData[index].toko,
+                    qty: decryptData[index].qty,
+                    alamat: decryptData[index].alamat,
                     status: 'BELUM BAYAR',
-                    bulan: res.data[index].bulan,
-                    email: res.data[index].email,
-                    harga: res.data[index].harga,
-                    product: res.data[index].product,
-                    telepon: res.data[index].telepon,
-                    tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-                    total_harga: res.data[index].total_harga,
-                    created_at: res.data[index].created_at,
-                    kode_cabang: res.data[index].kode_cabang,
-                    tipe_program: res.data[index].tipe_program,
-                    _id: res.data[index]._id,
-                    __v: res.data[index].__v,
+                    bulan: decryptData[index].bulan,
+                    email: decryptData[index].email,
+                    harga: decryptData[index].harga,
+                    product: decryptData[index].product,
+                    telepon: decryptData[index].telepon,
+                    tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+                    total_harga: decryptData[index].total_harga,
+                    created_at: decryptData[index].created_at,
+                    kode_cabang: decryptData[index].kode_cabang,
+                    tipe_program: decryptData[index].tipe_program,
+                    _id: decryptData[index]._id,
+                    __v: decryptData[index].__v,
                   }
-                } else if (res.data[index].status === 'PAID') {
+                } else if (decryptData[index].status === 'PAID') {
                   obj = {
                     key: index,
-                    kode_toko: res.data[index].kode_toko,
-                    toko: res.data[index].toko,
-                    qty: res.data[index].qty,
-                    alamat: res.data[index].alamat,
+                    kode_toko: decryptData[index].kode_toko,
+                    toko: decryptData[index].toko,
+                    qty: decryptData[index].qty,
+                    alamat: decryptData[index].alamat,
                     status: 'SUDAH BAYAR',
-                    bulan: res.data[index].bulan,
-                    email: res.data[index].email,
-                    harga: res.data[index].harga,
-                    product: res.data[index].product,
-                    telepon: res.data[index].telepon,
-                    tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-                    total_harga: res.data[index].total_harga,
-                    created_at: res.data[index].created_at,
-                    kode_cabang: res.data[index].kode_cabang,
-                    tipe_program: res.data[index].tipe_program,
-                    _id: res.data[index]._id,
-                    __v: res.data[index].__v,
+                    bulan: decryptData[index].bulan,
+                    email: decryptData[index].email,
+                    harga: decryptData[index].harga,
+                    product: decryptData[index].product,
+                    telepon: decryptData[index].telepon,
+                    tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+                    total_harga: decryptData[index].total_harga,
+                    created_at: decryptData[index].created_at,
+                    kode_cabang: decryptData[index].kode_cabang,
+                    tipe_program: decryptData[index].tipe_program,
+                    _id: decryptData[index]._id,
+                    __v: decryptData[index].__v,
                   }
-                } else if (res.data[index].status === 'CLOSE') {
+                } else if (decryptData[index].status === 'CLOSE') {
                   obj = {
                     key: index,
-                    kode_toko: res.data[index].kode_toko,
-                    toko: res.data[index].toko,
-                    qty: res.data[index].qty,
-                    alamat: res.data[index].alamat,
+                    kode_toko: decryptData[index].kode_toko,
+                    toko: decryptData[index].toko,
+                    qty: decryptData[index].qty,
+                    alamat: decryptData[index].alamat,
                     status: 'TIDAK AKTIF',
-                    bulan: res.data[index].bulan,
-                    email: res.data[index].email,
-                    harga: res.data[index].harga,
-                    product: res.data[index].product,
-                    telepon: res.data[index].telepon,
-                    tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-                    total_harga: res.data[index].total_harga,
-                    created_at: res.data[index].created_at,
-                    kode_cabang: res.data[index].kode_cabang,
-                    tipe_program: res.data[index].tipe_program,
-                    _id: res.data[index]._id,
-                    __v: res.data[index].__v,
+                    bulan: decryptData[index].bulan,
+                    email: decryptData[index].email,
+                    harga: decryptData[index].harga,
+                    product: decryptData[index].product,
+                    telepon: decryptData[index].telepon,
+                    tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+                    total_harga: decryptData[index].total_harga,
+                    created_at: decryptData[index].created_at,
+                    kode_cabang: decryptData[index].kode_cabang,
+                    tipe_program: decryptData[index].tipe_program,
+                    _id: decryptData[index]._id,
+                    __v: decryptData[index].__v,
                   }
                 } else {
                   obj = {
                     key: index,
-                    kode_toko: res.data[index].kode_toko,
-                    toko: res.data[index].toko,
-                    qty: res.data[index].qty,
-                    alamat: res.data[index].alamat,
+                    kode_toko: decryptData[index].kode_toko,
+                    toko: decryptData[index].toko,
+                    qty: decryptData[index].qty,
+                    alamat: decryptData[index].alamat,
                     status: 'JATUH TEMPO',
-                    bulan: res.data[index].bulan,
-                    email: res.data[index].email,
-                    harga: res.data[index].harga,
-                    product: res.data[index].product,
-                    telepon: res.data[index].telepon,
-                    tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-                    total_harga: res.data[index].total_harga,
-                    created_at: res.data[index].created_at,
-                    kode_cabang: res.data[index].kode_cabang,
-                    tipe_program: res.data[index].tipe_program,
-                    _id: res.data[index]._id,
-                    __v: res.data[index].__v,
+                    bulan: decryptData[index].bulan,
+                    email: decryptData[index].email,
+                    harga: decryptData[index].harga,
+                    product: decryptData[index].product,
+                    telepon: decryptData[index].telepon,
+                    tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+                    total_harga: decryptData[index].total_harga,
+                    created_at: decryptData[index].created_at,
+                    kode_cabang: decryptData[index].kode_cabang,
+                    tipe_program: decryptData[index].tipe_program,
+                    _id: decryptData[index]._id,
+                    __v: decryptData[index].__v,
                   }
                 }
                 newarrdata.push(obj)
               }
             } else {
-              for (let index = 0; index < res.data.length; index++) {
+              for (let index = 0; index < decryptData.length; index++) {
                 const obj: TableCustomerReportType = {
                   key: index,
-                  kode_toko: res.data[index].kode_toko,
-                  toko: res.data[index].toko,
-                  qty: res.data[index].qty,
-                  alamat: res.data[index].alamat,
-                  status: res.data[index].status,
-                  bulan: res.data[index].bulan,
-                  email: res.data[index].email,
-                  harga: res.data[index].harga,
-                  product: res.data[index].product,
-                  telepon: res.data[index].telepon,
-                  tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-                  total_harga: res.data[index].total_harga,
-                  created_at: res.data[index].created_at,
-                  kode_cabang: res.data[index].kode_cabang,
-                  tipe_program: res.data[index].tipe_program,
-                  __v: res.data[index].__v,
-                  _id: res.data[index]._id,
+                  kode_toko: decryptData[index].kode_toko,
+                  toko: decryptData[index].toko,
+                  qty: decryptData[index].qty,
+                  alamat: decryptData[index].alamat,
+                  status: decryptData[index].status,
+                  bulan: decryptData[index].bulan,
+                  email: decryptData[index].email,
+                  harga: decryptData[index].harga,
+                  product: decryptData[index].product,
+                  telepon: decryptData[index].telepon,
+                  tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+                  total_harga: decryptData[index].total_harga,
+                  created_at: decryptData[index].created_at,
+                  kode_cabang: decryptData[index].kode_cabang,
+                  tipe_program: decryptData[index].tipe_program,
+                  __v: decryptData[index].__v,
+                  _id: decryptData[index]._id,
                 }
                 newarrdata.push(obj)
               }
@@ -195,31 +212,46 @@ export const GetCustomerReportAction = (data: {
         }&product=${data.product.value}&status=${data.status.value}`
       )
         .then(async (res: any) => {
-          if (res.data.length === 0) {
+          const decryptData = doDecrypt(res.data, [
+            'bulan',
+            'created_at',
+            'harga',
+            'kode_cabang',
+            'kode_toko',
+            'product',
+            'qty',
+            'status',
+            'tgl_jatuh_tempo',
+            'tipe_program',
+            'total_harga',
+            '__v',
+            '_id',
+          ])
+          if (decryptData.length === 0) {
             PopUpAlert.default.AlertError('Data Laporan Kosong !')
             dispatch({type: GET_DATA_CUSTOMER_REPORT_SUCCESS, payload: {feedback: []}})
             dispatch(stopLoading())
           } else {
-            for (let index = 0; index < res.data.length; index++) {
+            for (let index = 0; index < decryptData.length; index++) {
               const obj: TableCustomerReportType = {
                 key: index,
-                kode_toko: res.data[index].kode_toko,
-                toko: res.data[index].toko,
-                qty: res.data[index].qty,
-                alamat: res.data[index].alamat,
-                status: res.data[index].status,
-                bulan: res.data[index].bulan,
-                email: res.data[index].email,
-                harga: res.data[index].harga,
-                product: res.data[index].product,
-                telepon: res.data[index].telepon,
-                tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-                total_harga: res.data[index].total_harga,
-                created_at: res.data[index].created_at,
-                kode_cabang: res.data[index].kode_cabang,
-                tipe_program: res.data[index].tipe_program,
-                __v: res.data[index].__v,
-                _id: res.data[index]._id,
+                kode_toko: decryptData[index].kode_toko,
+                toko: decryptData[index].toko,
+                qty: decryptData[index].qty,
+                alamat: decryptData[index].alamat,
+                status: decryptData[index].status,
+                bulan: decryptData[index].bulan,
+                email: decryptData[index].email,
+                harga: decryptData[index].harga,
+                product: decryptData[index].product,
+                telepon: decryptData[index].telepon,
+                tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+                total_harga: decryptData[index].total_harga,
+                created_at: decryptData[index].created_at,
+                kode_cabang: decryptData[index].kode_cabang,
+                tipe_program: decryptData[index].tipe_program,
+                __v: decryptData[index].__v,
+                _id: decryptData[index]._id,
               }
               newarrdata.push(obj)
             }
