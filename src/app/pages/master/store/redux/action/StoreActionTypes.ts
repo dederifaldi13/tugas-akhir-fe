@@ -11,6 +11,7 @@ export const EDIT_STORE_SUCCESS = 'EDIT_STORE_SUCCESS'
 export const DELETE_STORE_SUCCESS = 'DELETE_STORE_SUCCESS'
 export const SHOW_MODAL_CABANG_DETAIL = 'SHOW_MODAL_CABANG_DETAIL'
 export const HIDE_MODAL_CABANG_DETAIL = 'HIDE_MODAL_CABANG_DETAIL'
+export const IS_EDITED = 'IS_EDITED'
 
 export type PostStoreType = {
   kode_toko: String
