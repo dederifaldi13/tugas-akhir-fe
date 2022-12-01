@@ -275,31 +275,43 @@ export const PostLocalCabang = () => {
     const data = getState().form.FormAddNewCabang.values
     getLocal('cabangAlamat').then((dataDetail) => {
       if (dataDetail.length === 0) {
-        let newarr: Array<TableCabangStoreType> = []
-        let key = 0
-        newarr.push({
-          key: key,
-          _id: data?._id,
-          alamat: data?.alamat,
-          alamat_korespondensi: data?.alamat_korespondensi,
-          kode_cabang: data?.kode_cabang.toUpperCase(),
-          nama_cabang: data?.nama_cabang,
-          email: data?.email,
-          telepon: data?.telepon,
-        })
-
-        // newarr.push(data)
-        saveLocal('cabangAlamat', newarr).then(() => {
+        if (
+          data?.kode_cabang === undefined ||
+          data?.nama_cabang === undefined ||
+          data?.email === undefined ||
+          data?.telepon === undefined ||
+          data?.alamat === undefined ||
+          data?.alamat_korespondensi === undefined
+        ) {
+          PopUpAlert.default.AlertError('Mohon Lengkapi Dahulu Form Yg Tersedia !')
           dispatch(stopLoading())
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Berhasil Menambahkan Data Cabang / Alamat',
-          }).then(() => {
-            dispatch(HideModalCabang())
-            dispatch(GetDataCabangLocal())
+        } else {
+          let newarr: Array<TableCabangStoreType> = []
+          let key = 0
+          newarr.push({
+            key: key,
+            _id: data?._id,
+            alamat: data?.alamat,
+            alamat_korespondensi: data?.alamat_korespondensi,
+            kode_cabang: data?.kode_cabang.toUpperCase(),
+            nama_cabang: data?.nama_cabang,
+            email: data?.email,
+            telepon: data?.telepon,
           })
-        })
+
+          // newarr.push(data)
+          saveLocal('cabangAlamat', newarr).then(() => {
+            dispatch(stopLoading())
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Berhasil Menambahkan Data Cabang / Alamat',
+            }).then(() => {
+              dispatch(HideModalCabang())
+              dispatch(GetDataCabangLocal())
+            })
+          })
+        }
       } else {
         const cekSameData = dataDetail.find(
           (val: any) => val.kode_cabang.toUpperCase() === data?.kode_cabang.toUpperCase()
@@ -308,43 +320,29 @@ export const PostLocalCabang = () => {
           PopUpAlert.default.AlertError('Kode Cabang Tidak Boleh Sama !')
           dispatch(stopLoading())
         } else {
-          const cek = dataDetail.find((val: any) => val.key === data?.id)
-          if (cek) {
-            let newarrfill = dataDetail.filter((val: any) => val.key !== data?.id)
-            newarrfill.push({
-              key: data?.id,
-              _id: data?._id,
-              kode_cabang: data?.kode_cabang.toUpperCase(),
-              alamat: data?.alamat,
-              email: data?.email,
-              telepon: data?.telepon,
-            })
-            saveLocal('cabangAlamat', newarrfill).then(() => {
-              dispatch(stopLoading())
-              Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Berhasil Menambahkan Data Cabang / Alamat',
-              }).then(() => {
-                dispatch(HideModalCabang())
-                dispatch(GetDataCabangLocal())
-              })
-            })
+          if (
+            data?.kode_cabang === undefined ||
+            data?.nama_cabang === undefined ||
+            data?.email === undefined ||
+            data?.telepon === undefined ||
+            data?.alamat === undefined ||
+            data?.alamat_korespondensi === undefined
+          ) {
+            PopUpAlert.default.AlertError('Mohon Lengkapi Dahulu Form Yg Tersedia !')
+            dispatch(stopLoading())
           } else {
-            let newarr: Array<TableCabangStoreType> = dataDetail
-            const checkData = newarr.find((val: any) => val.key === dataDetail.length)
-            if (checkData) {
-              newarr.push({
-                key: dataDetail.length + 1,
+            const cek = dataDetail.find((val: any) => val.key === data?.id)
+            if (cek) {
+              let newarrfill = dataDetail.filter((val: any) => val.key !== data?.id)
+              newarrfill.push({
+                key: data?.id,
                 _id: data?._id,
-                alamat: data?.alamat,
-                alamat_korespondensi: data?.alamat_korespondensi,
                 kode_cabang: data?.kode_cabang.toUpperCase(),
-                nama_cabang: data?.nama_cabang,
+                alamat: data?.alamat,
                 email: data?.email,
                 telepon: data?.telepon,
               })
-              saveLocal('cabangAlamat', newarr).then(() => {
+              saveLocal('cabangAlamat', newarrfill).then(() => {
                 dispatch(stopLoading())
                 Swal.fire({
                   icon: 'success',
@@ -356,27 +354,53 @@ export const PostLocalCabang = () => {
                 })
               })
             } else {
-              newarr.push({
-                key: dataDetail.length,
-                _id: data?._id,
-                alamat: data?.alamat,
-                alamat_korespondensi: data?.alamat_korespondensi,
-                kode_cabang: data?.kode_cabang.toUpperCase(),
-                nama_cabang: data?.nama_cabang,
-                email: data?.email,
-                telepon: data?.telepon,
-              })
-              saveLocal('cabangAlamat', newarr).then(() => {
-                dispatch(stopLoading())
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Success',
-                  text: 'Berhasil Menambahkan Data Cabang / Alamat',
-                }).then(() => {
-                  dispatch(HideModalCabang())
-                  dispatch(GetDataCabangLocal())
+              let newarr: Array<TableCabangStoreType> = dataDetail
+              const checkData = newarr.find((val: any) => val.key === dataDetail.length)
+              if (checkData) {
+                newarr.push({
+                  key: dataDetail.length + 1,
+                  _id: data?._id,
+                  alamat: data?.alamat,
+                  alamat_korespondensi: data?.alamat_korespondensi,
+                  kode_cabang: data?.kode_cabang.toUpperCase(),
+                  nama_cabang: data?.nama_cabang,
+                  email: data?.email,
+                  telepon: data?.telepon,
                 })
-              })
+                saveLocal('cabangAlamat', newarr).then(() => {
+                  dispatch(stopLoading())
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Berhasil Menambahkan Data Cabang / Alamat',
+                  }).then(() => {
+                    dispatch(HideModalCabang())
+                    dispatch(GetDataCabangLocal())
+                  })
+                })
+              } else {
+                newarr.push({
+                  key: dataDetail.length,
+                  _id: data?._id,
+                  alamat: data?.alamat,
+                  alamat_korespondensi: data?.alamat_korespondensi,
+                  kode_cabang: data?.kode_cabang.toUpperCase(),
+                  nama_cabang: data?.nama_cabang,
+                  email: data?.email,
+                  telepon: data?.telepon,
+                })
+                saveLocal('cabangAlamat', newarr).then(() => {
+                  dispatch(stopLoading())
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Berhasil Menambahkan Data Cabang / Alamat',
+                  }).then(() => {
+                    dispatch(HideModalCabang())
+                    dispatch(GetDataCabangLocal())
+                  })
+                })
+              }
             }
           }
         }
@@ -413,27 +437,41 @@ export const PostLocalCabangAdd = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
     const data = getState().form.FormAddNewCabangEdit.values
-    const newArrData: any = {cabang_detail: []}
-    const addData = {
-      kode_cabang: data?.kode_cabang,
-      nama_cabang: data?.nama_cabang,
-      kode_toko: data?.kode_toko,
-      email: data?.email,
-      telepon: data?.telepon,
-      alamat_cabang: data?.alamat,
-      alamat_korespondensi: data?.alamat_korespondensi,
-    }
-    newArrData.cabang_detail.push(addData)
+    if (
+      data?.kode_cabang === undefined ||
+      data?.nama_cabang === undefined ||
+      data?.email === undefined ||
+      data?.telepon === undefined ||
+      data?.alamat === undefined ||
+      data?.alamat_korespondensi === undefined
+    ) {
+      dispatch(stopLoading())
+      PopUpAlert.default.AlertError('Mohon Lengkapi Dahulu Form Yg Tersedia !')
+    } else {
+      const newArrData: any = {cabang_detail: []}
+      const addData = {
+        kode_cabang: data?.kode_cabang,
+        nama_cabang: data?.nama_cabang,
+        kode_toko: data?.kode_toko,
+        email: data?.email,
+        telepon: data?.telepon,
+        alamat_cabang: data?.alamat,
+        alamat_korespondensi: data?.alamat_korespondensi,
+      }
+      newArrData.cabang_detail.push(addData)
 
-    AxiosPost(MASTER_CABANG_URL, newArrData)
-      .then((res: any) => {
-        PopUpAlert.default.AlertSuccess(res.message || 'Berhasil Menambahkan Data Cabang / Alamat')
-        dispatch(stopLoading())
-      })
-      .catch((err) => {
-        dispatch(stopLoading())
-        PopUpAlert.default.AlertError(err.response.data.message)
-      })
+      AxiosPost(MASTER_CABANG_URL, newArrData)
+        .then((res: any) => {
+          PopUpAlert.default.AlertSuccess(
+            res.message || 'Berhasil Menambahkan Data Cabang / Alamat'
+          )
+          dispatch(stopLoading())
+        })
+        .catch((err) => {
+          dispatch(stopLoading())
+          PopUpAlert.default.AlertError(err.response.data.message)
+        })
+    }
   }
 }
 

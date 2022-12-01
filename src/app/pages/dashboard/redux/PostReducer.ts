@@ -6,6 +6,7 @@ import {
   COUNT_TOTAL_QTY,
   DataType,
   GET_TOKO_BY_KODE,
+  HIDE_MODAL,
   HIDE_MODAL_BUKTI_BAYAR_SUCCESS,
   PaymentDataType,
   PAYMENT_DATA_SUCCESS,
@@ -13,6 +14,7 @@ import {
   SET_CABANG,
   SET_CABANG_BY_ID,
   SET_PRODUCT,
+  SHOW_MODAL,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
 } from './actions/PostActionTypes'
 
@@ -34,6 +36,7 @@ export interface DefaultStateI {
   tipe_program?: String
   cabangToko?: any
   cabangTokoByID?: CabangType
+  modal: Boolean
 }
 
 const defaultState: DefaultStateI = {
@@ -50,6 +53,7 @@ const defaultState: DefaultStateI = {
   tipe_program: 'ONLINE',
   cabangToko: [],
   cabangTokoByID: undefined,
+  modal: false,
 }
 
 const postReducer = (
@@ -86,6 +90,10 @@ const postReducer = (
       return {...state, cabangToko: action.payload?.cabangToko}
     case SET_CABANG_BY_ID:
       return {...state, cabangTokoByID: action.payload?.cabangTokoByID}
+    case SHOW_MODAL:
+      return {...state, modal: true}
+    case HIDE_MODAL:
+      return {...state, modal: false}
     default:
       return state
   }

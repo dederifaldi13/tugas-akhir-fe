@@ -28,7 +28,7 @@ export const ACTIVE_CUSTOMER_API = `customer`
 export const GetActiveCustomerAction = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     let newarrdata: TableActivateCustomerType[] = []
-    AxiosGet(ACTIVE_CUSTOMER_API + '/open')
+    AxiosGet(ACTIVE_CUSTOMER_API)
       .then((res: any) => {
         for (let index = 0; index < res.data.length; index++) {
           const obj: TableActivateCustomerType = {

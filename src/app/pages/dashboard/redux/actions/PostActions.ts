@@ -25,6 +25,7 @@ import {
   COUNT_TOTAL_QTY,
   FormPostType,
   GET_TOKO_BY_KODE,
+  HIDE_MODAL,
   HIDE_MODAL_BUKTI_BAYAR_SUCCESS,
   PAYMENT_DATA_SUCCESS,
   PostType,
@@ -33,6 +34,7 @@ import {
   SET_CABANG,
   SET_CABANG_BY_ID,
   SET_PRODUCT,
+  SHOW_MODAL,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
   TableDataType,
   TablePaymentDataType,
@@ -466,5 +468,17 @@ export const CreateAndSendPDFWithLoop = () => {
           })
       })
     })
+  }
+}
+
+export const ShowModal = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({type: SHOW_MODAL})
+  }
+}
+
+export const HideModal = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({type: HIDE_MODAL})
   }
 }
