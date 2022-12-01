@@ -54,6 +54,7 @@ const TableReportCustomer: React.FC = () => {
         setValue(currValue)
         const filteredData = newarrdata.filter(
           (entry: DataType) =>
+            entry.alamat.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.product.toUpperCase().includes(currValue.toUpperCase()) ||

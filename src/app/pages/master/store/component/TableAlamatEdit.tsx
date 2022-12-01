@@ -38,6 +38,7 @@ const TableAlamatEdit: React.FC = () => {
   }
 
   const newarrdata: any = useSelector<RootState>(({masterstore}) => masterstore.feedbackCabangEdit)
+  const isEdit: any = useSelector<RootState>(({masterstore}) => masterstore.edited)
   const [count, setCount] = useState(newarrdata.length)
   const [dataSource, setDataSource] = useState(newarrdata)
   const [value, setValue] = useState('')
@@ -136,7 +137,13 @@ const TableAlamatEdit: React.FC = () => {
       }}
     />
   )
-  const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
+  const dataTable = isEdit
+    ? newarrdata
+    : dataSource.length === 0
+    ? search
+      ? dataSource
+      : newarrdata
+    : dataSource
 
   const defaultOptions = {
     loop: true,

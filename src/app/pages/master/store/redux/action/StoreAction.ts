@@ -26,6 +26,7 @@ import {
   HIDE_ADD_MODAL_CABANG_EDIT,
   SHOW_MODAL_CABANG_DETAIL,
   HIDE_MODAL_CABANG_DETAIL,
+  IS_EDITED,
 } from './StoreActionTypes'
 
 export const MASTER_STORE_URL = `store`
@@ -412,6 +413,7 @@ export const PostLocalCabang = () => {
 export const PostLocalCabangEdit = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
+    const dataHead: any = getState().form.FormEditStore.values
     const data = getState().form.FormAddNewCabangEdit.values
     const editData = {
       kode_cabang: data?.kode_cabang,
@@ -425,10 +427,23 @@ export const PostLocalCabangEdit = () => {
 
     AxiosPut(MASTER_CABANG_URL + '/' + data?.id_cabang, editData)
       .then((res: any) => {
-        PopUpAlert.default.AlertSuccess(res.message || 'Berhasil Merubah Data Cabang / Alamat')
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: res.message || 'Berhasil Merubah Data Cabang / Alamat',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            dispatch(isEdited(true))
+            dispatch(GetMasterStoreByID(dataHead.id))
+            dispatch(HideAddModalCabangEdit())
+            dispatch(stopLoading())
+          }
+        })
       })
       .catch((err) => {
         PopUpAlert.default.AlertError(err.response.data.message)
+        dispatch(stopLoading())
+        dispatch(isEdited(false))
       })
   }
 }
@@ -465,6 +480,19 @@ export const PostLocalCabangAdd = () => {
           PopUpAlert.default.AlertSuccess(
             res.message || 'Berhasil Menambahkan Data Cabang / Alamat'
           )
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: res.message || 'Berhasil Merubah Data Cabang / Alamat',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              dispatch(isEdited(true))
+              const dataHead: any = getState().form.FormEditStore.values
+              dispatch(GetMasterStoreByID(dataHead.id))
+              dispatch(HideAddModalCabangEdit())
+              dispatch(stopLoading())
+            }
+          })
           dispatch(stopLoading())
         })
         .catch((err) => {
@@ -472,6 +500,12 @@ export const PostLocalCabangAdd = () => {
           PopUpAlert.default.AlertError(err.response.data.message)
         })
     }
+  }
+}
+
+export const isEdited = (edit: Boolean) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({type: IS_EDITED, payload: {edited: edit}})
   }
 }
 

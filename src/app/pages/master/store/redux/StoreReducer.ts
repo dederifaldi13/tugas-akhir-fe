@@ -10,6 +10,7 @@ import {
   HIDE_MODAL_CABANG,
   HIDE_MODAL_CABANG_DETAIL,
   HIDE_MODAL_CABANG_EDIT,
+  IS_EDITED,
   SHOW_ADD_MODAL_CABANG_EDIT,
   SHOW_MODAL_CABANG,
   SHOW_MODAL_CABANG_DETAIL,
@@ -30,6 +31,7 @@ export interface DefaultStateI {
   feedbackCabang?: Array<CabangStoreType>
   feedbackCabangDetail?: any
   feedbackCabangEdit?: Array<CabangStoreType>
+  edited?: Boolean
 }
 
 const defaultState: DefaultStateI = {
@@ -42,6 +44,7 @@ const defaultState: DefaultStateI = {
   feedbackCabang: [],
   feedbackCabangDetail: undefined,
   feedbackCabangEdit: [],
+  edited: false,
 }
 
 const masterStoreReducer = (
@@ -83,6 +86,8 @@ const masterStoreReducer = (
     case ADD_CABANG_EDIT_SUCCESS:
       const datacabedit = action.payload?.feedbackCabangEdit
       return {...state, feedbackCabangEdit: datacabedit}
+    case IS_EDITED:
+      return {...state, edited: action.payload?.edited}
     default:
       return state
   }
