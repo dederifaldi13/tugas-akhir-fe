@@ -11,20 +11,19 @@ export const SET_CABANG = 'SET_CABANG'
 export const SET_CABANG_BY_ID = 'SET_CABANG_BY_ID'
 export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
+export const SET_DATA_PRODUCT = 'SET_DATA_PRODUCT'
 
 export type PostType = {
-  kode_toko: String
-  toko: String
-  product: String
-  email: String
-  telepon: String
-  qty: Number
-  harga: Number
-  bulan: String
-  total_harga: Number
-  tgl_jatuh_tempo: String
-  kode_cabang: String
-  tipe_program: String
+  kode_toko?: String
+  toko?: String
+  kode_cabang?: String
+  email?: String
+  telepon?: String
+  tgl_jatuh_tempo?: String
+  bulan?: String
+  total_harga?: Number
+  total_diskon?: Number
+  product_detail?: Array<any>
 }
 
 export type FormPostType = {
@@ -40,6 +39,7 @@ export type FormPostType = {
   harga: Number
   bulan: String
   total_harga: Number
+  total_diskon: Number
   tgl_jatuh_tempo: String
 }
 
@@ -94,6 +94,7 @@ export type TablePaymentDataType = {
   _id: string
   created_at: string
   no_bayar: string
+  no_invoice: string
   tanggal_bayar: string
   kode_toko: string
   kode_cabang: string
@@ -111,26 +112,26 @@ export type TablePaymentDataType = {
 export type TableDataType = {
   key: number
   _id: String
-  created_at: String
-  kode_toko: String
-  toko: String
-  alamat: String
-  telepon: String
-  email: String
-  product: String
-  qty: Number
-  harga: Number
-  bulan: String
-  total_harga: Number
+  no_invoice: String
   tgl_jatuh_tempo: String
-  status: String
+  kode_toko: String
   kode_cabang: String
-  tipe_program: String
+  email: String
+  telepon: String
+  bulan: String
+  total_harga: number
+  total_diskon: number
+  status: String
+  input_date: String
+  __v: number
+  customer: Array<any>
+  grand_total: number
 }
 
 export type RequestValidationType = {
+  no_invoice: string
   kode_toko: string
-  product: string
+  kode_cabang: string
 }
 
 export type CabangType = {

@@ -10,6 +10,7 @@ const ContentVerifikasiCustomer: FC = () => {
   const dataFeedback: any = useSelector<RootState>(
     ({verifikasicustomerreducer}) => verifikasicustomerreducer.feedbackVerif
   )
+
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -29,7 +30,7 @@ const ContentVerifikasiCustomer: FC = () => {
 
   return (
     <>
-      {dataFeedback.status === 500 ? (
+      {dataFeedback.status === 500 || dataFeedback.status === 404 ? (
         <div className='d-grid gap-2 col-6 mx-auto'>
           <Result
             icon={

@@ -41,24 +41,24 @@ const Routes: FC = () => {
         ) : location.pathname.includes('payment-confirmation') ? (
           <Redirect
             from='/auth'
-            to='/payment-confirmation/:kode_toko/:product/:tipe_program/:kode_cabang'
+            to='/payment-confirmation/:no_invoice/:kode_toko/:kode_cabang/:tipe_program'
           />
         ) : location.pathname.includes('success-payment') ? (
           <Redirect from='/auth' to='/success-payment' />
         ) : location.pathname.includes('payment-method') ? (
           <Redirect
             from='/auth'
-            to='/payment-method/:kode_toko/:product/:tipe_program/:kode_cabang'
+            to='/payment-method/:no_invoice/:kode_toko/:kode_cabang/:tipe_program'
           />
         ) : location.pathname.includes('return-payment') ? (
           <Redirect
             from='/auth'
-            to='/return-payment/:kode_toko/:product/:tipe_program/:kode_cabang'
+            to='/return-payment/:no_invoice/:kode_toko/:kode_cabang/:tipe_program'
           />
         ) : location.pathname.includes('verification-phone') ? (
           <MasterLayout>
             <Route
-              path='/verification-phone/:kode_toko/:product/:tipe_program/:kode_cabang/:kode_verif'
+              path='/verification-phone/:no_invoice/:kode_toko/:kode_cabang/:tipe_program/:kode_verif'
               component={VerifikasiCustomerWrapper}
             />
           </MasterLayout>
@@ -81,7 +81,7 @@ const Routes: FC = () => {
         ) : location.pathname.includes('payment-confirmation') ? (
           <MasterLayout>
             <Route
-              path='/payment-confirmation/:kode_toko/:product/:tipe_program/:kode_cabang'
+              path='/payment-confirmation/:no_invoice/:kode_toko/:kode_cabang/:tipe_program'
               component={TransactionWrapper}
             />
           </MasterLayout>
@@ -92,21 +92,21 @@ const Routes: FC = () => {
         ) : location.pathname.includes('payment-method') ? (
           <MasterLayout>
             <Route
-              path='/payment-method/:kode_toko/:product/:tipe_program/:kode_cabang'
+              path='/payment-method/:no_invoice/:kode_toko/:kode_cabang/:tipe_program'
               component={PaymentMethodWrapper}
             />
           </MasterLayout>
         ) : location.pathname.includes('return-payment') ? (
           <MasterLayout>
             <Route
-              path='/return-payment/:kode_toko/:product/:tipe_program/:kode_cabang'
+              path='/return-payment/:no_invoice/:kode_toko/:kode_cabang/:tipe_program'
               component={ReturnPage}
             />
           </MasterLayout>
         ) : location.pathname.includes('verification-phone') ? (
           <MasterLayout>
             <Route
-              path='/verification-phone/:kode_toko/:product/:tipe_program/:kode_cabang/:kode_verif'
+              path='/verification-phone/:no_invoice/:kode_toko/:kode_cabang/:tipe_program/:kode_verif'
               component={VerifikasiCustomerWrapper}
             />
           </MasterLayout>

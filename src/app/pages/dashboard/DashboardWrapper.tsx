@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import {Button} from 'antd'
 import React, {FC, useEffect, useState} from 'react'
 import {Modal} from 'react-bootstrap-v5'
 import {useIntl} from 'react-intl'
@@ -9,7 +10,13 @@ import {GetMasterProduct} from '../master/product/redux/action/ProductAction'
 import {GetMasterStore} from '../master/store/redux/action/StoreAction'
 // import CustomerExcel from './excel/CustomerExcel'
 import FormAddNewTransaction from './FormAddNewTransaction'
-import {GetPayment, GetPost, PostCustomer} from './redux/actions/PostActions'
+import {
+  generatePDF,
+  GetPayment,
+  GetPost,
+  HideModalTrx,
+  PostCustomer,
+} from './redux/actions/PostActions'
 import TableDashboard from './TableDashboard'
 import TableHasBeenPaid from './TableHasBeenPaid'
 
@@ -18,7 +25,10 @@ const DashboardWrapper: FC = () => {
   const intl = useIntl()
   const [show, setShow] = useState(false)
 
-  const handleClose = () => setShow(false)
+  const handleClose = () => {
+    dispatch(HideModalTrx())
+    setShow(false)
+  }
   const handleShow = () => setShow(true)
   const handleSubmit = (data: any) => {
     dispatch(PostCustomer(data))
@@ -80,6 +90,9 @@ const DashboardWrapper: FC = () => {
                   </div>
                 </div>
                 {/* begin::Body */}
+                <div className='card-footer py-3 d-none'>
+                  <Button onClick={() => dispatch(generatePDF())}>PDF</Button>
+                </div>
               </div>
             </div>
           </div>

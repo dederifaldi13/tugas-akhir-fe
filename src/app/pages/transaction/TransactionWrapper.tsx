@@ -21,7 +21,7 @@ const TransactionWrapper: FC = () => {
   }
   const params: {
     kode_toko: string
-    product: string
+    no_invoice: string
     kode_cabang: string
     tipe_program: string
   } = useParams()

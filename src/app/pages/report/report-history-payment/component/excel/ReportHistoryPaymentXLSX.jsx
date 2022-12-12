@@ -14,14 +14,14 @@ class ExcelReport extends Component {
       color: '#000',
       textAlign: 'center',
       fontWeight: 'bold',
-      borderWidth: '1px',
+      borderWidth: '0.5px',
       borderColor: '#000000',
       borderStyle: 'solid',
     }
 
     const footerStyle = {
       textAlign: 'right',
-      borderWidth: '1px',
+      borderWidth: '0.5px',
       borderColor: '#000000',
       borderStyle: 'solid',
     }
@@ -56,27 +56,26 @@ class ExcelReport extends Component {
             </tr>
             <tr>
               <td style={headStyle}>No</td>
+              <td style={headStyle}>No Bayar</td>
+              <td style={headStyle}>No Invoice</td>
               <td style={headStyle}>Kode Toko / Customer</td>
               <td style={headStyle}>Toko / Customer</td>
-              <td style={headStyle}>No Bayar</td>
+              <td style={headStyle}>Cabang</td>
               <td style={headStyle}>Tanggal Bayar</td>
-              <td style={headStyle}>Product</td>
-              <td style={headStyle}>Qty</td>
-              <td style={headStyle}>Harga</td>
-              <td style={headStyle}>Bulan</td>
               <td style={headStyle}>Total Harga</td>
+              <td style={headStyle}>Tipe Pembayaran</td>
             </tr>
           </thead>
           <tbody>
             {this.props.dataExcel.map((row) => {
               const bodyStyle = {
-                borderWidth: '1px',
+                borderWidth: '0.5px',
                 borderColor: '#000000',
                 borderStyle: 'solid',
                 textAlign: 'center',
               }
               const bodyStyleNumber = {
-                borderWidth: '1px',
+                borderWidth: '0.5px',
                 borderColor: '#000000',
                 borderStyle: 'solid',
                 textAlign: 'right',
@@ -85,31 +84,25 @@ class ExcelReport extends Component {
               return (
                 <tr>
                   <td style={bodyStyle}>{row.key + 1}</td>
+                  <td style={bodyStyle}>{row.no_bayar}</td>
+                  <td style={bodyStyle}>{row.no_invoice}</td>
                   <td style={bodyStyle}>{row.kode_toko}</td>
                   <td style={bodyStyle}>{row.toko}</td>
-                  <td style={bodyStyle}>{row.no_bayar}</td>
+                  <td style={bodyStyle}>{row.kode_cabang}</td>
                   <td style={bodyStyle}>{moment(row.tanggal_bayar).format('DD-MM-YYYY')}</td>
-                  <td style={bodyStyle}>{row.product}</td>
-                  <td style={bodyStyleNumber}>{row.qty}</td>
-                  <td style={bodyStyleNumber}>Rp. {row.harga.toLocaleString()}</td>
-                  <td style={bodyStyle}>{row.bulan}</td>
-                  <td style={bodyStyleNumber}>Rp. {row.total_harga.toLocaleString()}</td>
+                  <td style={bodyStyleNumber}>Rp. {row.total_harga?.toLocaleString()}</td>
+                  <td style={bodyStyle}>{row.tipe_pembayaran}</td>
                 </tr>
               )
             })}
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={6} style={footerStyle}>
+              <td colSpan={7} style={footerStyle}>
                 Total :
               </td>
-              <td style={footerStyle}>{this.props.dataExcel.reduce((a, b) => a + b.qty, 0)}</td>
               <td style={footerStyle}>
-                Rp. {this.props.dataExcel.reduce((a, b) => a + b.harga, 0).toLocaleString()}
-              </td>
-              <td style={footerStyle}></td>
-              <td style={footerStyle}>
-                Rp. {this.props.dataExcel.reduce((a, b) => a + b.total_harga, 0).toLocaleString()}
+                Rp. {this.props.dataExcel.reduce((a, b) => a + b.total_harga, 0)?.toLocaleString()}
               </td>
             </tr>
           </tfoot>

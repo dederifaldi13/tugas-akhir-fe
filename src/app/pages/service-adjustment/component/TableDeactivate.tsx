@@ -14,8 +14,8 @@ import {
   deleteTransaction,
   editTransaction,
   getDataByIDTrx,
-  PostActivateData,
-  PostDeactivateData,
+  PostActivateDataInvoice,
+  PostDeactivateDataInvoice,
   SetIDForDelete,
   setShowAction,
 } from '../redux/action/ServiceAdjustmentAction'
@@ -26,6 +26,7 @@ interface DataType {
   key: string
   _id: string
   kode_toko: string
+  kode_cabang: string
   toko: string
   alamat: string
   telepon: string
@@ -38,6 +39,9 @@ interface DataType {
   tgl_jatuh_tempo: string
   status: string
   tipe_program: string
+  total_diskon: number
+  grand_total: number
+  no_invoice: string
 }
 
 interface ExpandedDataType {
@@ -46,6 +50,8 @@ interface ExpandedDataType {
   telepon: string
   email: string
   tipe_program: string
+  status: string
+  harga: number
 }
 
 const TableDeactivate: React.FC = () => {
@@ -58,8 +64,8 @@ const TableDeactivate: React.FC = () => {
   const load = useSelector<RootState>(({loader}) => loader.loading)
   const isSending = load as boolean
   const loadActivate = useSelector<RootState>(({loader}) => loader.loadingApprove)
-  const isShow = useSelector<RootState>(({serviceAdjustment}) => serviceAdjustment.isShow)
   const isSendingActivate = loadActivate as boolean
+  const isShow = useSelector<RootState>(({serviceAdjustment}) => serviceAdjustment.isShow)
   const SearchBar = (
     <Input
       placeholder='Search Data Table'
@@ -79,13 +85,12 @@ const TableDeactivate: React.FC = () => {
           const filteredData = newarrdata.filter(
             (entry: DataType) =>
               entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
-              entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
-              entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
-              entry.status.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.kode_cabang.toUpperCase().includes(currValue.toUpperCase()) ||
               entry.tgl_jatuh_tempo.toUpperCase().includes(currValue.toUpperCase()) ||
               entry.bulan.toUpperCase().includes(currValue.toUpperCase()) ||
-              entry.harga.toString().includes(currValue) ||
-              entry.qty.toString().includes(currValue) ||
+              entry.telepon.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.email.toUpperCase().includes(currValue.toUpperCase()) ||
+              entry.no_invoice.toUpperCase().includes(currValue.toUpperCase()) ||
               entry.total_harga.toString().includes(currValue)
           )
           setDataSource(filteredData)
@@ -96,7 +101,7 @@ const TableDeactivate: React.FC = () => {
   )
   const dataTable = dataSource.length === 0 ? (search ? dataSource : newarrdata) : dataSource
 
-  const handleDeactivate = (kode: string, product: string) => {
+  const handleDeactivate = (no_invoice: string) => {
     Swal.fire({
       title: 'Apakah Anda Yakin?',
       text: 'Menonaktifkan Customer Ini',
@@ -107,12 +112,12 @@ const TableDeactivate: React.FC = () => {
       confirmButtonText: 'Yakin',
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(PostDeactivateData(kode, product))
+        dispatch(PostDeactivateDataInvoice(no_invoice))
       }
     })
   }
 
-  const handleActivate = (kode: string, product: string) => {
+  const handleActivate = (no_invoice: string) => {
     Swal.fire({
       title: 'Apakah Anda Yakin?',
       text: 'Mengaktifkan Customer Ini',
@@ -123,7 +128,7 @@ const TableDeactivate: React.FC = () => {
       confirmButtonText: 'Yakin',
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(PostActivateData(kode, product))
+        dispatch(PostActivateDataInvoice(no_invoice))
       }
     })
   }
@@ -146,6 +151,7 @@ const TableDeactivate: React.FC = () => {
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
+      {title: 'Product', dataIndex: 'product', key: 'product'},
       {
         title: 'Tipe',
         dataIndex: 'tipe_program',
@@ -154,10 +160,6 @@ const TableDeactivate: React.FC = () => {
           if (tipe_program === 'ONLINE') {
             return (
               <span className='badge badge-success fs-7 fw-bold'>
-                {/* <KTSVG
-                          path='/media/icons/duotune/maps/map001.svg'
-                          className='svg-icon-2 svg-icon-light'
-                        /> */}
                 &nbsp;
                 {tipe_program}
               </span>
@@ -165,10 +167,6 @@ const TableDeactivate: React.FC = () => {
           } else {
             return (
               <span className='badge badge-dark fs-7 fw-bold'>
-                {/* <KTSVG
-                          path='/media/icons/duotune/maps/map001.svg'
-                          className='svg-icon-2 svg-icon-light'
-                        /> */}
                 &nbsp;
                 {tipe_program}
               </span>
@@ -176,23 +174,70 @@ const TableDeactivate: React.FC = () => {
           }
         },
       },
-      {title: 'Kode Cabang', dataIndex: 'kode_cabang', key: 'kode_cabang'},
-      {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
-      {title: 'Email', dataIndex: 'email', key: 'email'},
+      {
+        title: 'Status Aktif',
+        dataIndex: 'status',
+        key: 'status',
+        render: (_, {status}) => {
+          if (status !== 'CLOSE') {
+            return (
+              <>
+                <button className='btn btn-light-success btn-sm me-1' disabled>
+                  <span className='indicator-label'>
+                    <span className='indicator-label'>
+                      Active
+                      <KTSVG
+                        path='/media/icons/duotune/general/gen051.svg'
+                        className='svg-icon-1'
+                      />
+                    </span>
+                  </span>
+                </button>
+              </>
+            )
+          } else {
+            return (
+              <>
+                <button className='btn btn-light-danger btn-sm me-1' disabled>
+                  <span className='indicator-label'>
+                    <span className='indicator-label'>
+                      Deactive
+                      <KTSVG
+                        path='/media/icons/duotune/general/gen050.svg'
+                        className='svg-icon-1'
+                      />
+                    </span>
+                  </span>
+                </button>
+              </>
+            )
+          }
+        },
+      },
       {title: 'Qty', dataIndex: 'qty', key: 'qty'},
+      {
+        title: 'Harga',
+        dataIndex: 'harga',
+        key: 'harga',
+        render: (_, {harga}) => {
+          return 'Rp. ' + harga?.toLocaleString()
+        },
+      },
     ]
 
-    const data = []
+    const data: any = []
     for (let i = 0; i < dataTable.length; ++i) {
-      if (dataTable[i]._id === id) {
-        data.push({
-          key: i,
-          kode_cabang: dataTable[i].kode_cabang,
-          tipe_program: dataTable[i].tipe_program,
-          qty: dataTable[i].qty,
-          telepon: dataTable[i].telepon,
-          email: dataTable[i].email,
-        })
+      for (let index = 0; index < dataTable[i].customer.length; index++) {
+        if (dataTable[i]._id === id) {
+          data.push({
+            key: index,
+            product: dataTable[i].customer[index].product,
+            tipe_program: dataTable[i].customer[index].tipe_program,
+            status: dataTable[i].customer[index].status,
+            qty: dataTable[i].customer[index].qty,
+            harga: dataTable[i].customer[index].harga,
+          })
+        }
       }
     }
     return <Table columns={columns} dataSource={data} pagination={false} />
@@ -230,8 +275,8 @@ const TableDeactivate: React.FC = () => {
   const handleCloseEdit = () => {
     dispatch(setShowAction(false))
   }
-  const handleShowEdit = (id: String) => {
-    dispatch(getDataByIDTrx(id))
+  const handleShowEdit = (data: any) => {
+    dispatch(getDataByIDTrx(data))
   }
 
   const handleSubmitEdit = (data: any) => {
@@ -240,23 +285,29 @@ const TableDeactivate: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'No Invoice',
+      dataIndex: 'no_invoice',
+      key: 'no_invoice',
+    },
+    {
       title: 'Toko / Customer',
       dataIndex: 'kode_toko',
       key: 'kode_toko',
     },
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
+      title: 'Cabang',
+      dataIndex: 'kode_cabang',
+      key: 'kode_cabang',
     },
     {
-      title: 'Harga',
-      dataIndex: 'harga',
-      key: 'harga',
-      align: 'right',
-      render: (_, {harga}) => {
-        return 'Rp. ' + harga.toLocaleString()
-      },
+      title: 'Telepon',
+      dataIndex: 'telepon',
+      key: 'telepon',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Bulan',
@@ -264,12 +315,21 @@ const TableDeactivate: React.FC = () => {
       key: 'bulan',
     },
     {
-      title: 'Total Harga',
-      dataIndex: 'total_harga',
-      key: 'total_harga',
+      title: 'Total Discount',
+      dataIndex: 'total_diskon',
+      key: 'total_diskon',
       align: 'right',
-      render: (_, {total_harga}) => {
-        return 'Rp. ' + total_harga.toLocaleString()
+      render: (_, {total_diskon}) => {
+        return total_diskon * 100 + ' %'
+      },
+    },
+    {
+      title: 'Total Harga',
+      dataIndex: 'grand_total',
+      key: 'grand_total',
+      align: 'right',
+      render: (_, {grand_total}) => {
+        return 'Rp. ' + grand_total?.toLocaleString()
       },
     },
     {
@@ -277,39 +337,70 @@ const TableDeactivate: React.FC = () => {
       dataIndex: 'tgl_jatuh_tempo',
       key: 'tgl_jatuh_tempo',
       render: (_, {tgl_jatuh_tempo}) => {
-        if (tgl_jatuh_tempo === '-') {
-          return tgl_jatuh_tempo
-        } else {
+        if (tgl_jatuh_tempo !== '-') {
           return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+        } else {
+          return tgl_jatuh_tempo
         }
       },
     },
     {
       title: 'Status',
       key: 'status',
-      dataIndex: 'status',
       align: 'center',
-      render: (_, {status}) => {
-        if (status === 'CLOSE') {
+      render: (_, record) => {
+        if (record.tipe_program === 'OFFLINE') {
           return (
-            <span className='badge badge-danger fs-7 fw-bold'>
-              <KTSVG
-                path='/media/icons/duotune/general/gen040.svg'
-                className='svg-icon-2 svg-icon-white'
-              />
-              &nbsp; Deactive
+            <span className='badge badge-light-dark fs-7 fw-bold'>
+              <i className='bi bi-wifi-off text-dark'></i>
+              &nbsp; {record.status}
             </span>
           )
         } else {
-          return (
-            <span className='badge badge-light-success fs-7 fw-bold'>
-              <KTSVG
-                path='/media/icons/duotune/general/gen048.svg'
-                className='svg-icon-2 svg-icon-success'
-              />
-              &nbsp; Active
-            </span>
-          )
+          if (record.status === 'OPEN') {
+            return (
+              <span className='badge badge-light-warning fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/maps/map001.svg'
+                  className='svg-icon-2 svg-icon-warning'
+                />
+                &nbsp;
+                {record.status}
+              </span>
+            )
+          } else if (record.status === 'PAID') {
+            return (
+              <span className='badge badge-light-success fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/general/gen048.svg'
+                  className='svg-icon-2 svg-icon-success'
+                />
+                &nbsp;
+                {record.status}
+              </span>
+            )
+          } else if (record.status === 'CLOSE') {
+            return (
+              <span className='badge badge-danger fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/general/gen040.svg'
+                  className='svg-icon-2 svg-icon-white'
+                />
+                &nbsp; {record.status}
+              </span>
+            )
+          } else {
+            return (
+              <span className='badge badge-light-danger fs-7 fw-bold'>
+                <KTSVG
+                  path='/media/icons/duotune/general/gen044.svg'
+                  className='svg-icon-2 svg-icon-danger'
+                />
+                &nbsp;
+                {record.status}
+              </span>
+            )
+          }
         }
       },
     },
@@ -321,7 +412,7 @@ const TableDeactivate: React.FC = () => {
         <Space size='middle'>
           <button
             className='btn btn-light-warning btn-sm me-1'
-            onClick={() => handleShowEdit(record._id)}
+            onClick={() => handleShowEdit(record)}
           >
             <span className='indicator-label'>
               Edit <KTSVG path='/media/icons/duotune/general/gen055.svg' className='svg-icon-3' />
@@ -330,7 +421,7 @@ const TableDeactivate: React.FC = () => {
           {record.status === 'CLOSE' ? (
             <button
               className='btn btn-light-success btn-sm me-1'
-              onClick={() => handleActivate(record.kode_toko, record.product)}
+              onClick={() => handleActivate(record.no_invoice)}
               disabled={isSendingActivate}
             >
               <span className='indicator-label'>
@@ -351,7 +442,7 @@ const TableDeactivate: React.FC = () => {
           ) : (
             <button
               className='btn btn-light-danger btn-sm me-1'
-              onClick={() => handleDeactivate(record.kode_toko, record.product)}
+              onClick={() => handleDeactivate(record.no_invoice)}
               disabled={isSending || record.tipe_program === 'OFFLINE'}
             >
               <span className='indicator-label'>
@@ -418,7 +509,7 @@ const TableDeactivate: React.FC = () => {
       <div className='row justify-content-end mt-2 mb-2'>
         <div className='col-lg-2 d-grid'>{SearchBar}</div>
       </div>
-      <div className='table-responsive'>
+      <div>
         <Table
           columns={columns}
           dataSource={dataTable}
@@ -428,30 +519,24 @@ const TableDeactivate: React.FC = () => {
               return <>{imagenotfound}Data Not Found</>
             },
           }}
+          scroll={{x: 1400}}
           summary={(pageData) => {
             return (
               <>
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={2} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={7} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={4} align='right'>
-                      {'Rp. ' +
-                        dataTable
-                          .reduce((a: any, b: {harga: any}) => a + parseInt(b.harga || 0), 0)
-                          .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={6} align='right'>
+                    <Table.Summary.Cell index={2} align='right'>
                       {'Rp. ' +
                         dataTable
                           .reduce(
-                            (a: any, b: {total_harga: any}) => a + parseInt(b.total_harga || 0),
+                            (a: any, b: {grand_total: any}) => a + parseInt(b.grand_total || 0),
                             0
                           )
-                          .toLocaleString()}
+                          ?.toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
                 </Table.Summary>

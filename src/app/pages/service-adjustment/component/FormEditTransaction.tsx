@@ -1,16 +1,11 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {connect, useDispatch, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../setup'
-import {currencyMask} from '../../../../setup/helper/function'
 import FormEditTransactionValidate from '../../../../setup/validate/FormAddNewTransactionValidate'
-import {
-  ReanderField,
-  ReanderFieldInputGroup,
-  ReanderSelect2,
-} from '../../../modules/redux-form/BasicInput'
-import {GetProductType} from '../../master/product/redux/action/ProductActionTypes'
-import {CountTotalHarga, CountTotalHargaQty} from '../redux/action/ServiceAdjustmentAction'
+import {ReanderField, ReanderFieldInputGroup} from '../../../modules/redux-form/BasicInput'
+import {CountTotalHargaQty} from '../redux/action/ServiceAdjustmentAction'
+import TableDetailProduct from './TableDetailProduct'
 
 interface Props {}
 
@@ -19,23 +14,18 @@ const mapState = (state: RootState) => {
     return {
       initialValues: {
         id: state.serviceAdjustment.feedbackID._id,
+        no_invoice: state.serviceAdjustment.feedbackID.no_invoice,
         kode_toko: state.serviceAdjustment.feedbackID.kode_toko,
         toko: state.serviceAdjustment.feedbackID.toko,
         kode_cabang: state.serviceAdjustment.feedbackID.kode_cabang,
-        alamat: state.serviceAdjustment.feedbackID.alamat,
+        alamat: state.serviceAdjustment.feedbackID.alamat_cabang,
+        alamat_korespondensi: state.serviceAdjustment.feedbackID.alamat_korespondensi,
         telepon: state.serviceAdjustment.feedbackID.telepon,
         email: state.serviceAdjustment.feedbackID.email,
-        product: {
-          value: state.serviceAdjustment.product,
-          label: state.serviceAdjustment.product,
-        },
-        tipe_program: state.serviceAdjustment.tipe_program,
-        qty: 1,
-        harga: state.serviceAdjustment.harga,
-        total_harga: state.serviceAdjustment.totalHarga,
         bulan: state.serviceAdjustment.qty,
         tgl_jatuh_tempo: state.serviceAdjustment.feedbackID.tgl_jatuh_tempo,
         status: state.serviceAdjustment.feedbackID.status,
+        total_diskon: state.serviceAdjustment.feedbackID.total_diskon * 100,
       },
     }
   }
@@ -45,17 +35,9 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
   const {handleSubmit, submitting} = props
   const dispatch = useDispatch()
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
-  const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
   const tipe_program: any = useSelector<RootState>(
     ({serviceAdjustment}) => serviceAdjustment.tipe_program
   )
-  const productActive = useSelector<RootState>(
-    ({serviceAdjustment}) => serviceAdjustment.feedbackID?.product
-  )
-  const [product, setProduct] = useState({
-    value: productActive,
-    label: productActive,
-  })
 
   return (
     <>
@@ -71,6 +53,18 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
               nouperCase={true}
               label='ID'
               placeholder='Masukan ID'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2 '>
+            <Field
+              readOnly
+              name='no_invoice'
+              type='text'
+              customeCss='form-control-solid'
+              component={ReanderField}
+              nouperCase={true}
+              label='No Invoice'
+              placeholder='Masukan No Invoice'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2 d-none'>
@@ -109,7 +103,7 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
               placeholder='Masukan Toko'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2 d-none'>
+          <div className='col-lg-6 mb-2 mt-2'>
             <Field
               readOnly
               name='kode_cabang'
@@ -117,8 +111,8 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
               customeCss='form-control-solid'
               component={ReanderField}
               nouperCase={true}
-              label='Kode Cabang'
-              placeholder='Masukan Kode Cabang'
+              label='Cabang'
+              placeholder='Masukan Cabang'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
@@ -131,6 +125,18 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
               nouperCase={true}
               label='Alamat'
               placeholder='Masukan Alamat'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              readOnly
+              name='alamat_korespondensi'
+              type='text'
+              customeCss='form-control-solid'
+              component={ReanderField}
+              nouperCase={true}
+              label='Alamat Korespondesi'
+              placeholder='Masukan Alamat Korespondesi'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
@@ -157,61 +163,6 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
               placeholder='Masukan Email'
             />
           </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              name='product'
-              component={ReanderSelect2}
-              options={dataProduct.map((list: GetProductType) => {
-                let data = {
-                  value: list.product,
-                  label: `${list.product} - ${list.tipe_program}`,
-                }
-                return data
-              })}
-              label='Product'
-              placeholder='Pilih Product'
-              onChange={(e: any) => setProduct(e)}
-              defaultValue={product}
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2 d-none'>
-            <Field
-              readOnly
-              name='tipe_program'
-              type='text'
-              customeCss='form-control-solid'
-              component={ReanderField}
-              nouperCase={true}
-              label='Tipe'
-              placeholder='Masukan Tipe'
-            />
-          </div>
-          <div className={`col-lg-6 mb-2 mt-2 d-none`}>
-            <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='qty'
-              type='number'
-              component={ReanderField}
-              nouperCase={true}
-              label='Qty'
-              placeholder='Masukan Qty'
-            />
-          </div>
-          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
-            <Field
-              name='harga'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Harga'
-              placeholder='Masukan Harga'
-              {...currencyMask}
-              onChange={(e: any) => {
-                dispatch(CountTotalHarga(e.target.value))
-              }}
-            />
-          </div>
           <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
               // readOnly
@@ -229,19 +180,6 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
           </div>
           <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
             <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='total_harga'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Total Harga'
-              {...currencyMask}
-              placeholder='Masukan Total Harga'
-            />
-          </div>
-          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
-            <Field
               name='tgl_jatuh_tempo'
               type='date'
               component={ReanderField}
@@ -249,6 +187,22 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
               label='Tanggal Jatuh Tempo'
               placeholder='Masukan Tanggal Jatuh Tempo'
             />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              name='total_diskon'
+              type='total_diskon'
+              component={ReanderField}
+              nouperCase={true}
+              label='Discount Khusus'
+              placeholder='Masukan Discount Khusus'
+            />
+          </div>
+          <div className='col-lg-12'>
+            <div className='separator mt-3 mb-3 opacity-100'></div>
+          </div>
+          <div className='col-lg-12'>
+            <TableDetailProduct />
           </div>
         </div>
         <div className='row justify-content-end mt-2 mr-2'>

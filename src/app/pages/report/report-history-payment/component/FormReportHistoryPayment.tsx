@@ -1,11 +1,12 @@
 import moment from 'moment'
 import React, {useState} from 'react'
-import {connect, shallowEqual, useSelector} from 'react-redux'
+import {connect, shallowEqual, useDispatch, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormSearchReportHistoryPaymentValidation from '../../../../../setup/validate/FormSearchReportCustomerValidation'
 import {UserModelNew} from '../../../../modules/auth/models/UserModel'
 import {InputDate, ReanderField, ReanderSelect2} from '../../../../modules/redux-form/BasicInput'
+import {getInvoiceByToko} from '../redux/action/ReportHistoryPaymentAction'
 
 interface Props {}
 
@@ -16,7 +17,7 @@ const mapState = (state: RootState) => {
         tgl_awal: moment().format('DD-MM-YYYY'),
         tgl_akhir: moment().format('DD-MM-YYYY'),
         kode_toko: state.auth.user.user_name,
-        product: {
+        no_invoice: {
           value: 'ALL',
           label: 'SEMUA',
         },
@@ -31,7 +32,7 @@ const mapState = (state: RootState) => {
           value: 'ALL',
           label: 'SEMUA',
         },
-        product: {
+        no_invoice: {
           value: 'ALL',
           label: 'SEMUA',
         },
@@ -41,6 +42,7 @@ const mapState = (state: RootState) => {
 }
 
 const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+  const dispatch = useDispatch()
   const user: UserModelNew = useSelector<RootState>(
     ({auth}) => auth.user,
     shallowEqual
@@ -48,17 +50,18 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
   const {handleSubmit, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataTokoSelect = [{value: 'ALL', label: 'SEMUA'}]
-  const dataProductSelect = [{value: 'ALL', label: 'SEMUA'}]
+  const dataNoInvoiceSelect = [{value: 'ALL', label: 'SEMUA'}]
   const dataToko: any = useSelector<RootState>(({masterstore}) => masterstore.feedback) || []
-  const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
+  const dataNoInvoice: any =
+    useSelector<RootState>(({reportHistoryPayment}) => reportHistoryPayment.feedbackNoInvoice) || []
   dataToko.forEach((element: any) => {
     dataTokoSelect.push({value: element.kode_toko, label: element.toko})
   })
-  dataProduct.forEach((element: any) => {
-    dataProductSelect.push({value: element.product, label: element.product})
+  dataNoInvoice.forEach((element: any) => {
+    dataNoInvoiceSelect.push({value: element.no_invoice, label: element.no_invoice})
   })
   const [kodeToko, setKodeToko] = useState({value: 'ALL', label: 'SEMUA'})
-  const [Product, setProduct] = useState({value: 'ALL', label: 'SEMUA'})
+  const [NoInvoice, setNoInvoice] = useState({value: 'ALL', label: 'SEMUA'})
   const [tgl_awal, setTglAwal] = useState(new Date())
   const [tgl_akhir, setTglAkhir] = useState(new Date())
 
@@ -73,7 +76,7 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
               label='Tanggal Dari'
               type='text'
               selected={tgl_awal}
-              onChange={(date: any) => setTglAwal(new Date(date))}
+              onChange={(date: any) => setTglAwal(new Date(moment().format('DD-MM-YYYY')))}
               placeholder='Masukan Tanggal Dari'
             />
           </div>
@@ -84,7 +87,7 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
               component={InputDate}
               type='text'
               selected={tgl_akhir}
-              onChange={(date: any) => setTglAkhir(new Date(date))}
+              onChange={(date: any) => setTglAkhir(new Date(moment().format('DD-MM-YYYY')))}
               label='Tanggal Akhir'
               placeholder='Masukan Tanggal Akhir'
             />
@@ -112,6 +115,7 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
                 placeholder='Pilih Toko'
                 onChange={(e: any) => {
                   setKodeToko(e)
+                  dispatch(getInvoiceByToko(e.value))
                 }}
                 defaultValue={{value: kodeToko.value, label: kodeToko.label}}
               />
@@ -119,15 +123,15 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
           )}
           <div className='col-lg-4 mb-2 mt-2'>
             <Field
-              name='product'
+              name='no_invoice'
               component={ReanderSelect2}
-              options={dataProductSelect}
-              label='Product'
-              placeholder='Pilih Product'
+              options={dataNoInvoiceSelect}
+              label='No Invoice'
+              placeholder='Pilih No Invoice'
               onChange={(e: any) => {
-                setProduct(e)
+                setNoInvoice(e)
               }}
-              defaultValue={{value: Product.value, label: Product.label}}
+              defaultValue={{value: NoInvoice.value, label: NoInvoice.label}}
             />
           </div>
         </div>

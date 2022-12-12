@@ -10,7 +10,7 @@ const ReturnPage: FC = () => {
   const dispatch = useDispatch()
   const params: {
     kode_toko: string
-    product: string
+    no_invoice: string
     kode_cabang: string
     tipe_program: string
   } = useParams()
@@ -77,7 +77,7 @@ const ReturnPage: FC = () => {
                               className='btn btn-primary'
                               onClick={() => {
                                 window.open(
-                                  `/payment-method/${params.kode_toko}/${params.product}`,
+                                  `/payment-method/${params.no_invoice}/${params.kode_toko}/${params.kode_cabang}/ONLINE`,
                                   '_self',
                                   ''
                                 )

@@ -22,7 +22,7 @@ const VerifikasiCustomerWrapper: FC = () => {
   }
   const params: {
     kode_toko: string
-    product: string
+    no_invoice: string
     kode_cabang: string
     tipe_program: string
     kode_verif: string
@@ -53,7 +53,9 @@ const VerifikasiCustomerWrapper: FC = () => {
                     dataFeedback !== undefined &&
                     `url('${toAbsoluteUrl(
                       `/media/illustrations/new/${
-                        dataFeedback.status === 500 ? 'bgred' : 'bgorange'
+                        dataFeedback.status === 500 || dataFeedback.status === 404
+                          ? 'bgred'
+                          : 'bgorange'
                       }.png`
                     )}')`
                   }`,
@@ -68,14 +70,14 @@ const VerifikasiCustomerWrapper: FC = () => {
                   <h3 className='card-title align-items-start flex-column'>
                     <span className='card-label fw-bolder fs-3 mb-1'>
                       {dataFeedback !== undefined
-                        ? dataFeedback.status === 500
+                        ? dataFeedback.status === 500 || dataFeedback.status === 404
                           ? 'Verifikasi Gagal'
                           : 'Verifikasi Berhasil'
                         : 'Verifikasi'}
                     </span>
                     <span className='text-muted mt-1 fw-bold fs-7'>
                       {dataFeedback !== undefined
-                        ? dataFeedback.status === 500
+                        ? dataFeedback.status === 500 || dataFeedback.status === 404
                           ? 'Verifikasi Nomer Anda Gagal'
                           : 'Verifikasi Nomer Anda Berhasil'
                         : 'Verifikasi'}

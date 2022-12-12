@@ -14,14 +14,14 @@ class ExcelReport extends Component {
       color: '#000',
       textAlign: 'center',
       fontWeight: 'bold',
-      borderWidth: '1px',
+      borderWidth: '0.5px',
       borderColor: '#000000',
       borderStyle: 'solid',
     }
 
     const footerStyle = {
       textAlign: 'right',
-      borderWidth: '1px',
+      borderWidth: '0.5px',
       borderColor: '#000000',
       borderStyle: 'solid',
     }
@@ -56,13 +56,13 @@ class ExcelReport extends Component {
             </tr>
             <tr>
               <td style={headStyle}>No</td>
-              <td style={headStyle}>Toko / Customer</td>
+              <td style={headStyle}>No Invoice</td>
+              <td style={headStyle}>Toko</td>
+              <td style={headStyle}>Cabang</td>
               <td style={headStyle}>Alamat</td>
-              <td style={headStyle}>Product</td>
-              <td style={headStyle}>Tipe</td>
-              <td style={headStyle}>Qty</td>
-              <td style={headStyle}>Harga</td>
+              <td style={headStyle}>Alamat Korespondensi</td>
               <td style={headStyle}>Bulan</td>
+              <td style={headStyle}>Total Diskon</td>
               <td style={headStyle}>Total Harga</td>
               <td style={headStyle}>Tgl Jatuh Tempo</td>
               <td style={headStyle}>Status</td>
@@ -71,7 +71,7 @@ class ExcelReport extends Component {
           <tbody>
             {this.props.dataExcel.map((row) => {
               const bodyStyle = {
-                borderWidth: '1px',
+                borderWidth: '0.5px',
                 borderColor: '#000000',
                 borderStyle: 'solid',
                 backgroundColor:
@@ -80,12 +80,12 @@ class ExcelReport extends Component {
                     : row.status === 'PAID'
                     ? '#e8fff3'
                     : row.status === 'CLOSE'
-                    ? '#f1416c'
+                    ? '#fab9c9'
                     : '#fff5f8',
                 textAlign: 'center',
               }
               const bodyStyleNumber = {
-                borderWidth: '1px',
+                borderWidth: '0.5px',
                 borderColor: '#000000',
                 borderStyle: 'solid',
                 backgroundColor:
@@ -94,48 +94,152 @@ class ExcelReport extends Component {
                     : row.status === 'PAID'
                     ? '#e8fff3'
                     : row.status === 'CLOSE'
-                    ? '#f1416c'
+                    ? '#fab9c9'
                     : '#fff5f8',
                 textAlign: 'right',
               }
-
+              const headStyleDetail = {
+                borderWidth: '0.5px',
+                borderColor: '#000000',
+                borderStyle: 'solid',
+                backgroundColor:
+                  row.status === 'OPEN'
+                    ? '#fff8dd'
+                    : row.status === 'PAID'
+                    ? '#e8fff3'
+                    : row.status === 'CLOSE'
+                    ? '#fab9c9'
+                    : '#fff5f8',
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }
+              const bodyStyleDetail = {
+                borderWidth: '0.5px',
+                borderColor: '#000000',
+                borderStyle: 'solid',
+                backgroundColor:
+                  row.status === 'OPEN'
+                    ? '#fff8dd'
+                    : row.status === 'PAID'
+                    ? '#e8fff3'
+                    : row.status === 'CLOSE'
+                    ? '#fab9c9'
+                    : '#fff5f8',
+                textAlign: 'center',
+              }
+              const bodyStyleDetailNumber = {
+                borderWidth: '0.5px',
+                borderColor: '#000000',
+                borderStyle: 'solid',
+                backgroundColor:
+                  row.status === 'OPEN'
+                    ? '#fff8dd'
+                    : row.status === 'PAID'
+                    ? '#e8fff3'
+                    : row.status === 'CLOSE'
+                    ? '#fab9c9'
+                    : '#fff5f8',
+                textAlign: 'right',
+              }
+              const footerStyleDetail = {
+                borderWidth: '0.5px',
+                borderColor: '#000000',
+                borderStyle: 'solid',
+                backgroundColor:
+                  row.status === 'OPEN'
+                    ? '#fff8dd'
+                    : row.status === 'PAID'
+                    ? '#e8fff3'
+                    : row.status === 'CLOSE'
+                    ? '#fab9c9'
+                    : '#fff5f8',
+                textAlign: 'right',
+                fontWeight: 'bold',
+              }
               return (
-                <tr>
-                  <td style={bodyStyle}>{row.key + 1}</td>
-                  <td style={bodyStyle}>{row.toko}</td>
-                  <td style={bodyStyle}>{row.alamat}</td>
-                  <td style={bodyStyle}>{row.product}</td>
-                  <td style={bodyStyle}>{row.tipe_program}</td>
-                  <td style={bodyStyleNumber}>{row.qty}</td>
-                  <td style={bodyStyleNumber}>Rp. {row.harga.toLocaleString()}</td>
-                  <td style={bodyStyle}>{row.bulan}</td>
-                  <td style={bodyStyleNumber}>Rp. {row.total_harga.toLocaleString()}</td>
-                  <td style={bodyStyle}>{moment(row.tgl_jatuh_tempo).format('DD-MM-YYYY')}</td>
-                  <td style={bodyStyle}>{row.status}</td>
-                </tr>
+                <>
+                  <tr>
+                    <td style={bodyStyle}>{row.key + 1}</td>
+                    <td style={bodyStyle}>{row.no_invoice}</td>
+                    <td style={bodyStyle}>{row.toko}</td>
+                    <td style={bodyStyle}>{row.kode_cabang}</td>
+                    <td style={bodyStyle}>{row.alamat_cabang}</td>
+                    <td style={bodyStyle}>{row.alamat_korespondensi}</td>
+                    <td style={bodyStyle}>{row.bulan}</td>
+                    <td style={bodyStyle}>{row.total_diskon * 100} %</td>
+                    <td style={bodyStyleNumber}>Rp. {row.grand_total?.toLocaleString()}</td>
+                    <td style={bodyStyle}>{moment(row.tgl_jatuh_tempo).format('DD-MM-YYYY')}</td>
+                    <td style={bodyStyle}>{row.status}</td>
+                  </tr>
+                  <tr>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}>Product</td>
+                    <td style={headStyleDetail}>Tipe Program</td>
+                    <td style={headStyleDetail}>Harga</td>
+                    <td style={headStyleDetail}>TotalHarga</td>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}></td>
+                  </tr>
+                  {row.customer.map((detail) => {
+                    return (
+                      <tr>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}>{detail.product}</td>
+                        <td style={bodyStyleDetail}>{detail.tipe_program}</td>
+                        <td style={bodyStyleDetailNumber}>Rp. {detail.harga?.toLocaleString()}</td>
+                        <td style={bodyStyleDetailNumber}>
+                          Rp. {detail.total_harga?.toLocaleString()}
+                        </td>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}></td>
+                      </tr>
+                    )
+                  })}
+                  <tr>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}>Sub Total</td>
+                    <td style={footerStyleDetail}>
+                      Rp.{' '}
+                      {row.customer
+                        .reduce((a, b) => a + parseInt(b.harga || 0), 0)
+                        .toLocaleString()}
+                    </td>
+                    <td style={footerStyleDetail}>
+                      Rp.{' '}
+                      {row.customer
+                        .reduce((a, b) => a + parseInt(b.total_harga || 0), 0)
+                        .toLocaleString()}
+                    </td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                  </tr>
+                </>
               )
             })}
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={5} style={footerStyle}>
-                Total :
-              </td>
-              <td style={footerStyle}>
-                {this.props.dataExcel.reduce((a, b) => a + parseInt(b.qty || 0), 0)}
+              <td colSpan={8} style={footerStyle}>
+                Grand Total :
               </td>
               <td style={footerStyle}>
                 Rp.{' '}
                 {this.props.dataExcel
-                  .reduce((a, b) => parseInt(a + b.harga || 0), 0)
-                  .toLocaleString()}
-              </td>
-              <td style={footerStyle}></td>
-              <td style={footerStyle}>
-                Rp.{' '}
-                {this.props.dataExcel
-                  .reduce((a, b) => parseInt(a + b.total_harga || 0), 0)
-                  .toLocaleString()}
+                  .reduce((a, b) => a + parseInt(b.grand_total || 0), 0)
+                  ?.toLocaleString()}
               </td>
             </tr>
           </tfoot>

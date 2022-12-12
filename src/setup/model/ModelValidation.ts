@@ -41,6 +41,10 @@ export interface IFormAddNewTransaction {
 
 export interface IFormAddNewProduct {
   product: string
+  qty: number
+  harga: number
+  total_harga: number
+  tipe_program: string
 }
 
 export type IFormStoreType = {

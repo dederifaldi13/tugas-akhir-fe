@@ -36,14 +36,6 @@ const mapState = (state: RootState) => {
           alamat_korespondensi: state.dashboard.cabangTokoByID.alamat_korespondensi,
           telepon: state.dashboard.cabangTokoByID.telepon,
           email: state.dashboard.cabangTokoByID.email,
-          product: {
-            value: state.dashboard.product,
-            label: state.dashboard.product,
-          },
-          tipe_program: state.dashboard.tipe_program,
-          qty: 1,
-          harga: state.dashboard.harga,
-          total_harga: state.dashboard.totalHarga,
           bulan: state.dashboard.qty,
         },
       }
@@ -69,14 +61,6 @@ const mapState = (state: RootState) => {
           alamat_korespondensi: '',
           telepon: '',
           email: '',
-          product: {
-            value: state.dashboard.product,
-            label: state.dashboard.product,
-          },
-          tipe_program: state.dashboard.tipe_program,
-          qty: 1,
-          harga: state.dashboard.harga,
-          total_harga: state.dashboard.totalHarga,
           bulan: state.dashboard.qty,
         },
       }
@@ -94,14 +78,6 @@ const mapState = (state: RootState) => {
         email: '',
         alamat: '',
         alamat_korespondensi: '',
-        product: {
-          value: '',
-          label: '',
-        },
-        tipe_program: state.dashboard.tipe_program,
-        qty: 1,
-        harga: state.dashboard.harga,
-        total_harga: state.dashboard.totalHarga,
         bulan: state.dashboard.qty,
       },
     }
@@ -223,7 +199,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
             />
           </div>
 
-          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
+          <div className='col-lg-6 mb-2 mt-2'>
             <Field
               // readOnly
               // customeCss='form-control-solid'
@@ -238,7 +214,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               }}
             />
           </div>
-          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
+          <div className='col-lg-6 mb-2 mt-2'>
             <Field
               name='tgl_jatuh_tempo'
               type='date'
@@ -246,6 +222,16 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               nouperCase={true}
               label='Tanggal Jatuh Tempo'
               placeholder='Masukan Tanggal Jatuh Tempo'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              name='total_diskon'
+              type='total_diskon'
+              component={ReanderField}
+              nouperCase={true}
+              label='Discount Khusus'
+              placeholder='Masukan Discount Khusus'
             />
           </div>
         </div>

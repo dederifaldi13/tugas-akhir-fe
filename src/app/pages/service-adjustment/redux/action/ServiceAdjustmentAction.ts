@@ -1,4 +1,6 @@
 import {Dispatch} from 'redux'
+import {destroy} from 'redux-form'
+import Swal from 'sweetalert2'
 import {AxiosDelete, AxiosGet, AxiosPost, AxiosPut, PopUpAlert, postPDF} from '../../../../../setup'
 import {doDecrypt} from '../../../../../setup/helper/encrypt'
 import {dataURLtoPDFFile, NumberOnly} from '../../../../../setup/helper/function'
@@ -16,42 +18,64 @@ import {
   EditFormCustomer,
   GET_ACTIVE_CUSTOMER,
   GET_ACTIVE_CUSTOMER_BY_ID,
+  HIDE_MODAL,
+  SET_DATA_PRODUCT,
   SET_ID_FOR_DELETE,
+  SET_ONE_DATA_PRODUCT_CUSTOMER,
   SET_PRODUCT_EDIT,
   SET_TOTAL_HARGA,
+  SHOW_MODAL,
   SHOW_MODAL_EDIT,
   TableActivateCustomerType,
 } from './ServiceAdjustmentActionTypes'
 
 export const ACTIVE_CUSTOMER_API = `customer`
+export const ACTIVE_INVOICE_API = `invoice`
 
 export const GetActiveCustomerAction = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     let newarrdata: TableActivateCustomerType[] = []
-    AxiosGet(ACTIVE_CUSTOMER_API)
+    AxiosGet(ACTIVE_INVOICE_API + '/service-adjustment')
       .then((res: any) => {
-        for (let index = 0; index < res.data.length; index++) {
+        const decryptData = doDecrypt(res.data, [
+          '_id',
+          '__v',
+          'created_at',
+          'key',
+          'kode_toko',
+          'product',
+          'bulan',
+          'status',
+          'tgl_jatuh_tempo',
+          'harga',
+          'qty',
+          'total_harga',
+          'kode_cabang',
+          'tipe_program',
+          'no_invoice',
+        ])
+        for (let index = 0; index < decryptData.length; index++) {
           const obj: TableActivateCustomerType = {
             key: index,
-            kode_toko: res.data[index].kode_toko,
-            toko: doDecrypt(res.data[index].toko, []),
-            qty: res.data[index].qty,
-            alamat: res.data[index].alamat,
-            status: res.data[index].status,
-            bulan: res.data[index].bulan,
-            email: doDecrypt(res.data[index].email, []),
-            harga: res.data[index].harga,
-            product: res.data[index].product,
-            telepon: doDecrypt(res.data[index].telepon, []),
-            tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-            total_harga: res.data[index].total_harga,
-            created_at: res.data[index].created_at,
-            kode_cabang: res.data[index].kode_cabang,
-            tipe_program: res.data[index].tipe_program,
-            _id: res.data[index]._id,
+            kode_toko: decryptData[index].kode_toko,
+            status: decryptData[index].status,
+            bulan: decryptData[index].bulan,
+            email: decryptData[index].email,
+            telepon: decryptData[index].telepon,
+            tgl_jatuh_tempo: decryptData[index].tgl_jatuh_tempo,
+            total_harga: decryptData[index].total_harga,
+            kode_cabang: decryptData[index].kode_cabang,
+            no_invoice: decryptData[index].no_invoice,
+            _id: decryptData[index]._id,
+            __v: decryptData[index].__v,
+            customer: decryptData[index].customer,
+            grand_total: decryptData[index].grand_total,
+            input_date: decryptData[index].input_date,
+            total_diskon: decryptData[index].total_diskon,
           }
           newarrdata.push(obj)
         }
+
         dispatch({type: GET_ACTIVE_CUSTOMER, payload: {feedback: newarrdata}})
       })
       .catch((error: any) => {
@@ -60,9 +84,10 @@ export const GetActiveCustomerAction = () => {
   }
 }
 
-export const PostDeactivateData = (kode: string, namaproduct: string) => {
+export const PostDeactivateData = (namaproduct: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
+    const kode = getState().form.FormEditTransaction.values?.kode_toko
     const senddata = {
       kode_toko: kode,
       product: namaproduct,
@@ -80,14 +105,53 @@ export const PostDeactivateData = (kode: string, namaproduct: string) => {
   }
 }
 
-export const PostActivateData = (kode: string, namaproduct: string) => {
+export const PostActivateData = (namaproduct: string) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoadingApprove())
+    const kode = getState().form.FormEditTransaction.values?.kode_toko
     const senddata = {
       kode_toko: kode,
       product: namaproduct,
     }
     AxiosPost(`${ACTIVE_CUSTOMER_API}/activate`, senddata)
+      .then(() => {
+        dispatch(stopLoadingApprove())
+        PopUpAlert.default.AlertSuccess('Berhasil Mengaktifkan Data Customer')
+      })
+      .catch((error: any) => {
+        console.log(error)
+        dispatch(stopLoadingApprove())
+        PopUpAlert.default.AlertError('Gagal Mengaktifkan Data !')
+      })
+  }
+}
+
+export const PostDeactivateDataInvoice = (invoice: string) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(setLoading())
+    const senddata = {
+      no_invoice: invoice,
+    }
+    AxiosPost(`${ACTIVE_INVOICE_API}/deactivate`, senddata)
+      .then(() => {
+        dispatch(stopLoading())
+        PopUpAlert.default.AlertSuccess('Berhasil Menonaktifkan Data Customer')
+      })
+      .catch((error: any) => {
+        console.log(error)
+        dispatch(stopLoading())
+        PopUpAlert.default.AlertError('Gagal Menonaktifkan Data !')
+      })
+  }
+}
+
+export const PostActivateDataInvoice = (invoice: string) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(setLoadingApprove())
+    const senddata = {
+      no_invoice: invoice,
+    }
+    AxiosPost(`${ACTIVE_INVOICE_API}/activate`, senddata)
       .then(() => {
         dispatch(stopLoadingApprove())
         PopUpAlert.default.AlertSuccess('Berhasil Mengaktifkan Data Customer')
@@ -106,7 +170,7 @@ export const deleteTransaction = (data: any) => {
     AxiosGet(`user/authorize/delete?user_id=${data.user_id}&password=${data.password}`)
       .then(() => {
         const id = getState().serviceAdjustment.ID
-        AxiosDelete('customer/' + id)
+        AxiosDelete('invoice/' + id)
           .then(() => {
             dispatch(stopLoading())
             PopUpAlert.default.AlertSuccessDelete()
@@ -125,24 +189,33 @@ export const deleteTransaction = (data: any) => {
   }
 }
 
-export const getDataByIDTrx = (id: String) => {
+export const getDataByIDTrx = (data: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    AxiosGet(ACTIVE_CUSTOMER_API + '/by-id/' + id).then((res: any) => {
+    AxiosGet(
+      `invoice/filter-service-adjusment?no_invoice=${data.no_invoice}&kode_toko=${data.kode_toko}&kode_cabang=${data.kode_cabang}`
+    ).then((res: any) => {
       if (res.data.length !== 0) {
         const dataDec = doDecrypt(res.data[0], [
+          '_id',
+          'created_at',
+          'no_invoice',
+          'kode_toko',
           'product',
+          'qty',
           'harga',
           'bulan',
           'total_harga',
-          'status',
-          'tipe_program',
-          'kode_toko',
-          '_id',
-          'created_at',
           'tgl_jatuh_tempo',
           'kode_cabang',
+          'tipe_program',
+          'status',
           'input_date',
+          '__v',
+          'edit_by',
+          'edit_date',
+          'alamat',
         ])
+        dispatch({type: SET_DATA_PRODUCT, payload: {dataProduct: dataDec.customer}})
         dispatch({type: GET_ACTIVE_CUSTOMER_BY_ID, payload: {feedbackID: dataDec}})
         dispatch({type: SET_TOTAL_HARGA, payload: {feedbackID: dataDec.total_harga}})
         dispatch({
@@ -151,17 +224,38 @@ export const getDataByIDTrx = (id: String) => {
         })
         dispatch({
           type: COUNT_TOTAL_QTY_EDIT,
-          payload: {totalHarga: dataDec.total_harga, qty: dataDec.bulan},
+          payload: {totalHarga: 0, qty: dataDec.bulan},
         })
         dispatch({
           type: COUNT_TOTAL_HARGA_EDIT,
-          payload: {totalHarga: dataDec.total_harga, harga: dataDec.harga},
+          payload: {totalHarga: 0, harga: dataDec.harga},
         })
         dispatch({type: SHOW_MODAL_EDIT, payload: {isShow: true}})
       } else {
         PopUpAlert.default.AlertError('Data Tidak Ditemukan !')
       }
     })
+  }
+}
+
+export const DeleteProductEdit = (id: String) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    // const data = getState().form.FormEditTransaction.values
+    AxiosDelete(`customer/${id}`)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Berhasil Menambahkan Data !',
+        }).then(() => {
+          window.location.reload()
+          // dispatch(getDataByIDTrx(data))
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+        PopUpAlert.default.AlertError('Gagal Menghapus Data !')
+      })
   }
 }
 
@@ -208,38 +302,45 @@ export const editTransaction = (data: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
     const dataKirim: EditFormCustomer = {
-      toko: data.toko,
+      tanggal_jatuh_tempo: data.tgl_jatuh_tempo,
       bulan: data.bulan,
-      email: data.email,
-      harga: data.harga,
-      kode_cabang: data.kode_cabang,
-      kode_toko: data.kode_toko,
-      product: data.product.value,
-      qty: data.qty,
-      status: data.status,
-      telepon: data.telepon,
-      tgl_jatuh_tempo: data.tgl_jatuh_tempo,
-      tipe_program: data.tipe_program,
-      total_harga: data.total_harga,
+      total_diskon: parseFloat(data.total_diskon) / 100,
     }
-    AxiosPut(`customer/${data.id}`, dataKirim)
+    AxiosPut(`invoice/${data.id}`, dataKirim)
       .then(() => {
         AxiosGet(
-          `customer/filter?kode_toko=${dataKirim.kode_toko}&product=${dataKirim.product.replaceAll(
-            /\+/g,
-            '_'
-          )}&kode_cabang=${dataKirim.kode_cabang}&tipe_program=${dataKirim.tipe_program}`
+          `invoice/filter?kode_toko=${data.kode_toko}&no_invoice=${data.no_invoice}&kode_cabang=${data.kode_cabang}`
         )
           .then((resGet: any) => {
-            const dataInvoice = resGet.data[0]
+            const decryptData = doDecrypt(resGet.data[0], [
+              '_id',
+              'created_at',
+              'no_invoice',
+              'kode_toko',
+              'product',
+              'qty',
+              'harga',
+              'bulan',
+              'total_harga',
+              'tgl_jatuh_tempo',
+              'kode_cabang',
+              'tipe_program',
+              'status',
+              'input_date',
+              '__v',
+              'edit_by',
+              'edit_date',
+              'alamat',
+            ])
+            const dataInvoice = decryptData
             const pdf64 = InvoicePDF(dataInvoice)
             const file = dataURLtoPDFFile(
               pdf64,
-              `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+              `${dataInvoice.no_invoice}-${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-ONLINE`
             )
             postPDF(
               file,
-              `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+              `${dataInvoice.no_invoice}-${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-ONLINE`
             ).finally(() => {
               PopUpAlert.default.AlertSuccessEdit()
               dispatch(stopLoading())
@@ -255,6 +356,120 @@ export const editTransaction = (data: any) => {
         console.log(error)
         dispatch(stopLoading())
         PopUpAlert.default.AlertError(error.response.data.message)
+      })
+  }
+}
+
+export const ShowModal = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({type: SHOW_MODAL})
+  }
+}
+
+export const getDataProductCustomer = (id: string) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    AxiosGet(`customer/by-id-2/${id}`)
+      .then((res) => {
+        const decryptData = doDecrypt(res.data, [
+          'bulan',
+          'created_at',
+          'harga',
+          'input_date',
+          'kode_cabang',
+          'kode_toko',
+          'no_invoice',
+          'product',
+          'qty',
+          'status',
+          'tgl_jatuh_tempo',
+          'tipe_program',
+          'total_harga',
+          '_id',
+          '__v',
+        ])
+        dispatch({type: SET_ONE_DATA_PRODUCT_CUSTOMER, payload: {productID: decryptData}})
+        dispatch({
+          type: SET_PRODUCT_EDIT,
+          payload: {product: decryptData.product, tipe_program: 'ONLINE'},
+        })
+        dispatch({
+          type: COUNT_TOTAL_HARGA_EDIT,
+          payload: {totalHarga: decryptData.total_harga, harga: decryptData.harga},
+        })
+        dispatch(ShowModal())
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+}
+
+export const HideModal = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(destroy('FormAddProductEdit'))
+    dispatch({type: SET_ONE_DATA_PRODUCT_CUSTOMER, payload: {productID: undefined}})
+    dispatch({type: COUNT_TOTAL_HARGA_EDIT, payload: {totalHarga: 0, harga: 0}})
+    dispatch({type: SET_PRODUCT_EDIT, payload: {product: '', tipe_program: 'ONLINE'}})
+    dispatch({type: HIDE_MODAL})
+  }
+}
+
+export const PostDataProductCustomer = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const data = getState().form.FormAddProductEdit.values
+    const dataHead = getState().form.FormEditTransaction.values
+    const sendData = {
+      no_invoice: dataHead?.no_invoice,
+      product: data?.product.value,
+      tipe_program: data?.tipe_program,
+      qty: 1,
+      harga: data?.harga,
+      total_harga_product: data?.total_harga_product,
+    }
+    AxiosPost('customer/add-product', sendData)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Berhasil Menambahkan Data !',
+        }).then(() => {
+          window.location.reload()
+          // dispatch(getDataByIDTrx(data))
+        })
+      })
+      .catch(() => {
+        PopUpAlert.default.AlertError('Gagal Menambahkan Data !')
+      })
+  }
+}
+
+export const PutDataProductCustomer = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const dataHead = getState().form.FormEditTransaction.values
+    const data = getState().form.FormAddProductEdit.values
+    const sendData = {
+      kode_toko: dataHead?.kode_toko,
+      toko: dataHead?.toko,
+      product: data?.product.value,
+      email: dataHead?.email,
+      telepon: dataHead?.telepon,
+      qty: data?.qty,
+      harga: data?.harga,
+      bulan: dataHead?.bulan,
+      total_harga: data?.total_harga_product,
+      tgl_jatuh_tempo: dataHead?.tgl_jatuh_tempo,
+      kode_cabang: dataHead?.kode_cabang,
+      tipe_program: data?.tipe_program,
+      status: dataHead?.status,
+    }
+    AxiosPut(`customer/${data?.id}`, sendData)
+      .then((res) => {
+        console.log(res)
+        PopUpAlert.default.AlertSuccess('Berhasil Merubah Data !')
+      })
+      .catch((err) => {
+        console.log(err)
+        PopUpAlert.default.AlertError('Gagal Merubah Data !')
       })
   }
 }

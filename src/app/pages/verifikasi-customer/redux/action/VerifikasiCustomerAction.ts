@@ -1,5 +1,6 @@
 import {Dispatch} from 'redux'
-import {AxiosGet, AxiosPost} from '../../../../../setup'
+import {AxiosGet} from '../../../../../setup'
+import {doDecrypt} from '../../../../../setup/helper/encrypt'
 import {IAppState} from '../../../../../setup/redux/Store'
 import {
   GET_TRANSACTION_SUCCESS,
@@ -7,7 +8,7 @@ import {
   VERIFIKASI_SUCCESS,
 } from './VerifikasiCustomerActionTypes'
 
-export const TRANSACTION_URL_FILTER = `customer`
+export const TRANSACTION_URL_FILTER = `invoice`
 
 export const GetTransactionFilter = (params: ParamsVerifType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
@@ -15,15 +16,35 @@ export const GetTransactionFilter = (params: ParamsVerifType) => {
       TRANSACTION_URL_FILTER +
         '/filter?kode_toko=' +
         params.kode_toko +
-        '&product=' +
-        params.product.replaceAll(/\+/g, '_') +
+        '&no_invoice=' +
+        params.no_invoice +
         '&kode_cabang=' +
         params.kode_cabang +
         '&tipe_program=' +
         params.tipe_program
     )
       .then((res: any) => {
-        dispatch({type: GET_TRANSACTION_SUCCESS, payload: {feedback: res.data[0]}})
+        const dataDecrypt = doDecrypt(res.data[0], [
+          '_id',
+          'created_at',
+          'no_invoice',
+          'kode_toko',
+          'product',
+          'qty',
+          'harga',
+          'bulan',
+          'total_harga',
+          'tgl_jatuh_tempo',
+          'kode_cabang',
+          'tipe_program',
+          'status',
+          'input_date',
+          '__v',
+          'edit_by',
+          'edit_date',
+          'alamat',
+        ])
+        dispatch({type: GET_TRANSACTION_SUCCESS, payload: {feedback: dataDecrypt}})
         dispatch(handleVerifikasi(params))
       })
       .catch((error: any) => {
@@ -34,15 +55,14 @@ export const GetTransactionFilter = (params: ParamsVerifType) => {
 
 export const handleVerifikasi = (params: ParamsVerifType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const dataCustomer = getState().verifikasicustomerreducer.feedback
     const datakirim = {
-      kode_toko: params.kode_toko,
-      kode_cabang: params.kode_cabang,
-      product: params.product,
+      user_id: dataCustomer?.telepon,
       kode_verifikasi: params.kode_verif,
     }
-    AxiosPost(TRANSACTION_URL_FILTER + '/verify', datakirim)
+    AxiosGet(`user/verify/${datakirim.user_id}/${datakirim.kode_verifikasi}`)
       .then((res: any) => {
-        console.log(res);
+        console.log(res)
         dispatch({type: VERIFIKASI_SUCCESS, payload: {feedbackVerif: res}})
       })
       .catch((err) => {

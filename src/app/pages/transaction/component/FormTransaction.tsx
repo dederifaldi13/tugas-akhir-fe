@@ -6,6 +6,7 @@ import {convertBase64, currencyMask} from '../../../../setup/helper/function'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {ReanderField, ReanderFieldInputGroup} from '../../../modules/redux-form/BasicInput'
 import {setCameraAction} from '../redux/action/TransactionAction'
+import TableDetailProduct from './TableDetailProduct'
 // import FormAddNewTransactionValidate from '../../../setup/validate/FormAddNewTransactionValidate'
 
 interface Props {}
@@ -16,11 +17,9 @@ const mapState = (state: RootState) => {
       initialValues: {
         id: state.transactionconfirmpayment.feedback._id,
         kode_toko: state.transactionconfirmpayment.feedback.kode_toko,
-        toko: state.transactionconfirmpayment.feedback.toko,
-        product: state.transactionconfirmpayment.feedback.product,
-        qty: state.transactionconfirmpayment.feedback.qty,
-        harga: state.transactionconfirmpayment.feedback.harga,
+        no_invoice: state.transactionconfirmpayment.feedback.no_invoice,
         total_harga: state.transactionconfirmpayment.feedback.total_harga,
+        total_diskon: state.transactionconfirmpayment.feedback.total_diskon * 100 + ' %',
         bulan: state.transactionconfirmpayment.feedback.bulan,
         tgl_jatuh_tempo: state.transactionconfirmpayment.feedback.tgl_jatuh_tempo,
       },
@@ -52,61 +51,24 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             <Field
               readOnly
               customeCss='form-control-solid'
+              name='no_invoice'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='No Invoice'
+              placeholder='Masukan No Invoice'
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              readOnly
+              customeCss='form-control-solid'
               name='kode_toko'
               type='text'
               component={ReanderField}
               nouperCase={true}
               label='Kode Toko'
               placeholder='Masukan Kode Toko'
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='toko'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Toko'
-              placeholder='Masukan Toko'
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='product'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Product'
-              placeholder='Masukan Product'
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='qty'
-              type='number'
-              component={ReanderField}
-              nouperCase={true}
-              label='Qty'
-              placeholder='Masukan Qty'
-            />
-          </div>
-          <div className='col-lg-6 mb-2 mt-2'>
-            <Field
-              readOnly
-              customeCss='form-control-solid'
-              name='harga'
-              type='text'
-              component={ReanderField}
-              nouperCase={true}
-              label='Harga'
-              placeholder='Masukan Harga'
-              {...currencyMask}
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
@@ -132,6 +94,18 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               label='Total Harga'
               placeholder='Masukan Total Harga'
               {...currencyMask}
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2'>
+            <Field
+              readOnly
+              customeCss='form-control-solid'
+              name='total_diskon'
+              type='text'
+              component={ReanderField}
+              nouperCase={true}
+              label='Total Discount'
+              placeholder='Masukan Total Discount'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
@@ -197,6 +171,9 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               </div>
             </div>
           </div>
+          <div className='col-lg-12'>
+            <TableDetailProduct />
+          </div>
           <div className='col-lg-6'>
             <div className='row justify-content-end mt-2 mr-2'>
               <div className='col-lg-12 d-grid'>
@@ -220,7 +197,12 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                     </td>
                   </tr>
                   <tr>
-                    <td valign='bottom' colSpan={2}>
+                    <td valign='bottom'>
+                      <p style={{fontSize: '22px', marginTop: 30, marginBottom: -30}}>
+                        Total Harga :
+                      </p>
+                    </td>
+                    <td valign='bottom'>
                       <p
                         style={{
                           textAlign: 'right',
@@ -229,12 +211,15 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                           marginBottom: -30,
                         }}
                       >
-                        Rp. {data !== undefined ? data.harga.toLocaleString() : 0}
+                        Rp. {data !== undefined ? data.total_harga?.toLocaleString() : 0}
                       </p>
                     </td>
                   </tr>
                   <tr>
-                    <td valign='bottom' colSpan={2}>
+                    <td valign='bottom'>
+                      <p style={{fontSize: '22px', marginTop: 30, marginBottom: -30}}>Diskon :</p>
+                    </td>
+                    <td valign='bottom'>
                       <p
                         style={{
                           textAlign: 'right',
@@ -243,7 +228,10 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                           marginBottom: -30,
                         }}
                       >
-                        {data !== undefined ? data.bulan.toLocaleString() : 0}
+                        Rp.{' '}
+                        {data !== undefined
+                          ? (data.total_diskon * data.total_harga)?.toLocaleString()
+                          : 0}
                       </p>
                     </td>
                   </tr>
@@ -267,7 +255,13 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                     </td>
                     <td valign='bottom'>
                       <p style={{textAlign: 'right', fontSize: '24px'}}>
-                        Rp. {data !== undefined ? data.total_harga.toLocaleString() : 0}
+                        Rp.{' '}
+                        {data !== undefined
+                          ? (
+                              data.total_harga -
+                              data.total_diskon * data.total_harga
+                            )?.toLocaleString()
+                          : 0}
                       </p>
                     </td>
                   </tr>

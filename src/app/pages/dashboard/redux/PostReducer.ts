@@ -13,6 +13,7 @@ import {
   POST_SUCCESS,
   SET_CABANG,
   SET_CABANG_BY_ID,
+  SET_DATA_PRODUCT,
   SET_PRODUCT,
   SHOW_MODAL,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
@@ -37,6 +38,7 @@ export interface DefaultStateI {
   cabangToko?: any
   cabangTokoByID?: CabangType
   modal: Boolean
+  dataProduct?: Array<any>
 }
 
 const defaultState: DefaultStateI = {
@@ -54,6 +56,7 @@ const defaultState: DefaultStateI = {
   cabangToko: [],
   cabangTokoByID: undefined,
   modal: false,
+  dataProduct: [],
 }
 
 const postReducer = (
@@ -94,6 +97,8 @@ const postReducer = (
       return {...state, modal: true}
     case HIDE_MODAL:
       return {...state, modal: false}
+    case SET_DATA_PRODUCT:
+      return {...state, dataProduct: action.payload?.dataProduct}
     default:
       return state
   }

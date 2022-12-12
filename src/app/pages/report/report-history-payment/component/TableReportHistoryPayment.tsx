@@ -94,6 +94,16 @@ const TableReportHistoryPayment: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'No Bayar',
+      dataIndex: 'no_bayar',
+      key: 'no_bayar',
+    },
+    {
+      title: 'No Invoice',
+      dataIndex: 'no_invoice',
+      key: 'no_invoice',
+    },
+    {
       title: 'Kode Toko / Customer',
       dataIndex: 'kode_toko',
       key: 'kode_toko',
@@ -104,9 +114,9 @@ const TableReportHistoryPayment: React.FC = () => {
       key: 'toko',
     },
     {
-      title: 'No Bayar',
-      dataIndex: 'no_bayar',
-      key: 'no_bayar',
+      title: 'Cabang',
+      dataIndex: 'kode_cabang',
+      key: 'kode_cabang',
     },
     {
       title: 'Bukti Pembayaran',
@@ -146,35 +156,11 @@ const TableReportHistoryPayment: React.FC = () => {
       },
     },
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
-    },
-    {
-      title: 'Qty',
-      dataIndex: 'qty',
-      key: 'qty',
-      align: 'right',
-      render: (_, {qty}) => <>{qty.toLocaleString()}</>,
-    },
-    {
-      title: 'Harga',
-      dataIndex: 'harga',
-      key: 'harga',
-      align: 'right',
-      render: (_, {harga}) => <>{'Rp. ' + harga.toLocaleString()}</>,
-    },
-    {
-      title: 'Bulan',
-      dataIndex: 'bulan',
-      key: 'bulan',
-    },
-    {
       title: 'Total Harga',
       dataIndex: 'total_harga',
       key: 'total_harga',
       align: 'right',
-      render: (_, {total_harga}) => <>{'Rp. ' + total_harga.toLocaleString()}</>,
+      render: (_, {total_harga}) => <>{'Rp. ' + total_harga?.toLocaleString()}</>,
     },
     {
       title: 'Tipe Pembayaran',
@@ -214,24 +200,14 @@ const TableReportHistoryPayment: React.FC = () => {
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={5} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={6} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} align='right'>
-                      {dataTable.reduce((a: any, b: {qty: any}) => a + b.qty, 0).toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={4} align='right'>
-                      {'Rp. ' +
-                        dataTable
-                          .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
-                          .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={6} align='right'>
+                    <Table.Summary.Cell index={2} align='right'>
                       {'Rp. ' +
                         dataTable
                           .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
-                          .toLocaleString()}
+                          ?.toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
                 </Table.Summary>

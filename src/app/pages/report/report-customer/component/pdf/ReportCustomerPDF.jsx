@@ -13,7 +13,7 @@ const ReportCustomerPDF = (data, head) => {
   doc.text('Customer Report', 14, 15)
   // doc.text('Nagatech SI', 180, 15)
   var imgData = toAbsoluteUrl('/media/logos/nsi-logo.png')
-  doc.addImage(imgData, 'png', 165, 5, 30, 26)
+  doc.addImage(imgData, 'png', 250, 5, 30, 26)
 
   doc.setProperties({
     title: 'Customer',
@@ -34,15 +34,13 @@ const ReportCustomerPDF = (data, head) => {
   tableColumn = [
     [
       {content: `No`},
-      {content: `Kode Toko`},
-      {content: `Nama Toko`},
-      {content: `Kode Cabang`},
+      {content: `No Invoice`},
+      {content: `Toko`},
+      {content: `Cabang`},
       {content: `Alamat`},
-      {content: `Product`},
-      {content: `Tipe`},
-      {content: `Qty`},
-      {content: `Harga`},
+      {content: `Alamat Korespondensi`},
       {content: `Bulan`},
+      {content: `Total Diskon`},
       {content: `Total Harga`},
       {content: `Tgl Jatuh Tempo`},
       {content: `Status`},
@@ -52,43 +50,191 @@ const ReportCustomerPDF = (data, head) => {
   let no = 1
   data.forEach((element) => {
     const row = [
-      {content: no++},
-      {content: element.kode_toko},
-      {content: element.toko},
-      {content: element.kode_cabang},
-      {content: element.alamat},
-      {content: element.product},
-      {content: element.tipe_program},
-      {content: element.qty, styles: {halign: 'right'}},
+      {content: no++, styles: {fillColor: '#f0eded'}},
+      {content: element.no_invoice, styles: {fillColor: '#f0eded'}},
+      {content: element.toko, styles: {fillColor: '#f0eded'}},
+      {content: element.kode_cabang, styles: {fillColor: '#f0eded'}},
+      {content: element.alamat_cabang, styles: {fillColor: '#f0eded'}},
+      {content: element.alamat_korespondensi, styles: {fillColor: '#f0eded'}},
+      {content: element.bulan, styles: {fillColor: '#f0eded'}},
       {
-        content: 'Rp. ' + element.harga.toLocaleString(),
-        styles: {halign: 'right'},
+        content: element.total_diskon * 100 + ' %',
+        styles: {halign: 'right', fillColor: '#f0eded'},
       },
-      {content: element.bulan},
       {
-        content: 'Rp. ' + element.total_harga.toLocaleString(),
-        styles: {halign: 'right'},
+        content: 'Rp. ' + element.grand_total?.toLocaleString(),
+        styles: {halign: 'right', fillColor: '#f0eded'},
       },
-      {content: moment(element.tgl_jatuh_tempo).format('DD-MM-YYYY')},
-      {content: element.status},
+      {
+        content: moment(element.tgl_jatuh_tempo).format('DD-MM-YYYY'),
+        styles: {fillColor: '#f0eded'},
+      },
+      {content: element.status, styles: {fillColor: '#f0eded'}},
     ]
     tableRows.push(row)
+    const rowHeadDetail = [
+      {
+        content: '',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: 'Product',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: 'Tipe Program',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: 'Harga',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: 'Total Harga',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: '',
+        colSpan: 6,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+    ]
+    tableRows.push(rowHeadDetail)
+    element.customer.forEach((detail) => {
+      const rowDetail = [
+        {content: ''},
+        {content: detail.product},
+        {content: detail.tipe_program},
+        {content: 'Rp. ' + detail.harga?.toLocaleString()},
+        {content: 'Rp. ' + detail.total_harga?.toLocaleString()},
+        {
+          content: '',
+          colSpan: 6,
+        },
+      ]
+      tableRows.push(rowDetail)
+    })
+    const rowFooterDetail = [
+      {
+        content: '',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: '',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: 'Sub Total: ',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content:
+          'Rp. ' +
+          element.customer.reduce((a, b) => a + parseInt(b.harga || 0), 0)?.toLocaleString(),
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content:
+          'Rp. ' +
+          element.customer.reduce((a, b) => a + parseInt(b.total_harga || 0), 0)?.toLocaleString(),
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
+        content: '',
+        colSpan: 6,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+    ]
+    tableRows.push(rowFooterDetail)
   })
 
   const footer = [
-    {content: 'Total : ', colSpan: 7, styles: {halign: 'right'}},
-    {content: data.reduce((a, b) => a + parseInt(b.qty || 0), 0), styles: {halign: 'right'}},
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + parseInt(b.harga || 0), 0).toLocaleString(),
-      styles: {halign: 'right'},
+      content: 'Grand Total : ',
+      colSpan: 8,
+      styles: {halign: 'right', fillColor: '#E8E5E5', textColor: '#000'},
+    },
+    {
+      content:
+        'Rp. ' + data.reduce((a, b) => a + parseInt(b.grand_total || 0), 0)?.toLocaleString(),
+      styles: {halign: 'right', fillColor: '#E8E5E5', textColor: '#000'},
     },
     {
       content: '',
-      styles: {halign: 'right'},
-    },
-    {
-      content: 'Rp. ' + data.reduce((a, b) => a + parseInt(b.total_harga || 0), 0).toLocaleString(),
-      styles: {halign: 'right'},
+      colSpan: 2,
+      styles: {halign: 'right', fillColor: '#E8E5E5', textColor: '#000'},
     },
   ]
   tableRows.push(footer)

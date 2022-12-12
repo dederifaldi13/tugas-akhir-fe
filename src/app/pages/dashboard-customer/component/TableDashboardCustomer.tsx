@@ -26,6 +26,7 @@ interface DataType {
   status: string
   kode_cabang: string
   tipe_program: string
+  no_invoice: string
 }
 
 interface ExpandedDataType {
@@ -33,6 +34,8 @@ interface ExpandedDataType {
   alamat: string
   telepon: string
   email: string
+  tipe_program: string
+  harga: number
 }
 
 const TableDashboardCustomer: React.FC = () => {
@@ -71,7 +74,7 @@ const TableDashboardCustomer: React.FC = () => {
 
   const handleBayarSekarang = (data: DataType) => {
     window.open(
-      `/payment-method/${data.kode_toko}/${data.product}/ONLINE/${data.kode_cabang}`,
+      `/payment-method/${data.no_invoice}/${data.kode_toko}/${data.kode_cabang}/ONLINE`,
       '_self',
       ''
     )
@@ -79,59 +82,29 @@ const TableDashboardCustomer: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
+      title: 'No Invoice',
+      dataIndex: 'no_invoice',
+      key: 'no_invoice',
     },
     {
-      title: 'Tipe',
-      dataIndex: 'tipe_program',
-      key: 'tipe_program',
-      render: (_, {tipe_program}) => {
-        if (tipe_program === 'ONLINE') {
-          return (
-            <span className='badge badge-success fs-7 fw-bold'>
-              {/* <KTSVG
-                path='/media/icons/duotune/maps/map001.svg'
-                className='svg-icon-2 svg-icon-light'
-              /> */}
-              &nbsp;
-              {tipe_program}
-            </span>
-          )
-        } else {
-          return (
-            <span className='badge badge-dark fs-7 fw-bold'>
-              {/* <KTSVG
-                path='/media/icons/duotune/maps/map001.svg'
-                className='svg-icon-2 svg-icon-light'
-              /> */}
-              &nbsp;
-              {tipe_program}
-            </span>
-          )
-        }
-      },
+      title: 'Toko / Customer',
+      dataIndex: 'kode_toko',
+      key: 'kode_toko',
     },
     {
-      title: 'Qty',
-      dataIndex: 'qty',
-      key: 'qty',
-      align: 'right',
+      title: 'Cabang',
+      dataIndex: 'kode_cabang',
+      key: 'kode_cabang',
     },
     {
-      title: 'Harga',
-      dataIndex: 'harga',
-      key: 'harga',
-      align: 'right',
-      render: (_, {harga}) => {
-        return 'Rp. ' + harga.toLocaleString()
-      },
+      title: 'Telepon',
+      dataIndex: 'telepon',
+      key: 'telepon',
     },
     {
-      title: 'Bulan',
-      dataIndex: 'bulan',
-      key: 'bulan',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Total Harga',
@@ -139,7 +112,7 @@ const TableDashboardCustomer: React.FC = () => {
       key: 'total_harga',
       align: 'right',
       render: (_, {total_harga}) => {
-        return 'Rp. ' + total_harga.toLocaleString()
+        return 'Rp. ' + total_harga?.toLocaleString()
       },
     },
     {
@@ -249,20 +222,55 @@ const TableDashboardCustomer: React.FC = () => {
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
-      {title: 'Alamat', dataIndex: 'alamat', key: 'alamat'},
-      {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
-      {title: 'Email', dataIndex: 'email', key: 'email'},
+      {title: 'Product', dataIndex: 'product', key: 'product'},
+      {
+        title: 'Tipe',
+        dataIndex: 'tipe_program',
+        key: 'tipe_program',
+        render: (_, {tipe_program}) => {
+          if (tipe_program === 'ONLINE') {
+            return (
+              <span className='badge badge-success fs-7 fw-bold'>
+                &nbsp;
+                {tipe_program}
+              </span>
+            )
+          } else {
+            return (
+              <span className='badge badge-dark fs-7 fw-bold'>
+                &nbsp;
+                {tipe_program}
+              </span>
+            )
+          }
+        },
+      },
+      {title: 'Qty', dataIndex: 'qty', key: 'qty'},
+      {
+        title: 'Harga',
+        dataIndex: 'harga',
+        key: 'harga',
+        render: (_, {harga}) => {
+          return 'Rp. ' + harga?.toLocaleString()
+        },
+      },
     ]
 
     const data = []
     for (let i = 0; i < dataTable.length; ++i) {
       if (dataTable[i]._id === id) {
-        data.push({
-          key: i,
-          alamat: dataTable[i].alamat,
-          telepon: dataTable[i].telepon,
-          email: dataTable[i].email,
-        })
+        for (let index = 0; index < dataTable[i].customer.length; index++) {
+          data.push({
+            key: i,
+            alamat: dataTable[i].alamat,
+            telepon: dataTable[i].telepon,
+            email: dataTable[i].email,
+            product: dataTable[i].customer[index].product,
+            tipe_program: dataTable[i].customer[index].tipe_program,
+            qty: dataTable[i].customer[index].qty,
+            harga: dataTable[i].customer[index].harga,
+          })
+        }
       }
     }
     return <Table columns={columns} dataSource={data} pagination={false} />
@@ -309,21 +317,14 @@ const TableDashboardCustomer: React.FC = () => {
                     <Table.Summary.Cell index={1} colSpan={2} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} align='right'>
-                      {dataTable.reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={4} align='right'>
-                      {'Rp. ' +
-                        dataTable
-                          .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
-                          .toLocaleString()}
-                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={3} align='right'></Table.Summary.Cell>
+                    <Table.Summary.Cell index={4} align='right'></Table.Summary.Cell>
                     <Table.Summary.Cell index={5}></Table.Summary.Cell>
                     <Table.Summary.Cell index={6} align='right'>
                       {'Rp. ' +
                         dataTable
                           .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
-                          .toLocaleString()}
+                          ?.toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
                 </Table.Summary>

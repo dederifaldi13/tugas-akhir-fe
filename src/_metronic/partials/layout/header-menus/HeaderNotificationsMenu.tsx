@@ -5,7 +5,7 @@ import {FC, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {
-  CreateAndSendPDFWithLoop,
+  // CreateAndSendPDFWithLoop,
   GetPost,
   // SendEmailAndWhatsApp,
 } from '../../../../app/pages/dashboard/redux/actions/PostActions'
@@ -35,7 +35,7 @@ const HeaderNotificationsMenu: FC = () => {
         <button
           className='btn btn-light-primary btn-sm me-1 d-none'
           // onClick={() => dispatch(SendEmailAndWhatsApp())}
-          onClick={() => dispatch(CreateAndSendPDFWithLoop())}
+          // onClick={() => dispatch(CreateAndSendPDFWithLoop())}
           disabled={isSending}
         >
           {!isSending && <span className='indicator-label'>Kirim Email dan WhatsApp</span>}
@@ -128,9 +128,9 @@ const HeaderNotificationsMenu: FC = () => {
 
                     <div className='mb-0 me-2'>
                       <a href='#' className='fs-6 text-gray-800 text-hover-primary fw-bolder'>
-                        {val.toko}
+                        {val.kode_toko}
                       </a>
-                      <div className='text-gray-400 fs-7'>{val.product}</div>
+                      <div className='text-gray-400 fs-7'>{val.no_invoice}</div>
                     </div>
                   </div>
 

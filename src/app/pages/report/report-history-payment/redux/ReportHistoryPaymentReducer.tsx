@@ -3,6 +3,7 @@ import {
   GetHistoryPaymentReportType,
   GET_HISTORY_PAYMENT_SUCCESS,
   HIDE_MODAL_BUKTI_BAYAR_SUCCESS,
+  SET_INVOICE_BY_TOKO,
   SET_NO_BAYAR,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
 } from './action/RerportHistoryPaymentActionTypes'
@@ -16,6 +17,7 @@ export interface DefaultStateI {
   noBayar?: String
   image?: any
   showModalBuktiBayar: boolean
+  feedbackNoInvoice?: Array<any>
 }
 
 const defaultState: DefaultStateI = {
@@ -23,6 +25,7 @@ const defaultState: DefaultStateI = {
   noBayar: '-',
   image: '-',
   showModalBuktiBayar: false,
+  feedbackNoInvoice: [],
 }
 
 const reportHistoryPaymentReducer = (
@@ -43,6 +46,9 @@ const reportHistoryPaymentReducer = (
       }
     case HIDE_MODAL_BUKTI_BAYAR_SUCCESS:
       return {...state, showModalBuktiBayar: false, noBayar: '-', image: '-'}
+    case SET_INVOICE_BY_TOKO:
+      const dataInvoice = action.payload?.feedbackNoInvoice
+      return {...state, feedbackNoInvoice: dataInvoice}
     default:
       return state
   }

@@ -15,14 +15,17 @@ interface DataType {
   created_at: string
   kode_toko: string
   toko: string
-  alamat: string
+  alamat_cabang: string
   telepon: string
   email: string
+  no_invoice: string
   product: string
   qty: number
   harga: number
   bulan: string
   total_harga: number
+  total_diskon: number
+  grand_total: number
   tgl_jatuh_tempo: string
   status: string
   kode_cabang: string
@@ -35,6 +38,7 @@ interface ExpandedDataType {
   telepon: string
   email: string
   tipe_program: string
+  harga: number
 }
 
 const TableDashboard: React.FC = () => {
@@ -53,17 +57,11 @@ const TableDashboard: React.FC = () => {
           (entry: DataType) =>
             entry.kode_toko.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.kode_cabang.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.toko.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.product.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.tipe_program.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.status.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.tgl_jatuh_tempo.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.bulan.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.alamat.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.telepon.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.email.toUpperCase().includes(currValue.toUpperCase()) ||
-            entry.harga.toString().includes(currValue) ||
-            entry.qty.toString().includes(currValue) ||
+            entry.no_invoice.toUpperCase().includes(currValue.toUpperCase()) ||
             entry.total_harga.toString().includes(currValue)
         )
         setDataSource(filteredData)
@@ -75,6 +73,11 @@ const TableDashboard: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'No Invoice',
+      dataIndex: 'no_invoice',
+      key: 'no_invoice',
+    },
+    {
       title: 'Toko / Customer',
       dataIndex: 'kode_toko',
       key: 'kode_toko',
@@ -85,23 +88,14 @@ const TableDashboard: React.FC = () => {
       key: 'kode_cabang',
     },
     {
-      title: 'Alamat',
-      dataIndex: 'alamat',
-      key: 'alamat',
+      title: 'Telepon',
+      dataIndex: 'telepon',
+      key: 'telepon',
     },
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
-    },
-    {
-      title: 'Harga',
-      dataIndex: 'harga',
-      key: 'harga',
-      align: 'right',
-      render: (_, {harga}) => {
-        return 'Rp. ' + harga.toLocaleString()
-      },
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Bulan',
@@ -109,12 +103,21 @@ const TableDashboard: React.FC = () => {
       key: 'bulan',
     },
     {
-      title: 'Total Harga',
-      dataIndex: 'total_harga',
-      key: 'total_harga',
+      title: 'Total Discount',
+      dataIndex: 'total_diskon',
+      key: 'total_diskon',
       align: 'right',
-      render: (_, {total_harga}) => {
-        return 'Rp. ' + total_harga.toLocaleString()
+      render: (_, {total_diskon}) => {
+        return total_diskon * 100 + ' %'
+      },
+    },
+    {
+      title: 'Total Harga',
+      dataIndex: 'grand_total',
+      key: 'grand_total',
+      align: 'right',
+      render: (_, {grand_total}) => {
+        return 'Rp. ' + grand_total?.toLocaleString()
       },
     },
     {
@@ -133,7 +136,7 @@ const TableDashboard: React.FC = () => {
       title: 'Status',
       key: 'status',
       align: 'center',
-      // fixed: 'right',
+      fixed: 'right',
       render: (_, record) => {
         if (record.tipe_program === 'OFFLINE') {
           return (
@@ -194,6 +197,7 @@ const TableDashboard: React.FC = () => {
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
+      {title: 'Product', dataIndex: 'product', key: 'product'},
       {
         title: 'Tipe',
         dataIndex: 'tipe_program',
@@ -202,10 +206,6 @@ const TableDashboard: React.FC = () => {
           if (tipe_program === 'ONLINE') {
             return (
               <span className='badge badge-success fs-7 fw-bold'>
-                {/* <KTSVG
-                          path='/media/icons/duotune/maps/map001.svg'
-                          className='svg-icon-2 svg-icon-light'
-                        /> */}
                 &nbsp;
                 {tipe_program}
               </span>
@@ -213,10 +213,6 @@ const TableDashboard: React.FC = () => {
           } else {
             return (
               <span className='badge badge-dark fs-7 fw-bold'>
-                {/* <KTSVG
-                          path='/media/icons/duotune/maps/map001.svg'
-                          className='svg-icon-2 svg-icon-light'
-                        /> */}
                 &nbsp;
                 {tipe_program}
               </span>
@@ -225,20 +221,28 @@ const TableDashboard: React.FC = () => {
         },
       },
       {title: 'Qty', dataIndex: 'qty', key: 'qty'},
-      {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
-      {title: 'Email', dataIndex: 'email', key: 'email'},
+      {
+        title: 'Harga',
+        dataIndex: 'harga',
+        key: 'harga',
+        render: (_, {harga}) => {
+          return 'Rp. ' + harga?.toLocaleString()
+        },
+      },
     ]
 
-    const data = []
+    const data: any = []
     for (let i = 0; i < dataTable.length; ++i) {
-      if (dataTable[i]._id === id) {
-        data.push({
-          key: i,
-          tipe_program: dataTable[i].tipe_program,
-          qty: dataTable[i].qty,
-          telepon: dataTable[i].telepon,
-          email: dataTable[i].email,
-        })
+      for (let index = 0; index < dataTable[i].customer.length; index++) {
+        if (dataTable[i]._id === id) {
+          data.push({
+            key: index,
+            product: dataTable[i].customer[index].product,
+            tipe_program: dataTable[i].customer[index].tipe_program,
+            qty: dataTable[i].customer[index].qty,
+            harga: dataTable[i].customer[index].harga,
+          })
+        }
       }
     }
     return <Table columns={columns} dataSource={data} pagination={false} />
@@ -271,7 +275,7 @@ const TableDashboard: React.FC = () => {
           columns={columns}
           dataSource={dataTable}
           expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
-          // scroll={{x: 1350}}
+          scroll={{x: 1400}}
           locale={{
             emptyText() {
               return <>{imagenotfound}Data Not Found</>
@@ -283,23 +287,13 @@ const TableDashboard: React.FC = () => {
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={3} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={7} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} align='right'>
-                      {/* {dataTable.reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)} */}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={4} align='right'>
+                    <Table.Summary.Cell index={2} align='right'>
                       {'Rp. ' +
                         dataTable
-                          .reduce((a: any, b: {harga: any}) => a + b.harga, 0)
-                          .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={6} align='right'>
-                      {'Rp. ' +
-                        dataTable
-                          .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
+                          .reduce((a: any, b: {grand_total: any}) => a + b.grand_total, 0)
                           .toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

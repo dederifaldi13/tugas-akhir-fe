@@ -7,7 +7,7 @@ import {GetMasterStore} from '../../master/store/redux/action/StoreAction'
 // import ReportCustomerExcel from './component/excel/ReportCustomer'
 import FormReportCustomer from './component/FormReportCustomer'
 import TableReportCustomer from './component/TableReportCustomer'
-import {GetCustomerReportAction} from './redux/action/ReportCustomerAction'
+import {GetCustomerReportAction, getInvoiceByToko} from './redux/action/ReportCustomerAction'
 import ReportCustomerPDF from './component/pdf/ReportCustomerPDF'
 import {RootState} from '../../../../setup'
 import {getLocal} from '../../../../setup/encrypt'
@@ -18,6 +18,7 @@ const ReportCustomerPage: FC = () => {
   useEffect(() => {
     dispatch(GetMasterStore())
     dispatch(GetMasterProduct())
+    dispatch(getInvoiceByToko('ALL'))
   }, [dispatch])
 
   const handleSubmit = (data: any) => {

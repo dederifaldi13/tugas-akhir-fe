@@ -23,6 +23,7 @@ interface DataType {
   no_bayar: string
   tanggal_bayar: string
   kode_toko: string
+  kode_cabang: string
   toko: string
   product: string
   qty: number
@@ -31,6 +32,7 @@ interface DataType {
   total_harga: number
   status: string
   tipe_pembayaran: string
+  no_invoice: string
   __v: number
 }
 
@@ -56,9 +58,9 @@ const TableHasBeenPaid: React.FC = () => {
     dispatch(GetGambarByNoBayar(no_bayar))
   }
 
-  const handleValid = (kode: string, product: string, nobyr: string) => {
+  const handleValid = (kode: string, kodecabang: string, nobyr: string, nooinvoice: string) => {
     setNoBayar(nobyr)
-    dispatch(ValidationPayment(kode, product, nobyr))
+    dispatch(ValidationPayment(kode, kodecabang, nobyr, nooinvoice))
   }
 
   const handleDelete = (id: string, nobyr: string) => {
@@ -102,9 +104,9 @@ const TableHasBeenPaid: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Kode Toko / Customer',
-      dataIndex: 'kode_toko',
-      key: 'kode_toko',
+      title: 'No Bayar',
+      dataIndex: 'no_bayar',
+      key: 'no_bayar',
     },
     {
       title: 'Toko / Customer',
@@ -117,9 +119,9 @@ const TableHasBeenPaid: React.FC = () => {
       key: 'kode_cabang',
     },
     {
-      title: 'No Bayar',
-      dataIndex: 'no_bayar',
-      key: 'no_bayar',
+      title: 'No Invoice',
+      dataIndex: 'no_invoice',
+      key: 'no_invoice',
     },
     {
       title: 'Tipe Pembayaran',
@@ -164,30 +166,6 @@ const TableHasBeenPaid: React.FC = () => {
       },
     },
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
-    },
-    {
-      title: 'Qty',
-      dataIndex: 'qty',
-      key: 'qty',
-      align: 'right',
-      render: (_, {qty}) => <>{qty?.toLocaleString()}</>,
-    },
-    {
-      title: 'Harga',
-      dataIndex: 'harga',
-      key: 'harga',
-      align: 'right',
-      render: (_, {harga}) => <>{'Rp. ' + harga?.toLocaleString()}</>,
-    },
-    {
-      title: 'Bulan',
-      dataIndex: 'bulan',
-      key: 'bulan',
-    },
-    {
       title: 'Total Harga',
       dataIndex: 'total_harga',
       key: 'total_harga',
@@ -202,7 +180,9 @@ const TableHasBeenPaid: React.FC = () => {
         <Space size='middle'>
           <button
             className='btn btn-light-success btn-sm me-1'
-            onClick={() => handleValid(record.kode_toko, record.product, record.no_bayar)}
+            onClick={() =>
+              handleValid(record.kode_toko, record.kode_cabang, record.no_bayar, record.no_invoice)
+            }
             disabled={isSendingApprove && noBayar === record.no_bayar}
           >
             <span className='indicator-label'>
@@ -294,18 +274,7 @@ const TableHasBeenPaid: React.FC = () => {
                     <Table.Summary.Cell index={1} colSpan={6} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} align='right'>
-                      {dataTable
-                        .reduce((a: any, b: {qty: any}) => a + b.qty || 0, 0)
-                        .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={4} align='right'>
-                      {dataTable
-                        .reduce((a: any, b: {harga: any}) => a + b.harga || 0, 0)
-                        .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={6} align='right'>
+                    <Table.Summary.Cell index={2} align='right'>
                       {dataTable
                         .reduce((a: any, b: {total_harga: any}) => a + b.total_harga || 0, 0)
                         .toLocaleString()}

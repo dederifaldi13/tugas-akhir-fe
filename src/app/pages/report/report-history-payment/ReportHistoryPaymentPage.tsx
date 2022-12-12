@@ -10,13 +10,14 @@ import ExcelReport from './component/excel/ReportHistoryPaymentXLSX'
 import FormHistoryPaymentReport from './component/FormReportHistoryPayment'
 import ReportHistoryPaymentPDF from './component/pdf/ReportHistoryPaymentPDF'
 import TableHistoryPaymentReport from './component/TableReportHistoryPayment'
-import {GetHistoryPaymentReport} from './redux/action/ReportHistoryPaymentAction'
+import {GetHistoryPaymentReport, getInvoiceByToko} from './redux/action/ReportHistoryPaymentAction'
 
 const ReportHistoryPaymentPage: FC = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(GetMasterStore())
     dispatch(GetMasterProduct())
+    dispatch(getInvoiceByToko('ALL'))
   }, [dispatch])
 
   const handleSubmit = (data: any) => {

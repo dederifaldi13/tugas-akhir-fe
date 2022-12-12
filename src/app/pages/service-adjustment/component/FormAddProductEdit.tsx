@@ -1,12 +1,18 @@
 import React from 'react'
 import {connect, useDispatch, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
-import {RootState} from '../../../setup'
-import {currencyMask} from '../../../setup/helper/function'
-import FormAddProductValidate from '../../../setup/validate/FormAddNewProduct'
-import {ReanderField, ReanderSelect2} from '../../modules/redux-form/BasicInput'
-import {GetProductType} from '../master/product/redux/action/ProductActionTypes'
-import {AddProductToLocal, CountTotalHarga, SetProduct} from './redux/actions/PostActions'
+import {RootState} from '../../../../setup'
+import {currencyMask} from '../../../../setup/helper/function'
+import FormAddProductValidate from '../../../../setup/validate/FormAddNewProduct'
+import {ReanderField, ReanderSelect2} from '../../../modules/redux-form/BasicInput'
+import {GetProductType} from '../../master/product/redux/action/ProductActionTypes'
+import {
+  //   AddProductToLocal,
+  CountTotalHarga,
+  PostDataProductCustomer,
+  PutDataProductCustomer,
+  SetProduct,
+} from '../redux/action/ServiceAdjustmentAction'
 
 interface Props {}
 
@@ -14,27 +20,35 @@ const mapState = (state: RootState) => {
   return {
     initialValues: {
       product: {
-        value: state.dashboard.product,
-        label: state.dashboard.product,
+        value: state.serviceAdjustment.product,
+        label: state.serviceAdjustment.product,
       },
-      tipe_program: state.dashboard.tipe_program,
+      tipe_program: state.serviceAdjustment.tipe_program,
+      id: state.serviceAdjustment.productID._id,
       qty: 1,
-      harga: state.dashboard.harga,
-      total_harga_product: state.dashboard.totalHarga,
+      harga: state.serviceAdjustment.harga,
+      total_harga_product: state.serviceAdjustment.totalHarga,
     },
   }
 }
 
-const FormAddProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+const FormAddProductEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {handleSubmit, submitting} = props
 
   const dispatch = useDispatch()
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
   const tipe_program: any = useSelector<RootState>(({dashboard}) => dashboard.tipe_program)
+  const tipeProgram = useSelector<RootState>(({serviceAdjustment}) => serviceAdjustment.product)
+  const cek = useSelector<RootState>(({serviceAdjustment}) => serviceAdjustment.productID)
+  const type = {value: tipeProgram, label: tipeProgram}
 
   const handleClick = () => {
-    dispatch(AddProductToLocal())
+    if (cek === undefined) {
+      dispatch(PostDataProductCustomer())
+    } else {
+      dispatch(PutDataProductCustomer())
+    }
   }
 
   return (
@@ -52,9 +66,22 @@ const FormAddProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
                 }
                 return data
               })}
+              defaultValue={{value: type.value, label: type.label}}
               label='Product'
               placeholder='Pilih Product'
               onChange={(e: any) => dispatch(SetProduct(e))}
+            />
+          </div>
+          <div className='col-lg-6 mb-2 mt-2 d-none'>
+            <Field
+              readOnly
+              name='id'
+              type='text'
+              customeCss='form-control-solid'
+              component={ReanderField}
+              nouperCase={true}
+              label='ID'
+              placeholder='Masukan ID'
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2 d-none'>
@@ -135,11 +162,11 @@ const FormAddProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
 }
 
 const form = reduxForm<{}, Props>({
-  form: 'FormAddProduct',
+  form: 'FormAddProductEdit',
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
   touchOnChange: true,
   enableReinitialize: true,
   validate: FormAddProductValidate,
-})(FormAddProduct)
+})(FormAddProductEdit)
 export default connect(mapState, null)(form)

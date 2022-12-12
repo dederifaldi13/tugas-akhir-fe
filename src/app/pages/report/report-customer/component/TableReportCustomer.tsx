@@ -26,6 +26,8 @@ interface DataType {
   total_harga: number
   tgl_jatuh_tempo: string
   status: string
+  total_diskon: number
+  grand_total: number
 }
 
 interface ExpandedDataType {
@@ -33,6 +35,8 @@ interface ExpandedDataType {
   alamat: string
   telepon: string
   email: string
+  harga: number
+  tipe_program: string
 }
 
 const TableReportCustomer: React.FC = () => {
@@ -92,67 +96,29 @@ const TableReportCustomer: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'No Invoice',
+      dataIndex: 'no_invoice',
+      key: 'no_invoice',
+    },
+    {
       title: 'Toko / Customer',
       dataIndex: 'kode_toko',
       key: 'kode_toko',
     },
     {
-      title: 'Alamat',
-      dataIndex: 'alamat',
-      key: 'alamat',
+      title: 'Cabang',
+      dataIndex: 'kode_cabang',
+      key: 'kode_cabang',
     },
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
+      title: 'Telepon',
+      dataIndex: 'telepon',
+      key: 'telepon',
     },
     {
-      title: 'Tipe',
-      dataIndex: 'tipe_program',
-      key: 'tipe_program',
-      render: (_, {tipe_program}) => {
-        if (tipe_program === 'ONLINE') {
-          return (
-            <span className='badge badge-success fs-7 fw-bold'>
-              {/* <KTSVG
-                path='/media/icons/duotune/maps/map001.svg'
-                className='svg-icon-2 svg-icon-light'
-              /> */}
-              &nbsp;
-              {tipe_program}
-            </span>
-          )
-        } else {
-          return (
-            <span className='badge badge-dark fs-7 fw-bold'>
-              {/* <KTSVG
-                path='/media/icons/duotune/maps/map001.svg'
-                className='svg-icon-2 svg-icon-light'
-              /> */}
-              &nbsp;
-              {tipe_program}
-            </span>
-          )
-        }
-      },
-    },
-    {
-      title: 'Qty',
-      dataIndex: 'qty',
-      key: 'qty',
-      align: 'right',
-      render: (_, {qty}) => {
-        return qty.toLocaleString()
-      },
-    },
-    {
-      title: 'Harga',
-      dataIndex: 'harga',
-      key: 'harga',
-      align: 'right',
-      render: (_, {harga}) => {
-        return 'Rp. ' + harga.toLocaleString()
-      },
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Bulan',
@@ -160,12 +126,21 @@ const TableReportCustomer: React.FC = () => {
       key: 'bulan',
     },
     {
-      title: 'Total Harga',
-      dataIndex: 'total_harga',
-      key: 'total_harga',
+      title: 'Total Discount',
+      dataIndex: 'total_diskon',
+      key: 'total_diskon',
       align: 'right',
-      render: (_, {total_harga}) => {
-        return 'Rp. ' + total_harga.toLocaleString()
+      render: (_, {total_diskon}) => {
+        return total_diskon * 100 + ' %'
+      },
+    },
+    {
+      title: 'Total Harga',
+      dataIndex: 'grand_total',
+      key: 'grand_total',
+      align: 'right',
+      render: (_, {grand_total}) => {
+        return 'Rp. ' + grand_total?.toLocaleString()
       },
     },
     {
@@ -173,7 +148,11 @@ const TableReportCustomer: React.FC = () => {
       dataIndex: 'tgl_jatuh_tempo',
       key: 'tgl_jatuh_tempo',
       render: (_, {tgl_jatuh_tempo}) => {
-        return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+        if (tgl_jatuh_tempo !== '-') {
+          return moment(tgl_jatuh_tempo).format('DD-MM-YYYY')
+        } else {
+          return tgl_jatuh_tempo
+        }
       },
     },
     {
@@ -241,19 +220,52 @@ const TableReportCustomer: React.FC = () => {
 
   const expandedRowRenderTable = (id: string) => {
     const columns: ColumnsType<ExpandedDataType> = [
-      {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
-      {title: 'Email', dataIndex: 'email', key: 'email'},
+      {title: 'Product', dataIndex: 'product', key: 'product'},
+      {
+        title: 'Tipe',
+        dataIndex: 'tipe_program',
+        key: 'tipe_program',
+        render: (_, {tipe_program}) => {
+          if (tipe_program === 'ONLINE') {
+            return (
+              <span className='badge badge-success fs-7 fw-bold'>
+                &nbsp;
+                {tipe_program}
+              </span>
+            )
+          } else {
+            return (
+              <span className='badge badge-dark fs-7 fw-bold'>
+                &nbsp;
+                {tipe_program}
+              </span>
+            )
+          }
+        },
+      },
+      {title: 'Qty', dataIndex: 'qty', key: 'qty'},
+      {
+        title: 'Harga',
+        dataIndex: 'harga',
+        key: 'harga',
+        render: (_, {harga}) => {
+          return 'Rp. ' + harga?.toLocaleString()
+        },
+      },
     ]
 
-    const data = []
+    const data: any = []
     for (let i = 0; i < dataTable.length; ++i) {
-      if (dataTable[i]._id === id) {
-        data.push({
-          key: i,
-          alamat: dataTable[i].alamat,
-          telepon: dataTable[i].telepon,
-          email: dataTable[i].email,
-        })
+      for (let index = 0; index < dataTable[i].customer.length; index++) {
+        if (dataTable[i]._id === id) {
+          data.push({
+            key: index,
+            product: dataTable[i].customer[index].product,
+            tipe_program: dataTable[i].customer[index].tipe_program,
+            qty: dataTable[i].customer[index].qty,
+            harga: dataTable[i].customer[index].harga,
+          })
+        }
       }
     }
     return <Table columns={columns} dataSource={data} pagination={false} />
@@ -280,28 +292,13 @@ const TableReportCustomer: React.FC = () => {
                 <Table.Summary fixed>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={4} align='right'>
+                    <Table.Summary.Cell index={1} colSpan={7} align='right'>
                       Total
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} align='right'>
-                      {dataTable
-                        .reduce((a: any, b: {qty: any}) => a + parseInt(b.qty || 0), 0)
-                        .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={4} align='right'>
+                    <Table.Summary.Cell index={2} align='right'>
                       {'Rp. ' +
                         dataTable
-                          .reduce((a: any, b: {harga: any}) => a + parseInt(b.harga || 0), 0)
-                          .toLocaleString()}
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={6} align='right'>
-                      {'Rp. ' +
-                        dataTable
-                          .reduce(
-                            (a: any, b: {total_harga: any}) => a + parseInt(b.total_harga || 0),
-                            0
-                          )
+                          .reduce((a: any, b: {grand_total: any}) => a + b.grand_total, 0)
                           .toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

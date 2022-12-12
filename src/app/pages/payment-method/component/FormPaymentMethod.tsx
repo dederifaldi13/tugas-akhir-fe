@@ -10,7 +10,7 @@ interface Props {}
 const FormPaymentMethod: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const params: {
     kode_toko: string
-    product: string
+    no_invoice: string
     kode_cabang: string
     tipe_program: string
   } = useParams()
@@ -22,7 +22,7 @@ const FormPaymentMethod: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
   const handleManual = () => {
     setLoader(true)
     window.open(
-      `/payment-confirmation/${params.kode_toko}/${params.product}/${params.tipe_program}/${params.kode_cabang}`,
+      `/payment-confirmation/${data.no_invoice}/${data.kode_toko}/${data.kode_cabang}/ONLINE`,
       '_self',
       ''
     )

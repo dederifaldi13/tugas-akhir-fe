@@ -20,7 +20,7 @@ const ReportHistoryPaymentPDF = (data, head) => {
   })
   doc.setFontSize(9)
   doc.text(
-    `Periode : ${moment(head.tgl_awal).format('DD-MM-YYYY')}) s/d ${moment(head.tgl_akhir).format(
+    `Periode : ${moment(head.tgl_awal).format('DD-MM-YYYY')} s/d ${moment(head.tgl_akhir).format(
       'DD-MM-YYYY'
     )}`,
     14,
@@ -30,15 +30,14 @@ const ReportHistoryPaymentPDF = (data, head) => {
   tableColumn = [
     [
       {content: `No`},
+      {content: `No Bayar`},
+      {content: `No Invoice`},
       {content: `Kode Toko / Customer`},
       {content: `Nama Toko / Customer`},
-      {content: `No Bayar`},
+      {content: `Cabang`},
       {content: `Tgl Bayar`},
-      {content: `Product`},
-      {content: `Qty`},
-      {content: `Harga`},
-      {content: `Bulan`},
       {content: `Total Harga`},
+      {content: `Tipe Pembayaran`},
     ],
   ]
 
@@ -46,38 +45,29 @@ const ReportHistoryPaymentPDF = (data, head) => {
   data.forEach((element) => {
     const row = [
       {content: no++},
+      {content: element.no_bayar},
+      {content: element.no_invoice},
       {content: element.kode_toko},
       {content: element.toko},
-      {content: element.no_bayar},
+      {content: element.kode_cabang},
       {content: moment(element.tanggal_bayar).format('DD-MM-YYYY')},
-      {content: element.product},
-      {content: element.qty, styles: {halign: 'right'}},
-      {
-        content: 'Rp. ' + element.harga.toLocaleString(),
-        styles: {halign: 'right'},
-      },
-      {content: element.bulan},
       {
         content: 'Rp. ' + element.total_harga.toLocaleString(),
         styles: {halign: 'right'},
       },
+      {content: element.tipe_pembayaran},
     ]
     tableRows.push(row)
   })
 
   const footer = [
-    {content: 'Total : ', colSpan: 6, styles: {halign: 'right'}},
-    {content: data.reduce((a, b) => a + b.qty, 0), styles: {halign: 'right'}},
+    {content: 'Total : ', colSpan: 7, styles: {halign: 'right'}},
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.harga, 0).toLocaleString(),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0).toLocaleString(),
       styles: {halign: 'right'},
     },
     {
       content: '',
-      styles: {halign: 'right'},
-    },
-    {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0).toLocaleString(),
       styles: {halign: 'right'},
     },
   ]

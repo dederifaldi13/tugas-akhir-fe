@@ -1,13 +1,16 @@
 import {Dispatch} from 'redux'
+import {destroy} from 'redux-form'
+import Swal from 'sweetalert2'
 import {
   AxiosDelete,
   AxiosGet,
   AxiosPost,
   getImage,
   PopUpAlert,
-  postKwitansiPDF,
+  // postKwitansiPDF,
   postPDF,
 } from '../../../../../setup'
+import {getLocal, saveLocal} from '../../../../../setup/encrypt'
 import {doDecrypt} from '../../../../../setup/helper/encrypt'
 import {dataURLtoPDFFile, NumberOnly} from '../../../../../setup/helper/function'
 import {
@@ -19,6 +22,7 @@ import {
 import {IAppState} from '../../../../../setup/redux/Store'
 import InvoicePDF from '../../pdf/InvoicePDF'
 import KwitansiPDF from '../../pdf/KwitansiPDF'
+
 import {
   // CabangType,
   COUNT_TOTAL_HARGA,
@@ -33,6 +37,7 @@ import {
   RequestValidationType,
   SET_CABANG,
   SET_CABANG_BY_ID,
+  SET_DATA_PRODUCT,
   SET_PRODUCT,
   SHOW_MODAL,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
@@ -43,26 +48,25 @@ import {
 export const GetPost = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     let newarrdata: TableDataType[] = []
-    AxiosGet('customer').then((res: any) => {
+    AxiosGet('invoice').then((res: any) => {
       for (let index = 0; index < res.data.length; index++) {
         const obj: TableDataType = {
           key: index,
           kode_toko: res.data[index].kode_toko,
-          toko: res.data[index].toko,
-          qty: res.data[index].qty,
-          alamat: res.data[index].alamat,
           status: res.data[index].status,
           bulan: res.data[index].bulan,
           email: res.data[index].email,
-          harga: res.data[index].harga,
-          product: res.data[index].product,
           telepon: res.data[index].telepon,
           tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
           total_harga: res.data[index].total_harga,
-          created_at: res.data[index].created_at,
           kode_cabang: res.data[index].kode_cabang,
-          tipe_program: res.data[index].tipe_program,
+          no_invoice: res.data[index].no_invoice,
           _id: res.data[index]._id,
+          __v: res.data[index].__v,
+          customer: res.data[index].customer,
+          grand_total: res.data[index].grand_total,
+          input_date: res.data[index].input_date,
+          total_diskon: res.data[index].total_diskon,
         }
         newarrdata.push(obj)
       }
@@ -81,6 +85,7 @@ export const GetPost = () => {
         'total_harga',
         'kode_cabang',
         'tipe_program',
+        'no_invoice',
       ])
       dispatch({
         type: POST_SUCCESS,
@@ -108,6 +113,7 @@ export const GetPayment = () => {
           __v: res.data[index].__v,
           _id: res.data[index]._id,
           no_bayar: res.data[index].no_bayar,
+          no_invoice: res.data[index].no_invoice,
           tanggal_bayar: res.data[index].tanggal_bayar,
           status: res.data[index].status,
           tipe_pembayaran: res.data[index].tipe_pembayaran,
@@ -127,6 +133,7 @@ export const GetPayment = () => {
         '__v',
         '_id',
         'no_bayar',
+        'no_invoice',
         'tanggal_bayar',
         'status',
         'created_at',
@@ -141,6 +148,7 @@ export const GetPayment = () => {
 
 export const SetProduct = (data: {value: string; label: string}) => {
   return async (dispatch: Dispatch<any>) => {
+    dispatch({type: COUNT_TOTAL_HARGA, payload: {totalHarga: 0, harga: 0}})
     if (data.label.includes('OFFLINE')) {
       dispatch({type: SET_PRODUCT, payload: {product: data.value, tipe_program: 'OFFLINE'}})
     } else {
@@ -260,78 +268,63 @@ export const CountTotalHarga = (value: any) => {
 
 export const PostCustomer = (data: FormPostType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const dataProduct = getState().dashboard.dataProduct
+    const total = dataProduct?.reduce((a, b) => a + b.total_harga_product, 0)
     let senddata: PostType = {
-      kode_toko: '',
-      toko: '',
-      product: '',
-      email: '',
-      telepon: '',
-      qty: 0,
-      harga: 0,
-      bulan: '',
-      total_harga: 0,
-      tgl_jatuh_tempo: '',
-      kode_cabang: '',
-      tipe_program: '',
+      kode_toko: data.kode_toko.value,
+      toko: data.toko,
+      email: data.email,
+      telepon: data.telepon,
+      bulan: data.bulan.toString(),
+      total_harga: total,
+      tgl_jatuh_tempo: data.tgl_jatuh_tempo,
+      kode_cabang: data.kode_cabang.value,
+      total_diskon: parseFloat(data.total_diskon.toString()) / 100,
+      product_detail: dataProduct,
     }
     dispatch(setLoading())
-    if (data.tipe_program === 'OFFLINE') {
-      senddata = {
-        kode_toko: data.kode_toko.value,
-        toko: data.toko,
-        kode_cabang: data.kode_cabang.label,
-        product: data.product.value,
-        email: data.email,
-        telepon: data.telepon,
-        tipe_program: data.tipe_program,
-        qty: 1,
-        harga: 0,
-        bulan: '-',
-        total_harga: 0,
-        tgl_jatuh_tempo: '-',
-      }
-    } else {
-      senddata = {
-        kode_toko: data.kode_toko.value,
-        toko: data.toko,
-        kode_cabang: data.kode_cabang.value,
-        product: data.product.value,
-        email: data.email,
-        telepon: data.telepon,
-        tipe_program: data.tipe_program,
-        qty: parseInt(data.qty.toString()),
-        harga: parseInt(data.harga.toString()),
-        bulan: data.bulan.toString(),
-        total_harga: parseInt(data.total_harga.toString()),
-        tgl_jatuh_tempo: data.tgl_jatuh_tempo,
-      }
-    }
-
     AxiosPost('customer', senddata)
       .then((res: any) => {
         AxiosGet(
-          `customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(
-            /\+/g,
-            '_'
-          )}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`
+          `invoice/filter?kode_toko=${res.kode_toko}&no_invoice=${res.no_invoice}&kode_cabang=${res.kode_cabang}`
         ).then((resget: any) => {
-          const dataInvoice = resget.data[0]
+          const decryptData = doDecrypt(resget.data[0], [
+            '_id',
+            'created_at',
+            'no_invoice',
+            'kode_toko',
+            'product',
+            'qty',
+            'harga',
+            'bulan',
+            'total_harga',
+            'tgl_jatuh_tempo',
+            'kode_cabang',
+            'tipe_program',
+            'status',
+            'input_date',
+            '__v',
+            'edit_by',
+            'edit_date',
+            'alamat',
+          ])
+          const dataInvoice = decryptData
           const pdf64 = InvoicePDF(dataInvoice)
           const file = dataURLtoPDFFile(
             pdf64,
-            `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+            `${dataInvoice.no_invoice}-${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-ONLINE`
           )
           postPDF(
             file,
-            `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+            `${dataInvoice.no_invoice}-${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-ONLINE`
           ).finally(() => {
             const userData = {
               user_name: senddata.kode_toko,
               user_id: data.telepon,
               password: '12345678',
-              level: 'CUSTOMER',
             }
-            AxiosPost('auth/register', userData).finally(() => {
+            AxiosPost('auth/register/customer', userData).finally(() => {
+              localStorage.removeItem('productData')
               PopUpAlert.default.AlertSuccessAdd()
               dispatch(stopLoading())
             })
@@ -346,31 +339,55 @@ export const PostCustomer = (data: FormPostType) => {
   }
 }
 
-export const ValidationPayment = (kode: string, product: string, nobyr: string) => {
+export const ValidationPayment = (
+  kode: string,
+  kode_cabang: string,
+  nobyr: string,
+  nooinvoice: string
+) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoadingApprove())
     const senddata: RequestValidationType = {
+      no_invoice: nooinvoice,
       kode_toko: kode,
-      product: product,
+      kode_cabang: kode_cabang,
     }
+
     AxiosPost('payment/validation', senddata)
       .then((res: any) => {
         AxiosGet(
-          `customer/filter?kode_toko=${res.kode_toko}&product=${res.product.replaceAll(
-            /\+/g,
-            '_'
-          )}&kode_cabang=${res.kode_cabang}&tipe_program=${res.tipe_program}`
+          `invoice/filter?kode_toko=${res.kode_toko}&no_invoice=${res.no_invoice}&kode_cabang=${res.kode_cabang}`
         )
           .then((res: any) => {
-            const dataInvoice = res.data[0]
+            const decryptData = doDecrypt(res.data[0], [
+              '_id',
+              'created_at',
+              'no_invoice',
+              'kode_toko',
+              'product',
+              'qty',
+              'harga',
+              'bulan',
+              'total_harga',
+              'tgl_jatuh_tempo',
+              'kode_cabang',
+              'tipe_program',
+              'status',
+              'input_date',
+              '__v',
+              'edit_by',
+              'edit_date',
+              'alamat',
+            ])
+            const dataInvoice = decryptData
             const pdf64 = InvoicePDF(dataInvoice)
             const file = dataURLtoPDFFile(
               pdf64,
-              `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+              `${dataInvoice.no_invoice}-${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-ONLINE`
             )
             postPDF(
               file,
-              `${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-${dataInvoice.product}-${dataInvoice.tipe_program}`
+              `${dataInvoice.no_invoice}-${dataInvoice.kode_toko}-${dataInvoice.kode_cabang}-ONLINE`
             ).finally(() => {
               PopUpAlert.default.AlertSuccess('Berhasil Melakukan Validasi')
               dispatch(stopLoadingApprove())
@@ -423,54 +440,6 @@ export const SendEmailAndWhatsApp = () => {
   }
 }
 
-export const CreateAndSendPDFWithLoop = () => {
-  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    dispatch(setLoading())
-    let newarrdata: TableDataType[] = []
-    AxiosGet('customer').then((res: any) => {
-      for (let index = 0; index < res.data.length; index++) {
-        const obj: TableDataType = {
-          key: index,
-          kode_toko: res.data[index].kode_toko,
-          toko: res.data[index].toko,
-          qty: res.data[index].qty,
-          alamat: res.data[index].alamat,
-          status: res.data[index].status,
-          bulan: res.data[index].bulan,
-          email: res.data[index].email,
-          harga: res.data[index].harga,
-          product: res.data[index].product,
-          telepon: res.data[index].telepon,
-          tgl_jatuh_tempo: res.data[index].tgl_jatuh_tempo,
-          total_harga: res.data[index].total_harga,
-          created_at: res.data[index].created_at,
-          kode_cabang: res.data[index].kode_cabang,
-          tipe_program: res.data[index].tipe_program,
-          _id: res.data[index]._id,
-        }
-        newarrdata.push(obj)
-      }
-      newarrdata.forEach((element) => {
-        const pdf64 = KwitansiPDF(element, '-')
-        const file = dataURLtoPDFFile(
-          pdf64,
-          `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`
-        )
-        postKwitansiPDF(
-          file,
-          `${element.kode_toko}-${element.kode_cabang}-${element.product}-${element.tipe_program}`
-        )
-          .then((res: any) => {
-            console.log(res)
-          })
-          .finally(() => {
-            dispatch(stopLoading())
-          })
-      })
-    })
-  }
-}
-
 export const ShowModal = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch({type: SHOW_MODAL})
@@ -479,6 +448,135 @@ export const ShowModal = () => {
 
 export const HideModal = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(destroy('FormAddProduct'))
+    dispatch({type: COUNT_TOTAL_HARGA, payload: {totalHarga: 0, harga: 0}})
+    dispatch({type: SET_PRODUCT, payload: {product: '', tipe_program: 'ONLINE'}})
     dispatch({type: HIDE_MODAL})
+  }
+}
+
+export const HideModalTrx = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(destroy('FormAddNewTransaction'))
+    localStorage.removeItem('productData')
+    dispatch({type: SET_DATA_PRODUCT, payload: {dataProduct: []}})
+    dispatch({type: SET_CABANG_BY_ID, payload: {cabangTokoByID: undefined}})
+    dispatch({type: GET_TOKO_BY_KODE, payload: {dataTokoByKode: undefined}})
+    dispatch(HideModal())
+  }
+}
+
+export const GetDataProductLocal = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    getLocal('productData').then((res) => {
+      dispatch({type: SET_DATA_PRODUCT, payload: {dataProduct: res}})
+    })
+  }
+}
+
+export const AddProductToLocal = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const data: any = getState().form.FormAddProduct.values
+    getLocal('productData').then((res) => {
+      const find = res.find((val: any) => val.product === data.product.value)
+      if (find === undefined) {
+        if (data.product.value === '') {
+          PopUpAlert.default.AlertError('Mohon Lengkapi Form Terlebih Dahulu !')
+        } else {
+          if (res.length === 0) {
+            const product = []
+            product.push({
+              product: data.product.value,
+              harga: data.harga,
+              total_harga_product: data.total_harga_product,
+              qty: data.qty,
+              tipe_program: data.tipe_program,
+            })
+            saveLocal('productData', product).then((res) => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Berhasil Menambahkan Data !',
+              }).then(() => {
+                dispatch(GetDataProductLocal())
+                dispatch(destroy('FormAddProduct'))
+                dispatch(HideModal())
+              })
+            })
+          } else {
+            const product = res
+            product.push({
+              product: data.product.value,
+              harga: data.harga,
+              total_harga_product: data.total_harga_product,
+              qty: data.qty,
+              tipe_program: data.tipe_program,
+            })
+            saveLocal('productData', product).then(() => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Berhasil Menambahkan Data !',
+              }).then(() => {
+                dispatch(GetDataProductLocal())
+                dispatch(destroy('FormAddProduct'))
+                dispatch(HideModal())
+              })
+            })
+          }
+        }
+      } else {
+        PopUpAlert.default.AlertError('Product Tidak Boleh Sama !')
+      }
+    })
+  }
+}
+
+export const DeleteProductLocal = (product: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    getLocal('productData').then((res) => {
+      const productFill = res.filter((val: any) => val.product !== product)
+      saveLocal('productData', productFill).then((res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Berhasil Menghapus Data !',
+        }).then(() => {
+          dispatch(GetDataProductLocal())
+        })
+      })
+    })
+  }
+}
+
+export const generatePDF = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    AxiosGet(`invoice/filter?kode_toko=TR&no_invoice=INV-011222-0001&kode_cabang=CB`)
+      .then((res: any) => {
+        const decryptData = doDecrypt(res.data[0], [
+          '_id',
+          'created_at',
+          'no_invoice',
+          'kode_toko',
+          'product',
+          'qty',
+          'harga',
+          'bulan',
+          'total_harga',
+          'tgl_jatuh_tempo',
+          'kode_cabang',
+          'tipe_program',
+          'status',
+          'input_date',
+          '__v',
+          'edit_by',
+          'edit_date',
+        ])
+        const dataInvoice = decryptData
+        KwitansiPDF(dataInvoice)
+      })
+      .catch((error: any) => {
+        console.log(error)
+      })
   }
 }

@@ -6,17 +6,28 @@ import {Modal} from 'react-bootstrap-v5'
 import Lottie from 'react-lottie'
 import {useDispatch, useSelector} from 'react-redux'
 import Swal from 'sweetalert2'
-import {RootState} from '../../../setup'
-import animationlist from '../../../_metronic/assets/animation'
-import {KTSVG} from '../../../_metronic/helpers'
-import FormAddProduct from './FormAddProduct'
-import {DeleteProductLocal, HideModal, ShowModal} from './redux/actions/PostActions'
+import {RootState} from '../../../../setup'
+import animationlist from '../../../../_metronic/assets/animation'
+import {KTSVG} from '../../../../_metronic/helpers'
+import {
+  DeleteProductEdit,
+  getDataProductCustomer,
+  HideModal,
+  PostActivateData,
+  PostDeactivateData,
+  ShowModal,
+} from '../redux/action/ServiceAdjustmentAction'
+import FormAddProduct from './FormAddProductEdit'
 
 const TableDetailProduct: React.FC = () => {
   const dispatch = useDispatch()
-  const isShow: any = useSelector<RootState>(({dashboard}) => dashboard.modal)
+  const isShow: any = useSelector<RootState>(({serviceAdjustment}) => serviceAdjustment.modal)
+  const loadActivate = useSelector<RootState>(({loader}) => loader.loadingApprove)
+  const load = useSelector<RootState>(({loader}) => loader.loading)
+  const isSending = load as boolean
+  const isSendingActivate = loadActivate as boolean
 
-  const handleDelete = (e: any, product: any) => {
+  const handleDelete = (e: any, id: any) => {
     e.preventDefault()
     Swal.fire({
       title: 'Apakah Anda Yakin?',
@@ -28,12 +39,15 @@ const TableDetailProduct: React.FC = () => {
       confirmButtonText: 'Yakin',
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DeleteProductLocal(product))
+        dispatch(DeleteProductEdit(id))
       }
     })
   }
 
-  const newarrdata: any = useSelector<RootState>(({dashboard}) => dashboard.dataProduct)
+  const newarrdata: any = useSelector<RootState>(
+    ({serviceAdjustment}) => serviceAdjustment.dataProduct
+  )
+
   const [dataSource, setDataSource] = useState(newarrdata)
   const [value, setValue] = useState('')
   const [search, setSearch] = useState(false)
@@ -46,8 +60,42 @@ const TableDetailProduct: React.FC = () => {
     event.preventDefault()
   }
   const handleEdit = (event: any, id: any) => {
-    dispatch(HideModal())
+    dispatch(getDataProductCustomer(id))
     event.preventDefault()
+  }
+
+  const handleDeactivate = (e: any, product: string) => {
+    e.preventDefault()
+    Swal.fire({
+      title: 'Apakah Anda Yakin?',
+      text: 'Menonaktifkan Customer Ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yakin',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(PostDeactivateData(product))
+      }
+    })
+  }
+
+  const handleActivate = (e: any, product: string) => {
+    e.preventDefault()
+    Swal.fire({
+      title: 'Apakah Anda Yakin?',
+      text: 'Mengaktifkan Customer Ini',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yakin',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(PostActivateData(product))
+      }
+    })
   }
 
   const columns: ColumnsType<any> = [
@@ -66,10 +114,9 @@ const TableDetailProduct: React.FC = () => {
     },
     {
       title: 'Total Harga',
-      dataIndex: 'total_harga_product',
-      key: 'total_harga_product',
-      render: (_, {total_harga_product}) => {
-        return 'Rp. ' + total_harga_product?.toLocaleString()
+      key: 'total_harga',
+      render: (_, record) => {
+        return 'Rp. ' + (record.harga * record.bulan)?.toLocaleString()
       },
     },
     {
@@ -85,15 +132,58 @@ const TableDetailProduct: React.FC = () => {
         <Space size='middle'>
           <button
             className='btn btn-light-warning btn-sm me-1'
-            onClick={(e) => handleEdit(e, record.key)}
+            onClick={(e) => handleEdit(e, record._id)}
           >
             <span className='indicator-label'>
               Edit <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
             </span>
           </button>
+          {record.status === 'CLOSE' ? (
+            <button
+              className='btn btn-light-success btn-sm me-1'
+              onClick={(e) => handleActivate(e, record.product)}
+              disabled={isSendingActivate}
+            >
+              <span className='indicator-label'>
+                {!loadActivate && (
+                  <span className='indicator-label'>
+                    Activate
+                    <KTSVG path='/media/icons/duotune/general/gen051.svg' className='svg-icon-1' />
+                  </span>
+                )}
+                {loadActivate && (
+                  <span className='indicator-progress' style={{display: 'block'}}>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                )}
+              </span>
+            </button>
+          ) : (
+            <button
+              className='btn btn-light-danger btn-sm me-1'
+              onClick={(e) => handleDeactivate(e, record.product)}
+              disabled={isSending || record.tipe_program === 'OFFLINE'}
+            >
+              <span className='indicator-label'>
+                {!load && (
+                  <span className='indicator-label'>
+                    Deactivate
+                    <KTSVG path='/media/icons/duotune/general/gen050.svg' className='svg-icon-1' />
+                  </span>
+                )}
+                {load && (
+                  <span className='indicator-progress' style={{display: 'block'}}>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                )}
+              </span>
+            </button>
+          )}
           <button
             className='btn btn-light-danger btn-sm me-1'
-            onClick={(e) => handleDelete(e, record.product)}
+            onClick={(e) => handleDelete(e, record._id)}
           >
             <span className='indicator-label'>
               Delete <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />

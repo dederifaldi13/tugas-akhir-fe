@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, {useState} from 'react'
-import {connect, shallowEqual, useSelector} from 'react-redux'
+import {connect, shallowEqual, useDispatch, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormSearchReportCustomerValidation from '../../../../../setup/validate/FormSearchReportCustomerValidation'
@@ -11,7 +11,7 @@ import {
   ReanderField,
   ReanderSelect2,
 } from '../../../../modules/redux-form/BasicInput'
-import {SetCheckAllAction} from '../redux/action/ReportCustomerAction'
+import {getInvoiceByToko, SetCheckAllAction} from '../redux/action/ReportCustomerAction'
 
 interface Props {}
 
@@ -22,7 +22,7 @@ const mapState = (state: RootState) => {
         tgl_awal: moment().format('DD-MM-YYYY'),
         tgl_akhir: moment().format('DD-MM-YYYY'),
         kode_toko: state.auth.user.user_name,
-        product: {
+        no_invoice: {
           value: 'ALL',
           label: 'SEMUA',
         },
@@ -41,7 +41,7 @@ const mapState = (state: RootState) => {
           value: 'ALL',
           label: 'SEMUA',
         },
-        product: {
+        no_invoice: {
           value: 'ALL',
           label: 'SEMUA',
         },
@@ -55,6 +55,7 @@ const mapState = (state: RootState) => {
 }
 
 const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+  const dispatch = useDispatch()
   const user: UserModelNew = useSelector<RootState>(
     ({auth}) => auth.user,
     shallowEqual
@@ -62,15 +63,16 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
   const {handleSubmit, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataTokoSelect = [{value: 'ALL', label: 'SEMUA'}]
-  const dataProductSelect = [{value: 'ALL', label: 'SEMUA'}]
+  const dataInvoiceSelect = [{value: 'ALL', label: 'SEMUA'}]
   const dataToko: any = useSelector<RootState>(({masterstore}) => masterstore.feedback) || []
-  const dataProduct: any = useSelector<RootState>(({masterproduct}) => masterproduct.feedback) || []
+  const dataInvoice: any =
+    useSelector<RootState>(({reportCustomer}) => reportCustomer.feedbackNoInvoice) || []
   const isChecked: any = useSelector<RootState>(({reportCustomer}) => reportCustomer.all) || false
   dataToko.forEach((element: any) => {
     dataTokoSelect.push({value: element.kode_toko, label: element.toko})
   })
-  dataProduct.forEach((element: any) => {
-    dataProductSelect.push({value: element.product, label: element.product})
+  dataInvoice.forEach((element: any) => {
+    dataInvoiceSelect.push({value: element.no_invoice, label: element.no_invoice})
   })
   const dataStatus = [
     {value: 'ALL', label: 'SEMUA'},
@@ -87,7 +89,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
     {value: 'CLOSE', label: 'TIDAK AKTIF'},
   ]
   const [kodeToko, setKodeToko] = useState({value: 'ALL', label: 'SEMUA'})
-  const [Product, setProduct] = useState({value: 'ALL', label: 'SEMUA'})
+  const [Invoice, setInvoice] = useState({value: 'ALL', label: 'SEMUA'})
   const [Status, setStatus] = useState({value: 'ALL', label: 'SEMUA'})
   const [tgl_awal, setTglAwal] = useState(new Date())
   const [tgl_akhir, setTglAkhir] = useState(new Date())
@@ -143,6 +145,7 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                 placeholder='Pilih Toko'
                 onChange={(e: any) => {
                   setKodeToko(e)
+                  dispatch(getInvoiceByToko(e.value))
                 }}
                 defaultValue={{value: kodeToko.value, label: kodeToko.label}}
               />
@@ -151,15 +154,15 @@ const FormReportCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
 
           <div className='col-lg-4 mb-2 mt-2'>
             <Field
-              name='product'
+              name='no_invoice'
               component={ReanderSelect2}
-              options={dataProductSelect}
-              label='Product'
-              placeholder='Pilih Product'
+              options={dataInvoiceSelect}
+              label='No Invoice'
+              placeholder='Pilih No Invoice'
               onChange={(e: any) => {
-                setProduct(e)
+                setInvoice(e)
               }}
-              defaultValue={{value: Product.value, label: Product.label}}
+              defaultValue={{value: Invoice.value, label: Invoice.label}}
             />
           </div>
           <div className='col-lg-4 mb-2 mt-2'>
