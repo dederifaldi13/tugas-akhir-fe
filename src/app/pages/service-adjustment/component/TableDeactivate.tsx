@@ -52,6 +52,8 @@ interface ExpandedDataType {
   tipe_program: string
   status: string
   harga: number
+  diskon_produk: number
+  total_harga: number
 }
 
 const TableDeactivate: React.FC = () => {
@@ -214,13 +216,31 @@ const TableDeactivate: React.FC = () => {
           }
         },
       },
-      {title: 'Qty', dataIndex: 'qty', key: 'qty'},
       {
         title: 'Harga',
         dataIndex: 'harga',
         key: 'harga',
+        align: 'right',
         render: (_, {harga}) => {
           return 'Rp. ' + harga?.toLocaleString()
+        },
+      },
+      {
+        title: 'Diskon Produk',
+        dataIndex: 'diskon_produk',
+        key: 'diskon_produk',
+        align: 'right',
+        render: (_, {diskon_produk}) => {
+          return (diskon_produk || 0) * 100 + ' %'
+        },
+      },
+      {
+        title: 'Total Harga',
+        dataIndex: 'total_harga',
+        key: 'total_harga',
+        align: 'right',
+        render: (_, {total_harga}) => {
+          return 'Rp. ' + total_harga?.toLocaleString()
         },
       },
     ]
@@ -236,11 +256,52 @@ const TableDeactivate: React.FC = () => {
             status: dataTable[i].customer[index].status,
             qty: dataTable[i].customer[index].qty,
             harga: dataTable[i].customer[index].harga,
+            diskon_produk: dataTable[i].customer[index].diskon_produk,
+            total_harga: dataTable[i].customer[index].total_harga,
           })
         }
       }
     }
-    return <Table columns={columns} dataSource={data} pagination={false} />
+    return (
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={false}
+        summary={(pageData) => {
+          return (
+            <>
+              <Table.Summary fixed>
+                <Table.Summary.Row>
+                  <Table.Summary.Cell index={0} align='right'></Table.Summary.Cell>
+                  <Table.Summary.Cell index={1} colSpan={2} align='right'>
+                    Sub Total
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={2} align='right'>
+                    {'Rp. ' +
+                      data
+                        .reduce((a: any, b: {harga: any}) => a + (b.harga || 0), 0)
+                        .toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={3} align='right'>
+                    {data.reduce(
+                      (a: any, b: {diskon_produk: any}) => a + (b.diskon_produk * 100 || 0),
+                      0
+                    )}{' '}
+                    %
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={4} align='right'>
+                    {'Rp. ' +
+                      data
+                        .reduce((a: any, b: {total_harga: any}) => a + (b.total_harga || 0), 0)
+                        .toLocaleString()}
+                  </Table.Summary.Cell>
+                </Table.Summary.Row>
+              </Table.Summary>
+            </>
+          )
+        }}
+      />
+    )
   }
 
   const defaultOptions = {
@@ -519,7 +580,7 @@ const TableDeactivate: React.FC = () => {
               return <>{imagenotfound}Data Not Found</>
             },
           }}
-          scroll={{x: 1400}}
+          scroll={{x: 1300}}
           summary={(pageData) => {
             return (
               <>

@@ -26,6 +26,7 @@ import KwitansiPDF from '../../pdf/KwitansiPDF'
 import {
   // CabangType,
   COUNT_TOTAL_HARGA,
+  COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT,
   COUNT_TOTAL_QTY,
   FormPostType,
   GET_TOKO_BY_KODE,
@@ -260,9 +261,28 @@ export const CountTotalHargaQty = (value: number) => {
 export const CountTotalHarga = (value: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const qty = getState().form.FormAddNewTransaction.values?.bulan || 0
+    const discount = getState().form.FormAddProduct.values?.diskon_produk || 0
     const harga = parseInt(NumberOnly(value) || 0)
-    const totalharga = qty * harga
-    dispatch({type: COUNT_TOTAL_HARGA, payload: {totalHarga: totalharga, harga: harga}})
+    const hargadiscount = harga - (discount / 100) * harga
+    const totalharga = qty * hargadiscount
+    dispatch({
+      type: COUNT_TOTAL_HARGA,
+      payload: {totalHarga: totalharga, harga: harga, diskon_produk: discount},
+    })
+  }
+}
+
+export const CountTotalHargaDiscountProduct = (value: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const bulan = getState().form.FormAddNewTransaction.values?.bulan || 0
+    const harga = getState().form.FormAddProduct.values?.harga || 0
+    const discount = parseFloat(NumberOnly(value) || 0)
+    const hargadiscount = harga - (discount / 100) * harga
+    const total_harga = hargadiscount * bulan
+    dispatch({
+      type: COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT,
+      payload: {totalHarga: total_harga, harga: harga, diskon_produk: discount},
+    })
   }
 }
 
@@ -489,6 +509,7 @@ export const AddProductToLocal = () => {
               product: data.product.value,
               harga: data.harga,
               total_harga_product: data.total_harga_product,
+              diskon_produk: parseFloat(data.diskon_produk) / 100,
               qty: data.qty,
               tipe_program: data.tipe_program,
             })
@@ -509,6 +530,7 @@ export const AddProductToLocal = () => {
               product: data.product.value,
               harga: data.harga,
               total_harga_product: data.total_harga_product,
+              diskon_produk: parseFloat(data.diskon_produk) / 100,
               qty: data.qty,
               tipe_program: data.tipe_program,
             })

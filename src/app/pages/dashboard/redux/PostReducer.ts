@@ -3,6 +3,7 @@ import {GetStoreType} from '../../master/store/redux/action/StoreActionTypes'
 import {
   CabangType,
   COUNT_TOTAL_HARGA,
+  COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT,
   COUNT_TOTAL_QTY,
   DataType,
   GET_TOKO_BY_KODE,
@@ -39,6 +40,7 @@ export interface DefaultStateI {
   cabangTokoByID?: CabangType
   modal: Boolean
   dataProduct?: Array<any>
+  diskon_produk?: Number
 }
 
 const defaultState: DefaultStateI = {
@@ -57,6 +59,7 @@ const defaultState: DefaultStateI = {
   cabangTokoByID: undefined,
   modal: false,
   dataProduct: [],
+  diskon_produk: 0,
 }
 
 const postReducer = (
@@ -82,7 +85,19 @@ const postReducer = (
     case COUNT_TOTAL_QTY:
       return {...state, totalHarga: action.payload?.totalHarga, qty: action.payload?.qty}
     case COUNT_TOTAL_HARGA:
-      return {...state, totalHarga: action.payload?.totalHarga, harga: action.payload?.harga}
+      return {
+        ...state,
+        totalHarga: action.payload?.totalHarga,
+        harga: action.payload?.harga,
+        diskon_produk: action.payload?.diskon_produk,
+      }
+    case COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT:
+      return {
+        ...state,
+        totalHarga: action.payload?.totalHarga,
+        harga: action.payload?.harga,
+        diskon_produk: action.payload?.diskon_produk,
+      }
     case SET_PRODUCT:
       return {
         ...state,

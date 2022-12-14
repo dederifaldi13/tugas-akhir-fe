@@ -6,7 +6,12 @@ import {currencyMask} from '../../../setup/helper/function'
 import FormAddProductValidate from '../../../setup/validate/FormAddNewProduct'
 import {ReanderField, ReanderSelect2} from '../../modules/redux-form/BasicInput'
 import {GetProductType} from '../master/product/redux/action/ProductActionTypes'
-import {AddProductToLocal, CountTotalHarga, SetProduct} from './redux/actions/PostActions'
+import {
+  AddProductToLocal,
+  CountTotalHarga,
+  CountTotalHargaDiscountProduct,
+  SetProduct,
+} from './redux/actions/PostActions'
 
 interface Props {}
 
@@ -21,6 +26,7 @@ const mapState = (state: RootState) => {
       qty: 1,
       harga: state.dashboard.harga,
       total_harga_product: state.dashboard.totalHarga,
+      diskon_produk: state.dashboard.diskon_produk,
     },
   }
 }
@@ -92,6 +98,19 @@ const FormAddProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
               {...currencyMask}
               onChange={(e: any) => {
                 dispatch(CountTotalHarga(e.target.value))
+              }}
+            />
+          </div>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
+            <Field
+              name='diskon_produk'
+              type='number'
+              component={ReanderField}
+              nouperCase={true}
+              label='Discount Product'
+              placeholder='Masukan Discount Product'
+              onChange={(e: any) => {
+                dispatch(CountTotalHargaDiscountProduct(e.target.value))
               }}
             />
           </div>

@@ -35,6 +35,8 @@ interface DataType {
 interface ExpandedDataType {
   key: React.Key
   qty: number
+  diskon_produk: number
+  total_harga: number
   telepon: string
   email: string
   tipe_program: string
@@ -220,13 +222,31 @@ const TableDashboard: React.FC = () => {
           }
         },
       },
-      {title: 'Qty', dataIndex: 'qty', key: 'qty'},
       {
         title: 'Harga',
         dataIndex: 'harga',
         key: 'harga',
+        align: 'right',
         render: (_, {harga}) => {
           return 'Rp. ' + harga?.toLocaleString()
+        },
+      },
+      {
+        title: 'Diskon Produk',
+        dataIndex: 'diskon_produk',
+        key: 'diskon_produk',
+        align: 'right',
+        render: (_, {diskon_produk}) => {
+          return (diskon_produk || 0) * 100 + ' %'
+        },
+      },
+      {
+        title: 'Total Harga',
+        dataIndex: 'total_harga',
+        key: 'total_harga',
+        align: 'right',
+        render: (_, {total_harga}) => {
+          return 'Rp. ' + total_harga?.toLocaleString()
         },
       },
     ]
@@ -240,12 +260,53 @@ const TableDashboard: React.FC = () => {
             product: dataTable[i].customer[index].product,
             tipe_program: dataTable[i].customer[index].tipe_program,
             qty: dataTable[i].customer[index].qty,
+            diskon_produk: dataTable[i].customer[index].diskon_produk,
             harga: dataTable[i].customer[index].harga,
+            total_harga: dataTable[i].customer[index].total_harga,
           })
         }
       }
     }
-    return <Table columns={columns} dataSource={data} pagination={false} />
+    return (
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={false}
+        summary={(pageData) => {
+          return (
+            <>
+              <Table.Summary fixed>
+                <Table.Summary.Row>
+                  <Table.Summary.Cell index={0} align='right'></Table.Summary.Cell>
+                  <Table.Summary.Cell index={1} align='right'>
+                    Sub Total
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={2} align='right'>
+                    {'Rp. ' +
+                      data
+                        .reduce((a: any, b: {harga: any}) => a + (b.harga || 0), 0)
+                        .toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={3} align='right'>
+                    {data.reduce(
+                      (a: any, b: {diskon_produk: any}) => a + (b.diskon_produk * 100 || 0),
+                      0
+                    )}{' '}
+                    %
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={4} align='right'>
+                    {'Rp. ' +
+                      data
+                        .reduce((a: any, b: {total_harga: any}) => a + (b.total_harga || 0), 0)
+                        .toLocaleString()}
+                  </Table.Summary.Cell>
+                </Table.Summary.Row>
+              </Table.Summary>
+            </>
+          )
+        }}
+      />
+    )
   }
 
   const defaultOptions = {
@@ -275,7 +336,7 @@ const TableDashboard: React.FC = () => {
           columns={columns}
           dataSource={dataTable}
           expandable={{expandedRowRender: (record) => expandedRowRenderTable(record._id)}}
-          scroll={{x: 1400}}
+          scroll={{x: 1300}}
           locale={{
             emptyText() {
               return <>{imagenotfound}Data Not Found</>
@@ -288,7 +349,7 @@ const TableDashboard: React.FC = () => {
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
                     <Table.Summary.Cell index={1} colSpan={7} align='right'>
-                      Total
+                      Grand Total
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={2} align='right'>
                       {'Rp. ' +

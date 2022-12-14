@@ -65,6 +65,14 @@ const TableDetailProduct: React.FC = () => {
       },
     },
     {
+      title: 'Diskon Produk',
+      dataIndex: 'diskon_produk',
+      key: 'diskon_produk',
+      render: (_, {diskon_produk}) => {
+        return (diskon_produk || 0) * 100 + ' %'
+      },
+    },
+    {
       title: 'Total Harga',
       dataIndex: 'total_harga_product',
       key: 'total_harga_product',

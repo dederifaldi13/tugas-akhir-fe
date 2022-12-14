@@ -1,5 +1,6 @@
 import {Action} from 'redux'
 import {
+  COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT_EDIT,
   COUNT_TOTAL_HARGA_EDIT,
   COUNT_TOTAL_QTY_EDIT,
   GetActiveCustomerType,
@@ -27,6 +28,7 @@ export interface DefaultStateI {
   totalHarga?: Number
   qty?: Number
   harga?: Number
+  diskon_produk?: Number
   product?: String
   tipe_program?: String
   dataProduct?: Array<any>
@@ -42,6 +44,7 @@ const defaultState: DefaultStateI = {
   totalHarga: 0,
   qty: 6,
   harga: 0,
+  diskon_produk: 0,
   product: '',
   tipe_program: 'ONLINE',
   dataProduct: [],
@@ -66,7 +69,19 @@ const serviceAdjustmentReducer = (
     case COUNT_TOTAL_QTY_EDIT:
       return {...state, totalHarga: action.payload?.totalHarga, qty: action.payload?.qty}
     case COUNT_TOTAL_HARGA_EDIT:
-      return {...state, totalHarga: action.payload?.totalHarga, harga: action.payload?.harga}
+      return {
+        ...state,
+        totalHarga: action.payload?.totalHarga,
+        harga: action.payload?.harga,
+        diskon_produk: action.payload?.diskon_produk,
+      }
+    case COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT_EDIT:
+      return {
+        ...state,
+        totalHarga: action.payload?.totalHarga,
+        harga: action.payload?.harga,
+        diskon_produk: action.payload?.diskon_produk,
+      }
     case SET_PRODUCT_EDIT:
       return {
         ...state,

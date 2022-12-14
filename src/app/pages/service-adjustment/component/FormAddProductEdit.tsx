@@ -9,6 +9,7 @@ import {GetProductType} from '../../master/product/redux/action/ProductActionTyp
 import {
   //   AddProductToLocal,
   CountTotalHarga,
+  CountTotalHargaDiscountProduct,
   PostDataProductCustomer,
   PutDataProductCustomer,
   SetProduct,
@@ -17,18 +18,21 @@ import {
 interface Props {}
 
 const mapState = (state: RootState) => {
-  return {
-    initialValues: {
-      product: {
-        value: state.serviceAdjustment.product,
-        label: state.serviceAdjustment.product,
+  if (state.serviceAdjustment.productID !== undefined) {
+    return {
+      initialValues: {
+        product: {
+          value: state.serviceAdjustment.product,
+          label: state.serviceAdjustment.product,
+        },
+        tipe_program: state.serviceAdjustment.tipe_program,
+        id: state.serviceAdjustment.productID._id,
+        qty: 1,
+        harga: state.serviceAdjustment.harga,
+        diskon_produk: state.serviceAdjustment.diskon_produk,
+        total_harga_product: state.serviceAdjustment.totalHarga,
       },
-      tipe_program: state.serviceAdjustment.tipe_program,
-      id: state.serviceAdjustment.productID._id,
-      qty: 1,
-      harga: state.serviceAdjustment.harga,
-      total_harga_product: state.serviceAdjustment.totalHarga,
-    },
+    }
   }
 }
 
@@ -119,6 +123,19 @@ const FormAddProductEdit: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
               {...currencyMask}
               onChange={(e: any) => {
                 dispatch(CountTotalHarga(e.target.value))
+              }}
+            />
+          </div>
+          <div className={`col-lg-6 mb-2 mt-2 ${tipe_program === 'OFFLINE' && 'd-none'}`}>
+            <Field
+              name='diskon_produk'
+              type='number'
+              component={ReanderField}
+              nouperCase={true}
+              label='Discount Product'
+              placeholder='Masukan Discount Product'
+              onChange={(e: any) => {
+                dispatch(CountTotalHargaDiscountProduct(e.target.value))
               }}
             />
           </div>

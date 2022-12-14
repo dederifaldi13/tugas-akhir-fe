@@ -114,6 +114,16 @@ const ReportCustomerPDF = (data, head) => {
         },
       },
       {
+        content: 'Diskon Produk',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+        },
+      },
+      {
         content: 'Total Harga',
         styles: {
           fontSize: 7,
@@ -125,7 +135,7 @@ const ReportCustomerPDF = (data, head) => {
       },
       {
         content: '',
-        colSpan: 6,
+        colSpan: 5,
         styles: {
           fontSize: 7,
           fillColor: '#E8E5E5',
@@ -141,11 +151,12 @@ const ReportCustomerPDF = (data, head) => {
         {content: ''},
         {content: detail.product},
         {content: detail.tipe_program},
-        {content: 'Rp. ' + detail.harga?.toLocaleString()},
-        {content: 'Rp. ' + detail.total_harga?.toLocaleString()},
+        {content: 'Rp. ' + detail.harga?.toLocaleString(), styles: {halign: 'right'}},
+        {content: (detail.diskon_produk || 0) * 100 + ' %', styles: {halign: 'right'}},
+        {content: 'Rp. ' + detail.total_harga?.toLocaleString(), styles: {halign: 'right'}},
         {
           content: '',
-          colSpan: 6,
+          colSpan: 5,
         },
       ]
       tableRows.push(rowDetail)
@@ -178,7 +189,7 @@ const ReportCustomerPDF = (data, head) => {
           fillColor: '#E8E5E5',
           textColor: '#000',
           valign: 'middle',
-          halign: 'center',
+          halign: 'right',
         },
       },
       {
@@ -190,7 +201,18 @@ const ReportCustomerPDF = (data, head) => {
           fillColor: '#E8E5E5',
           textColor: '#000',
           valign: 'middle',
-          halign: 'center',
+          halign: 'right',
+        },
+      },
+      {
+        content:
+          element.customer.reduce((a, b) => a + parseFloat(b.diskon_produk || 0) * 100, 0) + ' %',
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'right',
         },
       },
       {
@@ -202,12 +224,12 @@ const ReportCustomerPDF = (data, head) => {
           fillColor: '#E8E5E5',
           textColor: '#000',
           valign: 'middle',
-          halign: 'center',
+          halign: 'right',
         },
       },
       {
         content: '',
-        colSpan: 6,
+        colSpan: 5,
         styles: {
           fontSize: 7,
           fillColor: '#E8E5E5',

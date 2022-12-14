@@ -176,8 +176,8 @@ class ExcelReport extends Component {
                     <td style={headStyleDetail}>Product</td>
                     <td style={headStyleDetail}>Tipe Program</td>
                     <td style={headStyleDetail}>Harga</td>
+                    <td style={headStyleDetail}>Diskon Produk</td>
                     <td style={headStyleDetail}>TotalHarga</td>
-                    <td style={headStyleDetail}></td>
                     <td style={headStyleDetail}></td>
                     <td style={headStyleDetail}></td>
                     <td style={headStyleDetail}></td>
@@ -191,10 +191,10 @@ class ExcelReport extends Component {
                         <td style={bodyStyleDetail}>{detail.product}</td>
                         <td style={bodyStyleDetail}>{detail.tipe_program}</td>
                         <td style={bodyStyleDetailNumber}>Rp. {detail.harga?.toLocaleString()}</td>
+                        <td style={bodyStyleDetailNumber}>{(detail.diskon_produk || 0) * 100} %</td>
                         <td style={bodyStyleDetailNumber}>
                           Rp. {detail.total_harga?.toLocaleString()}
                         </td>
-                        <td style={bodyStyleDetail}></td>
                         <td style={bodyStyleDetail}></td>
                         <td style={bodyStyleDetail}></td>
                         <td style={bodyStyleDetail}></td>
@@ -214,12 +214,17 @@ class ExcelReport extends Component {
                         .toLocaleString()}
                     </td>
                     <td style={footerStyleDetail}>
+                      {row.customer.reduce(
+                        (a, b) => a + parseFloat(b.diskon_produk || 0) * 100,
+                        0
+                      ) + ' %'}
+                    </td>
+                    <td style={footerStyleDetail}>
                       Rp.{' '}
                       {row.customer
                         .reduce((a, b) => a + parseInt(b.total_harga || 0), 0)
                         .toLocaleString()}
                     </td>
-                    <td style={footerStyleDetail}></td>
                     <td style={footerStyleDetail}></td>
                     <td style={footerStyleDetail}></td>
                     <td style={footerStyleDetail}></td>

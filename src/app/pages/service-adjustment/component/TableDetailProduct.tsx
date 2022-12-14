@@ -113,10 +113,18 @@ const TableDetailProduct: React.FC = () => {
       },
     },
     {
+      title: 'Diskon Produk',
+      dataIndex: 'diskon_produk',
+      key: 'diskon_produk',
+      render: (_, {diskon_produk}) => {
+        return (diskon_produk || 0) * 100 + ' %'
+      },
+    },
+    {
       title: 'Total Harga',
       key: 'total_harga',
       render: (_, record) => {
-        return 'Rp. ' + (record.harga * record.bulan)?.toLocaleString()
+        return 'Rp. ' + record.total_harga?.toLocaleString()
       },
     },
     {

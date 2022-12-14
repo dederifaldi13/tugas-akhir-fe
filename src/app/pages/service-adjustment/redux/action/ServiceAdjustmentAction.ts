@@ -13,6 +13,7 @@ import {
 import {IAppState} from '../../../../../setup/redux/Store'
 import InvoicePDF from '../../../dashboard/pdf/InvoicePDF'
 import {
+  COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT_EDIT,
   COUNT_TOTAL_HARGA_EDIT,
   COUNT_TOTAL_QTY_EDIT,
   EditFormCustomer,
@@ -276,9 +277,28 @@ export const CountTotalHargaQty = (value: number) => {
 export const CountTotalHarga = (value: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const qty = getState().form.FormEditTransaction.values?.bulan || 0
+    const discount = getState().form.FormAddProductEdit.values?.diskon_produk || 0
     const harga = parseInt(NumberOnly(value) || 0)
-    const totalharga = qty * harga
-    dispatch({type: COUNT_TOTAL_HARGA_EDIT, payload: {totalHarga: totalharga, harga: harga}})
+    const hargadiscount = harga - (discount / 100) * harga
+    const totalharga = qty * hargadiscount
+    dispatch({
+      type: COUNT_TOTAL_HARGA_EDIT,
+      payload: {totalHarga: totalharga, harga: harga, diskon_produk: discount},
+    })
+  }
+}
+
+export const CountTotalHargaDiscountProduct = (value: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const bulan = getState().form.FormEditTransaction.values?.bulan || 0
+    const harga = getState().form.FormAddProductEdit.values?.harga || 0
+    const discount = parseFloat(NumberOnly(value) || 0)
+    const hargadiscount = harga - (discount / 100) * harga
+    const total_harga = hargadiscount * bulan
+    dispatch({
+      type: COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT_EDIT,
+      payload: {totalHarga: total_harga, harga: harga, diskon_produk: discount},
+    })
   }
 }
 
@@ -394,7 +414,11 @@ export const getDataProductCustomer = (id: string) => {
         })
         dispatch({
           type: COUNT_TOTAL_HARGA_EDIT,
-          payload: {totalHarga: decryptData.total_harga, harga: decryptData.harga},
+          payload: {
+            totalHarga: decryptData.total_harga,
+            harga: decryptData.harga,
+            diskon_produk: decryptData.diskon_produk * 100 || 0,
+          },
         })
         dispatch(ShowModal())
       })
@@ -456,6 +480,7 @@ export const PutDataProductCustomer = () => {
       qty: data?.qty,
       harga: data?.harga,
       bulan: dataHead?.bulan,
+      diskon_produk: parseFloat(data?.diskon_produk) / 100,
       total_harga: data?.total_harga_product,
       tgl_jatuh_tempo: dataHead?.tgl_jatuh_tempo,
       kode_cabang: dataHead?.kode_cabang,
