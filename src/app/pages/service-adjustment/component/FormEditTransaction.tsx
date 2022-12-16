@@ -2,9 +2,10 @@ import React from 'react'
 import {connect, useDispatch, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../setup'
+import {currencyMask} from '../../../../setup/helper/function'
 import FormEditTransactionValidate from '../../../../setup/validate/FormAddNewTransactionValidate'
 import {ReanderField, ReanderFieldInputGroup} from '../../../modules/redux-form/BasicInput'
-import {CountTotalHargaQty} from '../redux/action/ServiceAdjustmentAction'
+import {CountTotalHargaFinal, CountTotalHargaQty} from '../redux/action/ServiceAdjustmentAction'
 import TableDetailProduct from './TableDetailProduct'
 
 interface Props {}
@@ -26,6 +27,9 @@ const mapState = (state: RootState) => {
         tgl_jatuh_tempo: state.serviceAdjustment.feedbackID.tgl_jatuh_tempo,
         status: state.serviceAdjustment.feedbackID.status,
         total_diskon: state.serviceAdjustment.feedbackID.total_diskon * 100,
+        grand_total: state.serviceAdjustment.feedbackID.grand_total,
+        total: state.serviceAdjustment.total_harga_jual,
+        diskon_tambahan: state.serviceAdjustment.diskon_tambahan,
       },
     }
   }
@@ -203,6 +207,56 @@ const FormEditTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any)
           </div>
           <div className='col-lg-12'>
             <TableDetailProduct />
+          </div>
+          <div className='col-lg-12'>
+            <div className='row justify-content-end mt-2 mb-2'>
+              <div className='col-lg-6 d-grid'>
+                <Field
+                  readOnly
+                  customeCss='form-control-solid'
+                  name='grand_total'
+                  type='text'
+                  component={ReanderField}
+                  nouperCase={true}
+                  label='Grand Total'
+                  placeholder='Masukan Grand Total'
+                  {...currencyMask}
+                />
+              </div>
+            </div>
+          </div>
+          <div className='col-lg-12'>
+            <div className='row justify-content-end mt-2 mb-2'>
+              <div className='col-lg-6 d-grid'>
+                <Field
+                  name='diskon_tambahan'
+                  type='text'
+                  component={ReanderField}
+                  nouperCase={true}
+                  label='Diskon Tambahan'
+                  placeholder='Masukan Diskon Tambahan'
+                  {...currencyMask}
+                  onChange={(e: any) => dispatch(CountTotalHargaFinal(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          <div className='col-lg-12'>
+            <div className='row justify-content-end mt-2 mb-2'>
+              <div className='col-lg-6 d-grid'>
+                <Field
+                  readOnly
+                  customeCss='form-control-solid'
+                  name='total'
+                  type='text'
+                  component={ReanderField}
+                  nouperCase={true}
+                  label='Total Harga'
+                  placeholder='Masukan Total Harga'
+                  {...currencyMask}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className='row justify-content-end mt-2 mr-2'>

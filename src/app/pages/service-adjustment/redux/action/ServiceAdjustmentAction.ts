@@ -14,6 +14,7 @@ import {IAppState} from '../../../../../setup/redux/Store'
 import InvoicePDF from '../../../dashboard/pdf/InvoicePDF'
 import {
   COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT_EDIT,
+  COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN_EDIT,
   COUNT_TOTAL_HARGA_EDIT,
   COUNT_TOTAL_QTY_EDIT,
   EditFormCustomer,
@@ -54,6 +55,7 @@ export const GetActiveCustomerAction = () => {
           'kode_cabang',
           'tipe_program',
           'no_invoice',
+          'diskon_tambahan',
         ])
         for (let index = 0; index < decryptData.length; index++) {
           const obj: TableActivateCustomerType = {
@@ -73,6 +75,7 @@ export const GetActiveCustomerAction = () => {
             grand_total: decryptData[index].grand_total,
             input_date: decryptData[index].input_date,
             total_diskon: decryptData[index].total_diskon,
+            diskon_tambahan: decryptData[index].diskon_tambahan,
           }
           newarrdata.push(obj)
         }
@@ -232,6 +235,13 @@ export const getDataByIDTrx = (data: any) => {
           payload: {totalHarga: 0, harga: dataDec.harga},
         })
         dispatch({type: SHOW_MODAL_EDIT, payload: {isShow: true}})
+        dispatch({
+          type: COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN_EDIT,
+          payload: {
+            diskon_tambahan: dataDec.diskon_tambahan,
+            total_harga_jual: dataDec.grand_total,
+          },
+        })
       } else {
         PopUpAlert.default.AlertError('Data Tidak Ditemukan !')
       }
@@ -263,6 +273,18 @@ export const DeleteProductEdit = (id: String) => {
 export const SetIDForDelete = (id: String) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch({type: SET_ID_FOR_DELETE, payload: {ID: id}})
+  }
+}
+
+export const CountTotalHargaFinal = (value: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const grand_total = getState().form.FormEditTransaction.values?.grand_total || 0
+    const diskon = parseInt(NumberOnly(value))
+    const total = (grand_total || 0) - (diskon || 0)
+    dispatch({
+      type: COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN_EDIT,
+      payload: {diskon_tambahan: diskon, total_harga_jual: total},
+    })
   }
 }
 
@@ -325,6 +347,7 @@ export const editTransaction = (data: any) => {
       tanggal_jatuh_tempo: data.tgl_jatuh_tempo,
       bulan: data.bulan,
       total_diskon: parseFloat(data.total_diskon) / 100,
+      diskon_tambahan: parseInt(data.diskon_tambahan),
     }
     AxiosPut(`invoice/${data.id}`, dataKirim)
       .then(() => {

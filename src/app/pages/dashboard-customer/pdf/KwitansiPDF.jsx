@@ -36,11 +36,11 @@ const KwitansiPDF = (data, no) => {
 
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
-  doc.text('#' + data.grand_total.toLocaleString() + '#', 83, 104)
+  doc.text('#' + (data.grand_total - (data.diskon_tambahan || 0)).toLocaleString() + '#', 83, 104)
   doc.text('Layanan berlangganan Nagatech Sistem Integrator, ', 80, 114)
-  const desk = `Total nilai Rp. ${data.grand_total.toLocaleString()} (${angkaTerbilang(
-    data.grand_total
-  )})`
+  const desk = `Total nilai Rp. ${(
+    data.grand_total - (data.diskon_tambahan || 0)
+  ).toLocaleString()} (${angkaTerbilang(data.grand_total - (data.diskon_tambahan || 0))})`
   const jml_desk = desk.length
   if (jml_desk > 20) {
     doc.text(desk.slice(0, 53), 80, 119)
@@ -52,7 +52,7 @@ const KwitansiPDF = (data, no) => {
     doc.text(desk, 80, 119)
   }
   //   doc.text(desk, 80, 110)
-  doc.text('#' + angkaTerbilang(data.grand_total) + '#', 83, 135)
+  doc.text('#' + angkaTerbilang(data.grand_total - (data.diskon_tambahan || 0)) + '#', 83, 135)
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Regular.ttf'), 'Lora', 'normal')
   doc.setFont('Lora', 'normal')
   doc.text('Bandung, ' + today, 126, 167)

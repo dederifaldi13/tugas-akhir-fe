@@ -56,8 +56,12 @@ export type GetTransactionType = {
   harga: Number
   bulan: String
   total_harga: Number
+  grand_total: any
+  diskon_tambahan: any
+  no_invoice: String
   tgl_jatuh_tempo: String
   status: String
+  customer: Array<any>
   __v: Number
 }
 

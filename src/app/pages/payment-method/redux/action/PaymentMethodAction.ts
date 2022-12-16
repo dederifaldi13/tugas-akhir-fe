@@ -64,30 +64,36 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
     const baseUrl = process.env.REACT_APP_API_URL
+    const total = data.grand_total - (data.diskon_tambahan || 0)
     const url =
       baseUrl +
       'payment/ipay/' +
+      data.no_invoice.replaceAll(' ', '%20') +
+      '/' +
       data.kode_toko.replaceAll(' ', '%20') +
       '/' +
       data.toko.replaceAll(' ', '%20') +
       '/' +
-      data.product.replaceAll(' ', '%20') +
-      '/' +
       params.kode_cabang.replaceAll(' ', '%20') +
       '/' +
-      data.qty +
+      data.customer.length +
       '/' +
-      data.harga +
+      data.total_harga +
       '/' +
       data.bulan +
       '/' +
-      data.total_harga +
+      total +
       '/iPaymu'
 
+    const dataProduct: Array<String> = []
+    data.customer.forEach((element: any) => {
+      dataProduct.push(element.product)
+    })
+
     const dataKirim: IPaymuType = {
-      product: [data.product],
-      qty: [data.bulan.toString()],
-      price: [data.harga.toString()],
+      product: dataProduct,
+      qty: ['1'],
+      price: [total.toString()],
       description: [`Pembayaran`],
       returnUrl: 'https://nagatech-vps.netlify.app/success-payment',
       notifyUrl: url,
@@ -101,12 +107,34 @@ export const handleIPayMu = (data: GetTransactionType, params: any) => {
 
     AxiosPostiPayMu('payment', dataKirim).then((res: any) => {
       AxiosGet(
-        `customer/filter?kode_toko=${params.kode_toko}&product=${params.product.replaceAll(
-          /\+/g,
-          '_'
-        )}&kode_cabang=${params.kode_cabang}&tipe_program=${params.tipe_program}`
+        'invoice/filter?kode_toko=' +
+          params.kode_toko +
+          '&no_invoice=' +
+          params.no_invoice +
+          '&kode_cabang=' +
+          params.kode_cabang
       ).then((response: any) => {
-        const dataInvoice = response.data[0]
+        const decryptData = doDecrypt(response.data[0], [
+          '_id',
+          'created_at',
+          'no_invoice',
+          'kode_toko',
+          'product',
+          'qty',
+          'harga',
+          'bulan',
+          'total_harga',
+          'tgl_jatuh_tempo',
+          'kode_cabang',
+          'tipe_program',
+          'status',
+          'input_date',
+          '__v',
+          'edit_by',
+          'edit_date',
+          'alamat',
+        ])
+        const dataInvoice = decryptData
         const pdfkwitansi64 = KwitansiPDF(dataInvoice, '-')
         const filekwitansi = dataURLtoPDFFile(
           pdfkwitansi64,

@@ -12,6 +12,7 @@ import {GetMasterStore} from '../master/store/redux/action/StoreAction'
 import FormAddNewTransaction from './FormAddNewTransaction'
 import {
   generatePDF,
+  GetDataProductLocal,
   GetPayment,
   GetPost,
   HideModalTrx,
@@ -29,7 +30,10 @@ const DashboardWrapper: FC = () => {
     dispatch(HideModalTrx())
     setShow(false)
   }
-  const handleShow = () => setShow(true)
+  const handleShow = () => {
+    dispatch(GetDataProductLocal())
+    setShow(true)
+  }
   const handleSubmit = (data: any) => {
     dispatch(PostCustomer(data))
   }
@@ -90,7 +94,7 @@ const DashboardWrapper: FC = () => {
                   </div>
                 </div>
                 {/* begin::Body */}
-                <div className='card-footer py-3 d-none'>
+                <div className='card-footer py-3'>
                   <Button onClick={() => dispatch(generatePDF())}>PDF</Button>
                 </div>
               </div>

@@ -108,6 +108,7 @@ const TableDetailProduct: React.FC = () => {
       title: 'Harga',
       dataIndex: 'harga',
       key: 'harga',
+      align: 'right',
       render: (_, {harga}) => {
         return 'Rp. ' + harga?.toLocaleString()
       },
@@ -116,6 +117,7 @@ const TableDetailProduct: React.FC = () => {
       title: 'Diskon Produk',
       dataIndex: 'diskon_produk',
       key: 'diskon_produk',
+      align: 'right',
       render: (_, {diskon_produk}) => {
         return (diskon_produk || 0) * 100 + ' %'
       },
@@ -123,6 +125,7 @@ const TableDetailProduct: React.FC = () => {
     {
       title: 'Total Harga',
       key: 'total_harga',
+      align: 'right',
       render: (_, record) => {
         return 'Rp. ' + record.total_harga?.toLocaleString()
       },
@@ -274,6 +277,38 @@ const TableDetailProduct: React.FC = () => {
             emptyText() {
               return <>{imagenotfound}Data Not Found</>
             },
+          }}
+          summary={(pageData) => {
+            return (
+              <>
+                <Table.Summary fixed>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} align='right'>
+                      Grand Total
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} align='right'>
+                      {'Rp. ' +
+                        dataTable
+                          .reduce((a: any, b: {harga: any}) => a + (b.harga || 0), 0)
+                          .toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={2} align='right'>
+                      {dataTable.reduce(
+                        (a: any, b: {diskon_produk: any}) => a + (b.diskon_produk * 100 || 0),
+                        0
+                      )}{' '}
+                      %
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} align='right'>
+                      {'Rp. ' +
+                        dataTable
+                          .reduce((a: any, b: {total_harga: any}) => a + (b.total_harga || 0), 0)
+                          .toLocaleString()}
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              </>
+            )
           }}
         />
       </div>

@@ -12,6 +12,7 @@ export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
 export const COUNT_TOTAL_HARGA = 'COUNT_TOTAL_HARGA'
 export const SET_ONE_DATA_PRODUCT_CUSTOMER = 'SET_ONE_DATA_PRODUCT_CUSTOMER'
+export const COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN_EDIT = 'COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN_EDIT'
 
 export type GetActiveCustomerType = {
   _id: String
@@ -28,11 +29,13 @@ export type GetActiveCustomerType = {
   harga: Number
   bulan: String
   total_harga: Number
+  grand_total: Number
   tgl_jatuh_tempo: String
   status: String
   total_diskon: number
   kode_cabang: String
   tipe_program: String
+  customer: Array<any>
 }
 
 export type TableActivateCustomerType = {
@@ -52,10 +55,12 @@ export type TableActivateCustomerType = {
   __v: number
   customer: Array<any>
   grand_total: number
+  diskon_tambahan: number
 }
 
 export type EditFormCustomer = {
   tanggal_jatuh_tempo: string
   bulan: string
   total_diskon: number
+  diskon_tambahan: number
 }

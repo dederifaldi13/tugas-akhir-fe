@@ -42,6 +42,8 @@ const ReportCustomerPDF = (data, head) => {
       {content: `Bulan`},
       {content: `Total Diskon`},
       {content: `Total Harga`},
+      {content: `Diskon Tambahan`},
+      {content: `Total`},
       {content: `Tgl Jatuh Tempo`},
       {content: `Status`},
     ],
@@ -63,6 +65,14 @@ const ReportCustomerPDF = (data, head) => {
       },
       {
         content: 'Rp. ' + element.grand_total?.toLocaleString(),
+        styles: {halign: 'right', fillColor: '#f0eded'},
+      },
+      {
+        content: 'Rp. ' + (element.diskon_tambahan || 0)?.toLocaleString(),
+        styles: {halign: 'right', fillColor: '#f0eded'},
+      },
+      {
+        content: 'Rp. ' + (element.grand_total - (element.diskon_tambahan || 0))?.toLocaleString(),
         styles: {halign: 'right', fillColor: '#f0eded'},
       },
       {
@@ -135,7 +145,7 @@ const ReportCustomerPDF = (data, head) => {
       },
       {
         content: '',
-        colSpan: 5,
+        colSpan: 7,
         styles: {
           fontSize: 7,
           fillColor: '#E8E5E5',
@@ -156,7 +166,7 @@ const ReportCustomerPDF = (data, head) => {
         {content: 'Rp. ' + detail.total_harga?.toLocaleString(), styles: {halign: 'right'}},
         {
           content: '',
-          colSpan: 5,
+          colSpan: 7,
         },
       ]
       tableRows.push(rowDetail)
@@ -229,7 +239,7 @@ const ReportCustomerPDF = (data, head) => {
       },
       {
         content: '',
-        colSpan: 5,
+        colSpan: 7,
         styles: {
           fontSize: 7,
           fillColor: '#E8E5E5',
@@ -251,6 +261,22 @@ const ReportCustomerPDF = (data, head) => {
     {
       content:
         'Rp. ' + data.reduce((a, b) => a + parseInt(b.grand_total || 0), 0)?.toLocaleString(),
+      styles: {halign: 'right', fillColor: '#E8E5E5', textColor: '#000'},
+    },
+    {
+      content:
+        'Rp. ' + data.reduce((a, b) => a + parseInt(b.diskon_tambahan || 0), 0)?.toLocaleString(),
+      styles: {halign: 'right', fillColor: '#E8E5E5', textColor: '#000'},
+    },
+    {
+      content:
+        'Rp. ' +
+        data
+          .reduce(
+            (a, b) => a + (parseInt(b.grand_total || 0) - parseInt(b.diskon_tambahan || 0)),
+            0
+          )
+          ?.toLocaleString(),
       styles: {halign: 'right', fillColor: '#E8E5E5', textColor: '#000'},
     },
     {

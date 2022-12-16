@@ -59,14 +59,16 @@ const InvoicePDF = (data) => {
       padding = padding + 5
     }
   }
-  doc.text('Total Harga'.toLocaleString(), 133, 172)
-  doc.text('Rp. ' + data.total_harga.toLocaleString(), 165, 172)
-  doc.text('Diskon Khusus'.toLocaleString(), 133, 178)
-  doc.text('Rp. ' + (data.total_diskon * data.total_harga).toLocaleString(), 165, 178)
+  doc.text('Total Harga'.toLocaleString(), 133, 166)
+  doc.text('Rp. ' + data.total_harga.toLocaleString(), 163, 166)
+  doc.text('Diskon Khusus'.toLocaleString(), 133, 172)
+  doc.text('Rp. ' + (data.total_diskon * data.total_harga).toLocaleString(), 163, 172)
+  doc.text('Diskon Tambahan'.toLocaleString(), 133, 178)
+  doc.text('Rp. ' + (data.diskon_tambahan || 0).toLocaleString(), 163, 178)
   doc.setTextColor(255, 255, 255)
-  doc.text('Rp. ' + data.grand_total.toLocaleString(), 165, 189)
+  doc.text('Rp. ' + (data.grand_total - (data.diskon_tambahan || 0)).toLocaleString(), 163, 189)
   doc.setTextColor(0, 0, 0)
-  doc.text('#' + angkaTerbilang(data.grand_total) + '#', 127, 204)
+  doc.text('#' + angkaTerbilang(data.grand_total - (data.diskon_tambahan || 0)) + '#', 127, 204)
   // doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-BoldItalic.ttf'), 'Lora', 'bold-italic')
   // doc.setFont('Lora', 'bold-italic')
   // doc.text(data.toko.toLocaleString(), 152, 211)

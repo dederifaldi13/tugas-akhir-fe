@@ -30,6 +30,7 @@ interface DataType {
   status: string
   kode_cabang: string
   tipe_program: string
+  diskon_tambahan: number
 }
 
 interface ExpandedDataType {
@@ -120,6 +121,24 @@ const TableDashboard: React.FC = () => {
       align: 'right',
       render: (_, {grand_total}) => {
         return 'Rp. ' + grand_total?.toLocaleString()
+      },
+    },
+    {
+      title: 'Diskon Tambahan',
+      dataIndex: 'diskon_tambahan',
+      key: 'diskon_tambahan',
+      align: 'right',
+      render: (_, {diskon_tambahan}) => {
+        return 'Rp. ' + (diskon_tambahan || 0)?.toLocaleString()
+      },
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      align: 'right',
+      render: (_, record) => {
+        const total = record.grand_total - (record.diskon_tambahan || 0)
+        return 'Rp. ' + total?.toLocaleString()
       },
     },
     {
@@ -355,6 +374,24 @@ const TableDashboard: React.FC = () => {
                       {'Rp. ' +
                         dataTable
                           .reduce((a: any, b: {grand_total: any}) => a + b.grand_total, 0)
+                          .toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={3} align='right'>
+                      {'Rp. ' +
+                        dataTable
+                          .reduce(
+                            (a: any, b: {diskon_tambahan: any}) => a + (b.diskon_tambahan || 0),
+                            0
+                          )
+                          .toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={3} align='right'>
+                      {'Rp. ' +
+                        dataTable
+                          .reduce(
+                            (a: any, b: any) => a + (b.grand_total - (b.diskon_tambahan || 0)),
+                            0
+                          )
                           .toLocaleString()}
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

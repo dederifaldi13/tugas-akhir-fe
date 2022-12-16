@@ -236,6 +236,25 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                     </td>
                   </tr>
                   <tr>
+                    <td valign='bottom'>
+                      <p style={{fontSize: '22px', marginTop: 30, marginBottom: -30}}>
+                        Diskon Tambahan :
+                      </p>
+                    </td>
+                    <td valign='bottom'>
+                      <p
+                        style={{
+                          textAlign: 'right',
+                          fontSize: '24px',
+                          marginTop: 30,
+                          marginBottom: -30,
+                        }}
+                      >
+                        Rp. {data !== undefined ? (data.diskon_tambahan || 0)?.toLocaleString() : 0}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
                     <td align='right'>x</td>
                     <td valign='bottom'>
                       <p
@@ -258,8 +277,7 @@ const FormAddTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
                         Rp.{' '}
                         {data !== undefined
                           ? (
-                              data.total_harga -
-                              data.total_diskon * data.total_harga
+                              (data.grand_total || 0) - (data.diskon_tambahan || 0)
                             )?.toLocaleString()
                           : 0}
                       </p>

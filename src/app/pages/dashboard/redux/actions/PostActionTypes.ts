@@ -7,12 +7,15 @@ export const GET_TOKO_BY_KODE = 'GET_TOKO_BY_KODE'
 export const COUNT_TOTAL_QTY = 'COUNT_TOTAL_QTY'
 export const COUNT_TOTAL_HARGA = 'COUNT_TOTAL_HARGA'
 export const COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT = 'COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT'
+export const COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN = 'COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN'
 export const SET_PRODUCT = 'SET_PRODUCT'
 export const SET_CABANG = 'SET_CABANG'
 export const SET_CABANG_BY_ID = 'SET_CABANG_BY_ID'
 export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
 export const SET_DATA_PRODUCT = 'SET_DATA_PRODUCT'
+export const SET_DISKON_KHUSUS = 'SET_DISKON_KHUSUS'
+export const SET_TANGGAL_JATUH_TEMPO = 'SET_TANGGAL_JATUH_TEMPO'
 
 export type PostType = {
   kode_toko?: String
@@ -24,6 +27,7 @@ export type PostType = {
   bulan?: String
   total_harga?: Number
   total_diskon?: Number
+  diskon_tambahan?: any
   product_detail?: Array<any>
 }
 
@@ -41,6 +45,7 @@ export type FormPostType = {
   bulan: String
   total_harga: Number
   total_diskon: Number
+  diskon_tambahan: any
   tgl_jatuh_tempo: String
 }
 
@@ -122,6 +127,7 @@ export type TableDataType = {
   bulan: String
   total_harga: number
   total_diskon: number
+  diskon_tambahan: number
   status: String
   input_date: String
   __v: number

@@ -42,4 +42,5 @@ export type TableCustomerReportType = {
   alamat_cabang: string
   alamat_korespondensi: string
   grand_total: number
+  diskon_tambahan: number
 }

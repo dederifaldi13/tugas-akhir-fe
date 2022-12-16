@@ -2,6 +2,7 @@ import React from 'react'
 import {connect, useDispatch, useSelector} from 'react-redux'
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../setup'
+import {currencyMask} from '../../../setup/helper/function'
 import FormAddNewTransactionValidate from '../../../setup/validate/FormAddNewTransactionValidate'
 import {
   ReanderField,
@@ -10,15 +11,28 @@ import {
 } from '../../modules/redux-form/BasicInput'
 import {GetStoreType} from '../master/store/redux/action/StoreActionTypes'
 import {
+  CountTotalHargaFinal,
   CountTotalHargaQty,
   GetMasterStoreByKodeToko,
   SetCabangByID,
+  SetDiskonKhusus,
+  SetTanggalJatuhTempo,
 } from './redux/actions/PostActions'
 import TableDetailProduct from './TableDetailProduct'
 
 interface Props {}
 
 const mapState = (state: RootState) => {
+  const dataProduct = state.dashboard.dataProduct
+  const total = dataProduct?.reduce(
+    (a: any, b: {total_harga_product: any}) => a + (b.total_harga_product || 0),
+    0
+  )
+  const diskon: any =
+    state.dashboard.diskon_khusus !== undefined ? state.dashboard.diskon_khusus : 0
+  const totaldiskon = total * (diskon / 100)
+  const grandtotal = total - totaldiskon
+
   if (state.dashboard.dataTokoByKode !== undefined) {
     if (state.dashboard.cabangTokoByID !== undefined) {
       return {
@@ -37,6 +51,12 @@ const mapState = (state: RootState) => {
           telepon: state.dashboard.cabangTokoByID.telepon,
           email: state.dashboard.cabangTokoByID.email,
           bulan: state.dashboard.qty,
+          grand_total: grandtotal,
+          total:
+            state.dashboard.total_harga_jual === 0 ? grandtotal : state.dashboard.total_harga_jual,
+          diskon_tambahan: state.dashboard.diskon_tambahan,
+          total_diskon: state.dashboard.diskon_khusus,
+          tgl_jatuh_tempo: state.dashboard.tgl_jatuh_tempo,
         },
       }
     } else {
@@ -62,6 +82,12 @@ const mapState = (state: RootState) => {
           telepon: '',
           email: '',
           bulan: state.dashboard.qty,
+          grand_total: grandtotal,
+          total:
+            state.dashboard.total_harga_jual === 0 ? grandtotal : state.dashboard.total_harga_jual,
+          diskon_tambahan: state.dashboard.diskon_tambahan,
+          total_diskon: state.dashboard.diskon_khusus,
+          tgl_jatuh_tempo: state.dashboard.tgl_jatuh_tempo,
         },
       }
     }
@@ -79,13 +105,19 @@ const mapState = (state: RootState) => {
         alamat: '',
         alamat_korespondensi: '',
         bulan: state.dashboard.qty,
+        grand_total: grandtotal,
+        total:
+          state.dashboard.total_harga_jual === 0 ? grandtotal : state.dashboard.total_harga_jual,
+        diskon_tambahan: state.dashboard.diskon_tambahan,
+        total_diskon: state.dashboard.diskon_khusus,
+        tgl_jatuh_tempo: state.dashboard.tgl_jatuh_tempo,
       },
     }
   }
 }
 
 const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
-  const {handleSubmit, pristine, submitting} = props
+  const {handleSubmit, submitting} = props
   const dispatch = useDispatch()
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
   const dataToko: any = useSelector<RootState>(({masterstore}) => masterstore.feedback) || []
@@ -222,16 +254,18 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
               nouperCase={true}
               label='Tanggal Jatuh Tempo'
               placeholder='Masukan Tanggal Jatuh Tempo'
+              onChange={(e: any) => dispatch(SetTanggalJatuhTempo(e.target.value))}
             />
           </div>
           <div className='col-lg-6 mb-2 mt-2'>
             <Field
               name='total_diskon'
-              type='total_diskon'
+              type='number'
               component={ReanderField}
               nouperCase={true}
               label='Discount Khusus'
               placeholder='Masukan Discount Khusus'
+              onChange={(e: any) => dispatch(SetDiskonKhusus(e.target.value))}
             />
           </div>
         </div>
@@ -241,11 +275,61 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
         <div className='col-lg-12'>
           <TableDetailProduct />
         </div>
+        <div className='col-lg-12'>
+          <div className='row justify-content-end mt-2 mb-2'>
+            <div className='col-lg-6 d-grid'>
+              <Field
+                readOnly
+                customeCss='form-control-solid'
+                name='grand_total'
+                type='text'
+                component={ReanderField}
+                nouperCase={true}
+                label='Grand Total'
+                placeholder='Masukan Grand Total'
+                {...currencyMask}
+              />
+            </div>
+          </div>
+        </div>
+        <div className='col-lg-12'>
+          <div className='row justify-content-end mt-2 mb-2'>
+            <div className='col-lg-6 d-grid'>
+              <Field
+                name='diskon_tambahan'
+                type='text'
+                component={ReanderField}
+                nouperCase={true}
+                label='Diskon Tambahan'
+                placeholder='Masukan Diskon Tambahan'
+                {...currencyMask}
+                onChange={(e: any) => dispatch(CountTotalHargaFinal(e.target.value))}
+              />
+            </div>
+          </div>
+        </div>
+        <div className='col-lg-12'>
+          <div className='row justify-content-end mt-2 mb-2'>
+            <div className='col-lg-6 d-grid'>
+              <Field
+                readOnly
+                customeCss='form-control-solid'
+                name='total'
+                type='text'
+                component={ReanderField}
+                nouperCase={true}
+                label='Total Harga'
+                placeholder='Masukan Total Harga'
+                {...currencyMask}
+              />
+            </div>
+          </div>
+        </div>
         <div className='row justify-content-end mt-2 mr-2'>
           <div className='col-lg-2 d-grid'>
             <button
               className='btn btn-primary'
-              disabled={tipe_program === 'ONLINE' ? submitting || isSending || pristine : false}
+              disabled={tipe_program === 'ONLINE' ? submitting || isSending : false}
             >
               {!isSending && <span className='indicator-label'>Simpan</span>}
               {isSending && (

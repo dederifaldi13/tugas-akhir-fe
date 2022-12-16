@@ -64,6 +64,8 @@ class ExcelReport extends Component {
               <td style={headStyle}>Bulan</td>
               <td style={headStyle}>Total Diskon</td>
               <td style={headStyle}>Total Harga</td>
+              <td style={headStyle}>Diskon Tambahan</td>
+              <td style={headStyle}>Total</td>
               <td style={headStyle}>Tgl Jatuh Tempo</td>
               <td style={headStyle}>Status</td>
             </tr>
@@ -168,6 +170,12 @@ class ExcelReport extends Component {
                     <td style={bodyStyle}>{row.bulan}</td>
                     <td style={bodyStyle}>{row.total_diskon * 100} %</td>
                     <td style={bodyStyleNumber}>Rp. {row.grand_total?.toLocaleString()}</td>
+                    <td style={bodyStyleNumber}>
+                      Rp. {(row.diskon_tambahan || 0)?.toLocaleString()}
+                    </td>
+                    <td style={bodyStyleNumber}>
+                      Rp. {(row.grand_total - (row.diskon_tambahan || 0))?.toLocaleString()}
+                    </td>
                     <td style={bodyStyle}>{moment(row.tgl_jatuh_tempo).format('DD-MM-YYYY')}</td>
                     <td style={bodyStyle}>{row.status}</td>
                   </tr>
@@ -178,6 +186,8 @@ class ExcelReport extends Component {
                     <td style={headStyleDetail}>Harga</td>
                     <td style={headStyleDetail}>Diskon Produk</td>
                     <td style={headStyleDetail}>TotalHarga</td>
+                    <td style={headStyleDetail}></td>
+                    <td style={headStyleDetail}></td>
                     <td style={headStyleDetail}></td>
                     <td style={headStyleDetail}></td>
                     <td style={headStyleDetail}></td>
@@ -195,6 +205,8 @@ class ExcelReport extends Component {
                         <td style={bodyStyleDetailNumber}>
                           Rp. {detail.total_harga?.toLocaleString()}
                         </td>
+                        <td style={bodyStyleDetail}></td>
+                        <td style={bodyStyleDetail}></td>
                         <td style={bodyStyleDetail}></td>
                         <td style={bodyStyleDetail}></td>
                         <td style={bodyStyleDetail}></td>
@@ -230,6 +242,8 @@ class ExcelReport extends Component {
                     <td style={footerStyleDetail}></td>
                     <td style={footerStyleDetail}></td>
                     <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
+                    <td style={footerStyleDetail}></td>
                   </tr>
                 </>
               )
@@ -244,6 +258,21 @@ class ExcelReport extends Component {
                 Rp.{' '}
                 {this.props.dataExcel
                   .reduce((a, b) => a + parseInt(b.grand_total || 0), 0)
+                  ?.toLocaleString()}
+              </td>
+              <td style={footerStyle}>
+                Rp.{' '}
+                {this.props.dataExcel
+                  .reduce((a, b) => a + parseInt(b.diskon_tambahan || 0), 0)
+                  ?.toLocaleString()}
+              </td>
+              <td style={footerStyle}>
+                Rp.{' '}
+                {this.props.dataExcel
+                  .reduce(
+                    (a, b) => a + (parseInt(b.grand_total || 0) - parseInt(b.diskon_tambahan || 0)),
+                    0
+                  )
                   ?.toLocaleString()}
               </td>
             </tr>

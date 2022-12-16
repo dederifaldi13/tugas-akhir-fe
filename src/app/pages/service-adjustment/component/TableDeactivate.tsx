@@ -41,6 +41,7 @@ interface DataType {
   tipe_program: string
   total_diskon: number
   grand_total: number
+  diskon_tambahan: number
   no_invoice: string
 }
 
@@ -394,6 +395,24 @@ const TableDeactivate: React.FC = () => {
       },
     },
     {
+      title: 'Diskon Tambahan',
+      dataIndex: 'diskon_tambahan',
+      key: 'diskon_tambahan',
+      align: 'right',
+      render: (_, {diskon_tambahan}) => {
+        return 'Rp. ' + (diskon_tambahan || 0)?.toLocaleString()
+      },
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      align: 'right',
+      render: (_, record) => {
+        const total = record.grand_total - (record.diskon_tambahan || 0)
+        return 'Rp. ' + total?.toLocaleString()
+      },
+    },
+    {
       title: 'Tgl Jatuh Tempo',
       dataIndex: 'tgl_jatuh_tempo',
       key: 'tgl_jatuh_tempo',
@@ -595,6 +614,26 @@ const TableDeactivate: React.FC = () => {
                         dataTable
                           .reduce(
                             (a: any, b: {grand_total: any}) => a + parseInt(b.grand_total || 0),
+                            0
+                          )
+                          ?.toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={2} align='right'>
+                      {'Rp. ' +
+                        dataTable
+                          .reduce(
+                            (a: any, b: {diskon_tambahan: any}) =>
+                              a + parseInt(b.diskon_tambahan || 0),
+                            0
+                          )
+                          ?.toLocaleString()}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={2} align='right'>
+                      {'Rp. ' +
+                        dataTable
+                          .reduce(
+                            (a: any, b: any) =>
+                              a + (parseInt(b.grand_total || 0) - parseInt(b.diskon_tambahan || 0)),
                             0
                           )
                           ?.toLocaleString()}

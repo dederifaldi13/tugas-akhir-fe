@@ -84,6 +84,7 @@ export const GetCustomerReportAction = (data: {
                   input_date: '',
                   no_invoice: '',
                   total_diskon: 0,
+                  diskon_tambahan: 0,
                 }
                 if (decryptData[index].status === 'OPEN') {
                   obj = {
@@ -106,6 +107,7 @@ export const GetCustomerReportAction = (data: {
                     input_date: decryptData[index].input_date,
                     no_invoice: decryptData[index].no_invoice,
                     total_diskon: decryptData[index].total_diskon,
+                    diskon_tambahan: decryptData[index].diskon_tambahan,
                   }
                 } else if (decryptData[index].status === 'PAID') {
                   obj = {
@@ -128,6 +130,7 @@ export const GetCustomerReportAction = (data: {
                     input_date: decryptData[index].input_date,
                     no_invoice: decryptData[index].no_invoice,
                     total_diskon: decryptData[index].total_diskon,
+                    diskon_tambahan: decryptData[index].diskon_tambahan,
                   }
                 } else if (decryptData[index].status === 'CLOSE') {
                   obj = {
@@ -151,6 +154,7 @@ export const GetCustomerReportAction = (data: {
                     input_date: decryptData[index].input_date,
                     no_invoice: decryptData[index].no_invoice,
                     total_diskon: decryptData[index].total_diskon,
+                    diskon_tambahan: decryptData[index].diskon_tambahan,
                   }
                 } else {
                   obj = {
@@ -174,6 +178,7 @@ export const GetCustomerReportAction = (data: {
                     input_date: decryptData[index].input_date,
                     no_invoice: decryptData[index].no_invoice,
                     total_diskon: decryptData[index].total_diskon,
+                    diskon_tambahan: decryptData[index].diskon_tambahan,
                   }
                 }
                 newarrdata.push(obj)
@@ -200,6 +205,7 @@ export const GetCustomerReportAction = (data: {
                   input_date: decryptData[index].input_date,
                   no_invoice: decryptData[index].no_invoice,
                   total_diskon: decryptData[index].total_diskon,
+                  diskon_tambahan: decryptData[index].diskon_tambahan,
                 }
                 newarrdata.push(obj)
               }
@@ -270,6 +276,7 @@ export const GetCustomerReportAction = (data: {
                 input_date: decryptData[index].input_date,
                 no_invoice: decryptData[index].no_invoice,
                 total_diskon: decryptData[index].total_diskon,
+                diskon_tambahan: decryptData[index].diskon_tambahan,
               }
               newarrdata.push(obj)
             }

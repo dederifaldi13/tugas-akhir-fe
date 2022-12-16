@@ -27,6 +27,7 @@ import {
   // CabangType,
   COUNT_TOTAL_HARGA,
   COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT,
+  COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN,
   COUNT_TOTAL_QTY,
   FormPostType,
   GET_TOKO_BY_KODE,
@@ -39,7 +40,9 @@ import {
   SET_CABANG,
   SET_CABANG_BY_ID,
   SET_DATA_PRODUCT,
+  SET_DISKON_KHUSUS,
   SET_PRODUCT,
+  SET_TANGGAL_JATUH_TEMPO,
   SHOW_MODAL,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
   TableDataType,
@@ -68,6 +71,7 @@ export const GetPost = () => {
           grand_total: res.data[index].grand_total,
           input_date: res.data[index].input_date,
           total_diskon: res.data[index].total_diskon,
+          diskon_tambahan: res.data[index].diskon_tambahan,
         }
         newarrdata.push(obj)
       }
@@ -250,6 +254,18 @@ export const SetCabangByID = (id: String) => {
   }
 }
 
+export const SetDiskonKhusus = (value: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({type: SET_DISKON_KHUSUS, payload: {diskon_khusus: value}})
+  }
+}
+
+export const SetTanggalJatuhTempo = (value: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch({type: SET_TANGGAL_JATUH_TEMPO, payload: {tgl_jatuh_tempo: value}})
+  }
+}
+
 export const CountTotalHargaQty = (value: number) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const harga = getState().form.FormAddNewTransaction.values?.harga || 0
@@ -286,6 +302,18 @@ export const CountTotalHargaDiscountProduct = (value: any) => {
   }
 }
 
+export const CountTotalHargaFinal = (value: any) => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    const grand_total = getState().form.FormAddNewTransaction.values?.grand_total || 0
+    const diskon = parseInt(NumberOnly(value))
+    const total = grand_total - diskon
+    dispatch({
+      type: COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN,
+      payload: {diskon_tambahan: diskon, total_harga_jual: total},
+    })
+  }
+}
+
 export const PostCustomer = (data: FormPostType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const dataProduct = getState().dashboard.dataProduct
@@ -300,6 +328,7 @@ export const PostCustomer = (data: FormPostType) => {
       tgl_jatuh_tempo: data.tgl_jatuh_tempo,
       kode_cabang: data.kode_cabang.value,
       total_diskon: parseFloat(data.total_diskon.toString()) / 100,
+      diskon_tambahan: parseInt(data.diskon_tambahan),
       product_detail: dataProduct,
     }
     dispatch(setLoading())
@@ -573,7 +602,7 @@ export const DeleteProductLocal = (product: any) => {
 
 export const generatePDF = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
-    AxiosGet(`invoice/filter?kode_toko=TR&no_invoice=INV-011222-0001&kode_cabang=CB`)
+    AxiosGet(`invoice/filter?kode_toko=AB&no_invoice=INV-151222-0001&kode_cabang=CA`)
       .then((res: any) => {
         const decryptData = doDecrypt(res.data[0], [
           '_id',

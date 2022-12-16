@@ -4,6 +4,7 @@ import {
   CabangType,
   COUNT_TOTAL_HARGA,
   COUNT_TOTAL_HARGA_DISCOUNT_PRODUCT,
+  COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN,
   COUNT_TOTAL_QTY,
   DataType,
   GET_TOKO_BY_KODE,
@@ -15,7 +16,9 @@ import {
   SET_CABANG,
   SET_CABANG_BY_ID,
   SET_DATA_PRODUCT,
+  SET_DISKON_KHUSUS,
   SET_PRODUCT,
+  SET_TANGGAL_JATUH_TEMPO,
   SHOW_MODAL,
   SHOW_MODAL_BUKTI_BAYAR_SUCCESS,
 } from './actions/PostActionTypes'
@@ -41,6 +44,10 @@ export interface DefaultStateI {
   modal: Boolean
   dataProduct?: Array<any>
   diskon_produk?: Number
+  diskon_tambahan?: Number
+  total_harga_jual?: Number
+  diskon_khusus?: Number
+  tgl_jatuh_tempo?: String
 }
 
 const defaultState: DefaultStateI = {
@@ -60,6 +67,10 @@ const defaultState: DefaultStateI = {
   modal: false,
   dataProduct: [],
   diskon_produk: 0,
+  diskon_tambahan: 0,
+  total_harga_jual: 0,
+  diskon_khusus: 0,
+  tgl_jatuh_tempo: '',
 }
 
 const postReducer = (
@@ -114,6 +125,22 @@ const postReducer = (
       return {...state, modal: false}
     case SET_DATA_PRODUCT:
       return {...state, dataProduct: action.payload?.dataProduct}
+    case COUNT_TOTAL_HARGA_DISCOUNT_TAMBAHAN:
+      return {
+        ...state,
+        diskon_tambahan: action.payload?.diskon_tambahan,
+        total_harga_jual: action.payload?.total_harga_jual,
+      }
+    case SET_DISKON_KHUSUS:
+      return {
+        ...state,
+        diskon_khusus: action.payload?.diskon_khusus,
+      }
+    case SET_TANGGAL_JATUH_TEMPO:
+      return {
+        ...state,
+        tgl_jatuh_tempo: action.payload?.tgl_jatuh_tempo,
+      }
     default:
       return state
   }
