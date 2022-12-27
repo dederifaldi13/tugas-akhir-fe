@@ -369,7 +369,7 @@ export const PostCustomer = (data: FormPostType) => {
           ).finally(() => {
             const userData = {
               user_name: senddata.kode_toko,
-              user_id: data.telepon,
+              user_id: data.telepon.toString() + '-' + senddata.kode_toko,
               password: '12345678',
             }
             AxiosPost('auth/register/customer', userData).finally(() => {

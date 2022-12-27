@@ -94,7 +94,7 @@ const DashboardWrapper: FC = () => {
                   </div>
                 </div>
                 {/* begin::Body */}
-                <div className='card-footer py-3'>
+                <div className='card-footer py-3 d-none'>
                   <Button onClick={() => dispatch(generatePDF())}>PDF</Button>
                 </div>
               </div>
