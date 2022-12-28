@@ -33,6 +33,21 @@ const mapState = (state: RootState) => {
         total_harga_product: state.serviceAdjustment.totalHarga,
       },
     }
+  } else {
+    return {
+      initialValues: {
+        product: {
+          value: '',
+          label: '',
+        },
+        tipe_program: state.serviceAdjustment.tipe_program,
+        id: '',
+        qty: 1,
+        harga: state.serviceAdjustment.harga,
+        diskon_produk: state.serviceAdjustment.diskon_produk,
+        total_harga_product: state.serviceAdjustment.totalHarga,
+      },
+    }
   }
 }
 
