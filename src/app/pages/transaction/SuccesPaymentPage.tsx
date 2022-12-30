@@ -42,8 +42,8 @@ const SuccessPaymentPage: FC = () => {
                       <button
                         className='btn btn-primary'
                         onClick={() => {
-                          window.open('', '_self', '')
-                          window.close()
+                          window.open('/dashboard', '_self', '')
+                          // window.close()
                         }}
                       >
                         <span className='indicator-label'>Ok</span>

@@ -320,7 +320,9 @@ const TableDashboardCustomer: React.FC = () => {
                     <Table.Summary.Cell index={3} align='right'></Table.Summary.Cell>
                     <Table.Summary.Cell index={4} align='right'></Table.Summary.Cell>
                     <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={6} align='right'>
+                    <Table.Summary.Cell index={6}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={7}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={8} align='right'>
                       {'Rp. ' +
                         dataTable
                           .reduce((a: any, b: {total_harga: any}) => a + b.total_harga, 0)
