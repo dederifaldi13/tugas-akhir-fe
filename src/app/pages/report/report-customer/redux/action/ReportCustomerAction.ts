@@ -227,7 +227,7 @@ export const GetCustomerReportAction = (data: {
 
       AxiosGet(
         `${REPORT_INVOICE_API}no_invoice=${
-          data.no_invoice
+          data.no_invoice.value
         }&start_date=${tgl_awal}&end_date=${tgl_akhir}&kode_toko=${
           data.kode_toko.value !== undefined ? data.kode_toko.value : data.kode_toko
         }&status=${data.status.value}`
