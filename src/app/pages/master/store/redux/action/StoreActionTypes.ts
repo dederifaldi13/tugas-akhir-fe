@@ -45,6 +45,7 @@ export type TableStoreType = {
   key: String
   _id: String
   created_at: String
+  input_date: Date
   kode_toko: String
   toko: String
   cabang: Array<CabangStoreType>

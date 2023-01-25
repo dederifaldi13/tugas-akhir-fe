@@ -42,6 +42,7 @@ export const GetMasterStore = () => {
           'created_at',
           'key',
           'kode_toko',
+          'input_date',
         ])
         let newarrdata: GetStoreType[] = []
         for (let index = 0; index < decryptDataToko.length; index++) {
@@ -52,6 +53,7 @@ export const GetMasterStore = () => {
             created_at: decryptDataToko[index].created_at,
             kode_toko: decryptDataToko[index].kode_toko,
             toko: decryptDataToko[index].toko,
+            input_date: decryptDataToko[index].input_date,
             cabang: [],
           }
 

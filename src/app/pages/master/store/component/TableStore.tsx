@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Input, Space, Table} from 'antd'
 import type {ColumnsType} from 'antd/lib/table'
+import moment from 'moment'
 import React, {useState} from 'react'
 import {Modal} from 'react-bootstrap-v5'
 import Lottie from 'react-lottie'
@@ -72,6 +73,14 @@ const TableStore: React.FC = () => {
       key: 'toko',
     },
     {
+      title: 'Tanggal Input',
+      dataIndex: 'input_date',
+      key: 'input_date',
+      render: (val) => {
+        return moment(val).format('DD/MM/YYYY')
+      },
+    },
+    {
       title: 'Action',
       key: 'action',
       align: 'center',
@@ -140,6 +149,14 @@ const TableStore: React.FC = () => {
       },
       {title: 'Telepon', dataIndex: 'telepon', key: 'telepon'},
       {title: 'Email', dataIndex: 'email', key: 'email'},
+      {
+        title: 'Tanggal Input',
+        dataIndex: 'input_date',
+        key: 'input_date',
+        render: (val) => {
+          return moment(val).format('DD/MM/YYYY')
+        },
+      },
     ]
 
     const data: any = []
@@ -155,6 +172,7 @@ const TableStore: React.FC = () => {
             email: dataTable[i].cabang[index].email,
             kode_cabang: dataTable[i].cabang[index].kode_cabang,
             nama_cabang: dataTable[i].cabang[index].nama_cabang,
+            input_date: dataTable[i].cabang[index].input_date,
           })
         }
       }
