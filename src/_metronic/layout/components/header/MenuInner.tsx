@@ -33,11 +33,11 @@ export function MenuInner() {
               title='History Payment Report'
               icon='/media/icons/duotune/finance/fin010.svg'
             />
-            <MenuItem
+            {/* <MenuItem
               to='/report/report-history-payment-ipaymu'
               title='History Payment Report iPaymu'
               icon='/media/icons/duotune/finance/fin010.svg'
-            />
+            /> */}
           </MenuInnerWithSub>
         </>
       ) : (
@@ -87,11 +87,11 @@ export function MenuInner() {
               title='History Payment Report'
               icon='/media/icons/duotune/finance/fin010.svg'
             />
-            <MenuItem
+            {/* <MenuItem
               to='/report/report-history-payment-ipaymu'
               title='History Payment Report iPaymu'
               icon='/media/icons/duotune/finance/fin010.svg'
-            />
+            /> */}
           </MenuInnerWithSub>
         </>
       )}

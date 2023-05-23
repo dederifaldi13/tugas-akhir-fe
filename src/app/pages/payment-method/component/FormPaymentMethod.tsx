@@ -48,7 +48,7 @@ const FormPaymentMethod: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
             </span>
           )}
         </button>
-        <button
+        {/* <button
           className='btn btn-light-primary'
           type='button'
           onClick={() => props.dispatch(handleIPayMu(data, params))}
@@ -61,7 +61,7 @@ const FormPaymentMethod: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
           )}
-        </button>
+        </button> */}
         {/* <button
           className='btn btn-light-info'
           type='button'

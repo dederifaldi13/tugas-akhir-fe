@@ -19,7 +19,7 @@ import {TableCabangStoreType} from '../redux/action/StoreActionTypes'
 import FormAddNewCabangAlamat from './FormAddNewCabangAlamat'
 
 const TableAlamat: React.FC = () => {
-  const dataKodeToko = useSelector<RootState>(({form}) => form.FormAddNewStore.values?.kode_toko)
+  const dataKodeToko = useSelector<RootState>(({form}) => form.FormAddNewStore?.values?.kode_toko)
   const dispatch = useDispatch()
   const handleDelete = (e: any, id: any) => {
     e.preventDefault()

@@ -12,17 +12,17 @@ const FormAddNewTransactionValidate = (values: IFormAddNewTransaction): FormErro
         errors.nama_toko = 'Nama Toko required'
     }
 
-    if (!values.alamat) {
-        errors.alamat = 'Alamat required'
-    }
+    // if (!values.alamat) {
+    //     errors.alamat = 'Alamat required'
+    // }
 
-    if (!values.telepon) {
-        errors.telepon = 'No Telepon required'
-    }
+    // if (!values.telepon) {
+    //     errors.telepon = 'No Telepon required'
+    // }
 
-    if (!values.email) {
-        errors.email = 'Email required'
-    }
+    // if (!values.email) {
+    //     errors.email = 'Email required'
+    // }
 
     if (!values.product) {
         errors.product = 'Product required'

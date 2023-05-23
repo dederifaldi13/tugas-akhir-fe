@@ -538,7 +538,7 @@ export const AddProductToLocal = () => {
               product: data.product.value,
               harga: data.harga,
               total_harga_product: data.total_harga_product,
-              diskon_produk: parseFloat(data.diskon_produk) / 100,
+              diskon_produk: parseFloat(data.diskon_produk || 0) / 100,
               qty: data.qty,
               tipe_program: data.tipe_program,
             })
@@ -559,7 +559,7 @@ export const AddProductToLocal = () => {
               product: data.product.value,
               harga: data.harga,
               total_harga_product: data.total_harga_product,
-              diskon_produk: parseFloat(data.diskon_produk) / 100,
+              diskon_produk: parseFloat(data.diskon_produk || 0) / 100,
               qty: data.qty,
               tipe_program: data.tipe_program,
             })

@@ -330,6 +330,7 @@ const FormAddNewTransaction: React.FC<InjectedFormProps<{}, Props>> = (props: an
             <button
               className='btn btn-primary'
               disabled={tipe_program === 'ONLINE' ? submitting || isSending : false}
+              type='submit'
             >
               {!isSending && <span className='indicator-label'>Simpan</span>}
               {isSending && (

@@ -57,7 +57,7 @@ export const handleVerifikasi = (params: ParamsVerifType) => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     const dataCustomer = getState().verifikasicustomerreducer.feedback
     const datakirim = {
-      user_id: dataCustomer?.telepon,
+      user_id: `${dataCustomer?.telepon}-${dataCustomer?.kode_toko}`,
       kode_verifikasi: params.kode_verif,
     }
     AxiosGet(`user/verify/${datakirim.user_id}/${datakirim.kode_verifikasi}`)
