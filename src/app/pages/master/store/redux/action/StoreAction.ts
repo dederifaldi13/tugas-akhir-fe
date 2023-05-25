@@ -417,34 +417,30 @@ export const PutLocalCabang = () => {
     dispatch(setLoading())
     const data = getState().form.FormAddNewCabang.values
     getLocal('cabangAlamat').then((dataDetail) => {
-      const newarr: any = []
-      const datafilter = dataDetail.filter(
-        (item: TableCabangStoreType) => item.key !== data?.kode_cabang
-      )
-      datafilter.forEach((element: any) => {
-        newarr.push({
-          key: datafilter.length,
-          alamat: element.alamat,
-          kode_cabang: element.kode_cabang,
-          email: element.email,
-          telepon: element.telepon,
-        })
-      })
-      newarr.push({
-        key: datafilter.length + 1,
+      const datafilter = dataDetail.filter((item: TableCabangStoreType) => item.key !== data?.id)
+      datafilter.push({
+        key: datafilter.length,
+        _id: data?._id,
         alamat: data?.alamat,
-        kode_cabang: data?.kode_cabang,
+        alamat_korespondensi: data?.alamat_korespondensi,
+        kode_cabang: data?.kode_cabang.toUpperCase(),
+        nama_cabang: data?.nama_cabang,
         email: data?.email,
         telepon: data?.telepon,
       })
-      saveLocal('cabangAlamat', newarr).then(() => {
+
+      saveLocal('cabangAlamat', datafilter).then(() => {
         Swal.fire({
           icon: 'success',
           title: 'Success',
           text: 'Berhasil Mengedit Data Cabang / Alamat',
-        }).then(() => {
-          dispatch(GetDataCabangLocal())
         })
+          .then(() => {
+            dispatch(GetDataCabangLocal())
+          })
+          .then(() => {
+            dispatch(stopLoading())
+          })
       })
     })
   }
@@ -645,8 +641,11 @@ export const DeleteCabangLocal = (id: any) => {
       datafilter.forEach((element: any) => {
         newarr.push({
           key: datafilter.length,
+          _id: element._id,
           alamat: element.alamat,
-          kode_cabang: element.kode_cabang,
+          alamat_korespondensi: element.alamat_korespondensi,
+          kode_cabang: element.kode_cabang.toUpperCase(),
+          nama_cabang: element.nama_cabang,
           email: element.email,
           telepon: element.telepon,
         })
