@@ -412,6 +412,44 @@ export const PostLocalCabang = () => {
   }
 }
 
+export const PutLocalCabang = () => {
+  return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
+    dispatch(setLoading())
+    const data = getState().form.FormAddNewCabang.values
+    getLocal('cabangAlamat').then((dataDetail) => {
+      const newarr: any = []
+      const datafilter = dataDetail.filter(
+        (item: TableCabangStoreType) => item.key !== data?.kode_cabang
+      )
+      datafilter.forEach((element: any) => {
+        newarr.push({
+          key: datafilter.length,
+          alamat: element.alamat,
+          kode_cabang: element.kode_cabang,
+          email: element.email,
+          telepon: element.telepon,
+        })
+      })
+      newarr.push({
+        key: datafilter.length + 1,
+        alamat: data?.alamat,
+        kode_cabang: data?.kode_cabang,
+        email: data?.email,
+        telepon: data?.telepon,
+      })
+      saveLocal('cabangAlamat', newarr).then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Berhasil Mengedit Data Cabang / Alamat',
+        }).then(() => {
+          dispatch(GetDataCabangLocal())
+        })
+      })
+    })
+  }
+}
+
 export const PostLocalCabangEdit = () => {
   return async (dispatch: Dispatch<any>, getState: () => IAppState) => {
     dispatch(setLoading())
