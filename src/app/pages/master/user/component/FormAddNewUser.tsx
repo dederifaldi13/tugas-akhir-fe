@@ -16,10 +16,6 @@ const FormAddNewUser: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
       label: 'OWNER',
     },
     {
-      value: 'MANAGER',
-      label: 'MANAGER',
-    },
-    {
       value: 'ADMIN',
       label: 'ADMIN',
     },

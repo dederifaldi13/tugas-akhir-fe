@@ -76,7 +76,7 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
               label='Tanggal Dari'
               type='text'
               selected={tgl_awal}
-              onChange={(date: any) => setTglAwal(new Date(moment().format('DD-MM-YYYY')))}
+              onChange={(date: any) => setTglAwal(new Date(date))}
               placeholder='Masukan Tanggal Dari'
             />
           </div>
@@ -87,7 +87,7 @@ const FormReportHistoryPayment: React.FC<InjectedFormProps<{}, Props>> = (props:
               component={InputDate}
               type='text'
               selected={tgl_akhir}
-              onChange={(date: any) => setTglAkhir(new Date(moment().format('DD-MM-YYYY')))}
+              onChange={(date: any) => setTglAkhir(new Date(date))}
               label='Tanggal Akhir'
               placeholder='Masukan Tanggal Akhir'
             />
