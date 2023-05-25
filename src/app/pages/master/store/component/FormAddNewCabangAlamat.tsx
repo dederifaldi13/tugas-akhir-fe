@@ -4,7 +4,7 @@ import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RootState} from '../../../../../setup'
 import FormAddNewStoreCabangValidate from '../../../../../setup/validate/FormAddNewStoreCabangValidate'
 import {ReanderField} from '../../../../modules/redux-form/BasicInput'
-import {PostLocalCabang} from '../redux/action/StoreAction'
+import {PostLocalCabang, PutLocalCabang} from '../redux/action/StoreAction'
 
 interface Props {}
 
@@ -39,8 +39,13 @@ const mapState = (state: RootState) => {
 const FormAddNewCabang: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const {pristine, submitting} = props
   const isSending = useSelector<RootState>(({loader}) => loader.loading)
+  const dataDetail = useSelector<RootState>(({masterstore}) => masterstore.feedbackCabangDetail)
   const handleClick = () => {
-    props.dispatch(PostLocalCabang())
+    if (dataDetail !== undefined) {
+      props.dispatch(PutLocalCabang())
+    } else {
+      props.dispatch(PostLocalCabang())
+    }
   }
 
   return (
