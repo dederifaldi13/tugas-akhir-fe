@@ -56,7 +56,7 @@ const StorePage: FC = () => {
                       Master Store / Customer Data
                     </span>
                     <span className='text-muted mt-1 fw-bold fs-7'>
-                      List Data Of Nagatech Store Customer
+                      List Data Of Customer
                     </span>
                   </h3>
                   <div className='card-toolbar'>

@@ -55,7 +55,7 @@ export function LoginForm() {
       {/* begin::Heading */}
       <div className='text-center mb-10'>
         <h1 className='text-dark mb-3'>Welcome</h1>
-        <div className='text-gray-400 fw-bold fs-4'> Nagatech Sistem Integrator App</div>
+        <div className='text-gray-400 fw-bold fs-4'> </div>
         {/* <img alt='Logo' src={toAbsoluteUrl('/media/logos/nsi-logo.png')} width={'45%'} /> */}
       </div>
       {/* begin::Heading */}

@@ -51,7 +51,7 @@ const UserPage: FC = () => {
                   <h3 className='card-title align-items-start flex-column'>
                     <span className='card-label fw-bolder fs-3 mb-1'>Master User Data</span>
                     <span className='text-muted mt-1 fw-bold fs-7'>
-                      List Data Of Nagatech User Admin
+                      List Data Of User
                     </span>
                   </h3>
                   <div className='card-toolbar'>

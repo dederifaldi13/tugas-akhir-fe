@@ -94,14 +94,14 @@ const TableDetailProduct: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <Space size='middle'>
-          <button
+          {/* <button
             className='btn btn-light-warning btn-sm me-1'
             onClick={(e) => handleEdit(e, record.key)}
           >
             <span className='indicator-label'>
               Edit <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
             </span>
-          </button>
+          </button> */}
           <button
             className='btn btn-light-danger btn-sm me-1'
             onClick={(e) => handleDelete(e, record.product)}

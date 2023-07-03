@@ -26,7 +26,7 @@ const ServiceAdjustmentPage: FC = () => {
                   <h3 className='card-title align-items-start flex-column'>
                     <span className='card-label fw-bolder fs-3 mb-1'>Customer Data</span>
                     <span className='text-muted mt-1 fw-bold fs-7'>
-                      List Data Of Nagatech Customer VPS
+                      List Data Of Customer
                     </span>
                   </h3>
                   <div className='card-toolbar'></div>

@@ -37,7 +37,7 @@ const KwitansiPDF = (data, no) => {
   doc.addFont(toAbsoluteUrl('/media/fonts/lora/Lora-Bold.ttf'), 'Lora', 'bold')
   doc.setFont('Lora', 'bold')
   doc.text('#' + (data.grand_total - (data.diskon_tambahan || 0)).toLocaleString() + '#', 83, 104)
-  doc.text('Layanan berlangganan Nagatech Sistem Integrator, ', 80, 114)
+  doc.text('Layanan berlangganan, ', 80, 114)
   const desk = `Total nilai Rp. ${(
     data.grand_total - (data.diskon_tambahan || 0)
   ).toLocaleString()} (${angkaTerbilang(data.grand_total - (data.diskon_tambahan || 0))})`
