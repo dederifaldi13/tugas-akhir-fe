@@ -136,10 +136,22 @@ const TableHasBeenPaidCustomer: React.FC = () => {
                 path='/media/icons/duotune/maps/map001.svg'
                 className='svg-icon-2 svg-icon-warning'
               />
-              &nbsp; BELUM DI VALIDASI
+              &nbsp; BELUM DIVALIDASI
             </span>
           )
-        } else {
+        } else if (status === "CANCEL") {
+          return (
+            <span className='badge badge-light-danger fs-7 fw-bold'>
+              <KTSVG
+                path='/media/icons/duotune/general/gen050.svg'
+                className='svg-icon-2 svg-icon-danger'
+              />
+              &nbsp; PEMBAYARAN DITOLAK
+            </span>
+          )
+
+        }
+        else {
           return (
             <span className='badge badge-light-success fs-7 fw-bold'>
               <KTSVG
